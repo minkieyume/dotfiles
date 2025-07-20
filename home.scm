@@ -18,7 +18,7 @@
              (guix-defaults? #t)
              (bash-profile (list (plain-file "bash-profile" "\n export HISTFILE=$XDG_CACHE_HOME/.bash_history")))	          
 	     (bashrc (list (plain-file "bashrc" "\nexport TERM=xterm-256color \nexport GUIX_PROFILE=$HOME/.guix-profile \n. $GUIX_PROFILE/etc/profile\nexport GUIX_LOCPATH=$HOME/.guix-profile/lib/locale")))))
-   (simple-service 'git-config
+   n(simple-service 'git-config
                    home-files-service-type
                    `((".gitconfig" ,(plain-file "gitconfig"
 "  
