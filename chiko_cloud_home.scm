@@ -5,6 +5,7 @@
    (gnu services)             ; 提供 service-type 与 service-extension
    (gnu packages admin)
    (guix gexp)
+   (rnrs io ports)
    (gnu packages emacs)
    (gnu packages version-control))
             

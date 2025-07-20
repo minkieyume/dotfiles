@@ -22,6 +22,7 @@
 (gnu services)             ; 提供 service-type 与 service-extension
 (gnu packages admin)
 (guix gexp)
+(rnrs io ports)
 #+end_src
 
 ** Bash
