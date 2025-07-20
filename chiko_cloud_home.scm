@@ -10,9 +10,9 @@
             
 (home-environment
   
-  (packages (
-    "emacs"
-    "git"))
+  (packages (list
+    emacs
+    git))
   (services (list
     (service home-bash-service-type
              (home-bash-configuration

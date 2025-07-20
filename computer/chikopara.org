@@ -7,7 +7,7 @@
             
 (home-environment
   <<env>>
-  (packages (
+  (packages (list
     <<package>>))
   (services (list
     <<service>>)))
@@ -38,7 +38,7 @@ Bash的基础配置。
 ** Emacs
 基础的包配置
 #+begin_src scheme :noweb-ref package
-"emacs"
+emacs
 #+end_src
 模块配置
 #+begin_src scheme :noweb-ref module
@@ -47,7 +47,7 @@ Bash的基础配置。
 
 ** Git
 #+begin_src scheme :noweb-ref package
-"git"
+git
 #+end_src
 
 #+begin_src scheme :noweb-ref module
