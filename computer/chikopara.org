@@ -57,7 +57,7 @@ git
 
 #+begin_src scheme :noweb-ref home_service
 (simple-service 'git-config home-files-service-type
-`((".gitconfig" ,(plain-file "gitconfig" (call-with-input-file "./config/chiko_cloud/gitconfig" get-string-all)))))
+`((".gitconfig" ,(plain-file "gitconfig" (call-with-input-file "./config/gitconfig" get-string-all)))))
 #+end_src
 
 ** SSH

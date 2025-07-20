@@ -1,9 +1,0 @@
-[user]
-  name = MinkieYume
-  email = minkieyume@gmail.com
-
-[core]
-  editor = emacs
-
-[color]
-  ui = auto
