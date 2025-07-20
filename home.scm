@@ -8,10 +8,10 @@
              (guix gexp))
 
 (home-environment
- (packages  (list emacs git misskey))
+ (packages  (list emacs git))
  (services
   (cons*
-   (load "misskey.scm")
+;   (load "misskey.scm")
    (list
    (service home-bash-service-type
             (home-bash-configuration
@@ -20,11 +20,11 @@
 	     (bashrc (list (plain-file "bashrc" "\nexport TERM=xterm-256color \nexport GUIX_PROFILE=$HOME/.guix-profile \n. $GUIX_PROFILE/etc/profile\nexport GUIX_LOCPATH=$HOME/.guix-profile/lib/locale")))))
    (simple-service 'git-config
                    home-files-service-type
-                   `(("gitconfig" ,(plain-file "gitconfig"
+                   `((".gitconfig" ,(plain-file "gitconfig"
 "  
 [user]
-  name = Minkie Yume
-  email = minkie@example.com
+  name = MinkieYume
+  email = minkieyume@gmail.com
 
 [core]
   editor = emacs
@@ -34,7 +34,7 @@
 "))))
    (simple-service 'ssh
                 home-files-service-type
-                `(("ssh/config" ,(plain-file "ssh-config"
+                `((".ssh/config" ,(plain-file "ssh-config"
 "Host *
   AddKeysToAgent yes
   IdentityFile ~/.ssh/id_rsa
