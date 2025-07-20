@@ -3,19 +3,19 @@
 * Chiko Home
 #+begin_src scheme :tangle ../chiko_cloud_home.scm :noweb yes
 (use-modules
-   <<module>>)
+   <<home_module>>)
             
 (home-environment
-  <<env>>
+  <<home_env>>
   (packages (list
-    <<package>>))
+    <<home_package>>))
   (services (list
-    <<service>>)))
+    <<home_service>>)))
 #+end_src
 
 * Base
 ** HomeBase
-#+begin_src scheme :noweb-ref module
+#+begin_src scheme :noweb-ref home_module
 (gnu home)                 ; 提供 home-environment
 (gnu home services)        ; 提供 home-service 的核心定义
 (gnu home services shells) ; 如果要配置 shell (bash、zsh)
@@ -26,7 +26,7 @@
 
 ** Bash
 Bash的基础配置。
-#+begin_src scheme :noweb-ref service
+#+begin_src scheme :noweb-ref home_service
   (service home-bash-service-type
            (home-bash-configuration
             (guix-defaults? #t)
@@ -37,30 +37,30 @@ Bash的基础配置。
 * Tools
 ** Emacs
 基础的包配置
-#+begin_src scheme :noweb-ref package
+#+begin_src scheme :noweb-ref home_package
 emacs
 #+end_src
 模块配置
-#+begin_src scheme :noweb-ref module
+#+begin_src scheme :noweb-ref home_module
 (gnu packages emacs)
 #+end_src
 
 ** Git
-#+begin_src scheme :noweb-ref package
+#+begin_src scheme :noweb-ref home_package
 git
 #+end_src
 
-#+begin_src scheme :noweb-ref module
+#+begin_src scheme :noweb-ref home_module
 (gnu packages version-control)
 #+end_src
 
-#+begin_src scheme :noweb-ref service
+#+begin_src scheme :noweb-ref home_service
 (simple-service 'git-config home-files-service-type
 `((".gitconfig" ,(plain-file "gitconfig" (call-with-input-file "./config/gitconfig" get-string-all)))))
 #+end_src
 
 ** SSH
-#+begin_src scheme :noweb-ref service
+#+begin_src scheme :noweb-ref home_service
 (simple-service 'ssh home-files-service-type
                 `((".ssh/config" ,(plain-file "ssh-config" (call-with-input-file "./config/ssh-config" get-string-all)))))
 #+end_src
