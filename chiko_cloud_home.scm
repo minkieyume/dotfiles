@@ -19,8 +19,8 @@
              (home-bash-configuration
               (guix-defaults? #t)
               (bash-profile (list (plain-file "bash-profile" "\n export HISTFILE=$XDG_CACHE_HOME/.bash_history")))
-    	  (bashrc (list (plain-file "bashrc" (call-with-input-file "./config/bash/bashrc" get-string-all))))))
+    	  (bashrc (list (plain-file "bashrc" (call-with-input-file "./config/chiko_cloud/bash/bashrc" get-string-all))))))
     (simple-service 'git-config home-files-service-type
     `((".gitconfig" ,(plain-file "gitconfig" (call-with-input-file "./config/gitconfig" get-string-all)))))
     (simple-service 'ssh home-files-service-type
-                    `((".ssh/config" ,(plain-file "ssh-config" (call-with-input-file "./config/ssh-config" get-string-all))))))))
+                    `((".ssh/config" ,(plain-file "ssh-config" (call-with-input-file "./config/chiko_cloud/ssh-config" get-string-all))))))))
