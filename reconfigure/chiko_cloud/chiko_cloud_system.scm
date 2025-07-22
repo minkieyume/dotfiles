@@ -1,5 +1,6 @@
 (use-modules (gnu)
 (gnu system)
+(gnu packages admin)
 (gnu services networking)
 (gnu services ssh)
 (gnu packages emacs))
