@@ -98,9 +98,13 @@
 #+begin_src scheme :noweb-ref service
   (service openssh-service-type
     (openssh-configuration
-    (permit-root-login #t)))
+      (permit-root-login #t)
+      (authorized-keys
+        `(("minkieyume"
+            ,(local-file "../../files/keys/yumemi_rsa.pub"))))))
 #+end_src
 
+** Doas
 
 
 * Tools
@@ -113,18 +117,4 @@
 模块配置
 #+begin_src scheme :noweb-ref module
   (gnu packages emacs)
-#+end_src
-
-** Git
-#+begin_src scheme :noweb-ref package
-  git
-#+end_src
-
-#+begin_src scheme :noweb-ref module
-  (gnu packages version-control)
-#+end_src
-
-#+begin_src scheme :noweb-ref service
-  (simple-service 'git-config home-files-service-type
-  `((".gitconfig" ,(plain-file "gitconfig" (call-with-input-file "./config/gitconfig" get-string-all)))))
 #+end_src

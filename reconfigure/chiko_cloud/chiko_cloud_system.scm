@@ -1,8 +1,8 @@
 (use-modules (gnu)
 (gnu service networking)  
 (gnu service ssh)
-(gnu packages emacs)
-(gnu packages version-control))
+(gnu packages emacs))
+
 (operating-system
   (locale "zh_CN.utf8")
 (timezone "Asia/Singapore")
@@ -23,9 +23,7 @@
 (service ntp-service-type)
 (service openssh-service-type
   (openssh-configuration
-  (permit-root-login #t)))
-(simple-service 'git-config home-files-service-type
-`((".gitconfig" ,(plain-file "gitconfig" (call-with-input-file "./config/gitconfig" get-string-all))))) %base-services))
+    (permit-root-login #t))) %base-services))
   (mapped-devices (list (mapped-device
   (source (uuid
             "31481dcb-adb6-4939-9e3e-00816e884e0c"))
