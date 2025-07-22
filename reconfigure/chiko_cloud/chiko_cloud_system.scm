@@ -29,7 +29,7 @@
     (authorized-keys
       `(("minkieyume"
           ,(local-file "../../files/keys/yumemi_rsa.pub"))))))
-(service doas-service-type) %base-services))
+(service opendoas-service-type) %base-services))
   (mapped-devices (list (mapped-device
   (source (uuid
             "31481dcb-adb6-4939-9e3e-00816e884e0c"))
