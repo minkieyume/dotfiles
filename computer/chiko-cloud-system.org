@@ -88,7 +88,7 @@
 * 基础服务
 ** 网络模块
 #+begin_src scheme :noweb-ref module
-  (gnu service networking)  
+  (gnu services networking)
 #+end_src
 
 配置网络服务：
@@ -99,7 +99,7 @@
 
 ** OpenSSH
 #+begin_src scheme :noweb-ref module
-  (gnu service ssh)
+  (gnu services ssh)
 #+end_src
 
 配置SSH配置的服务：

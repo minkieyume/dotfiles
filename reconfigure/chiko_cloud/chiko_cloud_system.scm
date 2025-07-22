@@ -1,7 +1,7 @@
 (use-modules (gnu)
 (gnu system)
-(gnu service networking)  
-(gnu service ssh)
+(gnu services networking)
+(gnu services ssh)
 (gnu packages emacs))
 
 (operating-system
