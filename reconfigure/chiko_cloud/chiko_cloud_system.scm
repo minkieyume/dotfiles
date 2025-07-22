@@ -1,7 +1,6 @@
 (use-modules (gnu)
 (gnu system)
 (gnu packages admin)
-(gnu packages doas)
 (gnu services networking)
 (gnu services ssh)
 (gnu packages emacs))
@@ -47,5 +46,5 @@
   (type "ext4")
   (dependencies mapped-devices)) %base-file-systems))
   (packages (cons* htop
-doas
+opendoas
 emacs %base-packages)))

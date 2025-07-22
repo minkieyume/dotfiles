@@ -46,7 +46,6 @@
   (gnu)
   (gnu system)
   (gnu packages admin)
-  (gnu packages doas)
 #+end_src
 
 ** 基础包
@@ -118,7 +117,7 @@
 Doas是比Sudo更简洁，也更为安全的提权工具。
 之所以用Doas而不用Sudo，是因为Sudo通常会有一定的安全漏洞，结构也比较复杂，而Doas结构相对简单，攻击面也更少，适合不需要复杂提权配置的服务器或个人。
 #+begin_src scheme :noweb-ref package
-  doas
+  opendoas
 #+end_src
 
 #+begin_src scheme :noweb-ref service
