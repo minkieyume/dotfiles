@@ -1,21 +1,21 @@
-#+TITLE: ChikoCloud
+#+TITLE: ChikoCloud - MinkieYume
 
-* Chiko Home
-#+begin_src scheme :tangle ../chiko_cloud_home.scm :noweb yes
+* MinkieYume Home
+#+begin_src scheme :tangle ../reconfigure/chiko_cloud/chiko_cloud_minkieyume.scm :noweb yes
 (use-modules
-   <<home_module>>)
+   <<module>>)
             
 (home-environment
-  <<home_env>>
+  <<env>>
   (packages (list
-    <<home_package>>))
+    <<package>>))
   (services (list
-    <<home_service>>)))
+    <<service>>)))
 #+end_src
 
 * Base
 ** HomeBase
-#+begin_src scheme :noweb-ref home_module
+#+begin_src scheme :noweb-ref module
 (gnu home)                 ; 提供 home-environment
 (gnu home services)        ; 提供 home-service 的核心定义
 (gnu home services shells) ; 如果要配置 shell (bash、zsh)
@@ -27,7 +27,7 @@
 
 ** Bash
 Bash的基础配置。
-#+begin_src scheme :noweb-ref home_service
+#+begin_src scheme :noweb-ref service
   (service home-bash-service-type
            (home-bash-configuration
             (guix-defaults? #t)
@@ -36,34 +36,8 @@ Bash的基础配置。
 #+end_src
 
 * Tools
-** Emacs
-基础的包配置
-#+begin_src scheme :noweb-ref home_package
-emacs
-#+end_src
-模块配置
-#+begin_src scheme :noweb-ref home_module
-(gnu packages emacs)
-#+end_src
-
-** Git
-#+begin_src scheme :noweb-ref home_package
-git
-#+end_src
-
-#+begin_src scheme :noweb-ref home_module
-(gnu packages version-control)
-#+end_src
-
-#+begin_src scheme :noweb-ref home_service
-(simple-service 'git-config home-files-service-type
-`((".gitconfig" ,(plain-file "gitconfig" (call-with-input-file "./config/gitconfig" get-string-all)))))
-#+end_src
-
 ** SSH
-#+begin_src scheme :noweb-ref home_service
+#+begin_src scheme :noweb-ref service 
 (simple-service 'ssh home-files-service-type
                 `((".ssh/config" ,(plain-file "ssh-config" (call-with-input-file "./config/chiko_cloud/ssh-config" get-string-all)))))
 #+end_src
-
-* Server
