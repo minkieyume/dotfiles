@@ -1,6 +1,7 @@
 (use-modules (gnu)
 (gnu system)
 (gnu packages admin)
+(gnu packages doas)
 (gnu services networking)
 (gnu services ssh)
 (gnu packages emacs))
