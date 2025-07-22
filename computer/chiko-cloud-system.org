@@ -46,6 +46,7 @@
   (gnu)
   (gnu system)
   (gnu packages admin)
+  (gnu packages doas)
 #+end_src
 
 ** 基础包
