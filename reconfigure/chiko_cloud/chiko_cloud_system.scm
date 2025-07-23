@@ -11,7 +11,6 @@
 (timezone "Asia/Singapore")
 (keyboard-layout (keyboard-layout "us"))
 (host-name "chikocloud")
-(channels (load "../../channels.scm"))
   (bootloader (bootloader-configuration
   (bootloader grub-efi-bootloader)
   (targets (list "/boot/efi"))
