@@ -1,12 +1,12 @@
 (cons* (channel
-	       (name 'chikochiko)
-	       (url "https://github.com/minkieyume/guix-channel.git")
-	       (branch "main")
-	       (introduction
-	         (make-channel-introduction
-	           "58c72b83e045c90bcef7edcc7b90b9b5fe875b03"
-	           (openpgp-fingerprint
-	             "F655 AB8D 8F94 0E9F 569C E97D 5DBC D441 1818 2F31"))))
+         (name 'chikochannel)
+         (url "https://github.com/minkieyume/guix-channel.git")
+         (branch "main")
+         (introduction
+           (make-channel-introduction
+             "58c72b83e045c90bcef7edcc7b90b9b5fe875b03"
+             (openpgp-fingerprint
+               "F655 AB8D 8F94 0E9F 569C E97D 5DBC D441 1818 2F31"))))
   (channel
 	  (name 'rosenthal)
 	  (url "https://github.com/rakino/rosenthal")
