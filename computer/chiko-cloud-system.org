@@ -25,6 +25,11 @@
   (host-name "chikocloud")
 #+end_src
 
+** 频道订阅
+#+begin_src scheme :noweb-ref env
+  (channels (load "../../channels.scm"))
+#+end_src
+
 ** VPS支持
 #+begin_src scheme :noweb-ref initrd-module
   "virtio_scsi"
