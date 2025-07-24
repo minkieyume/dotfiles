@@ -47,6 +47,7 @@
   (gnu)
   (gnu system)
   (gnu packages admin)
+  (gnu system privilege)
 #+end_src
 
 ** 基础包

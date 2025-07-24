@@ -1,6 +1,7 @@
 (use-modules (gnu)
 (gnu system)
 (gnu packages admin)
+(gnu system privilege)
 (gnu services networking)
 (gnu services ssh)
 (chiko services doas)
