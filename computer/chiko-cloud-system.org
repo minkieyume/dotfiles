@@ -9,7 +9,7 @@
     <<env>>
     (bootloader <<bootloader>>)
     (initrd-modules (cons* <<initrd-module>> %base-initrd-modules))
-    (privileged-programs (cons* <<privileged-program>> %default-privileged-programs)
+    (privileged-programs (cons* <<privileged-program>> %default-privileged-programs))
     (users (cons* <<user>> %base-user-accounts))
     (services (cons* <<service>> %base-services))
     (mapped-devices (list <<mapped-device>>))

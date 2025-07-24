@@ -18,7 +18,7 @@
   (initrd-modules (cons* "virtio_scsi" %base-initrd-modules))
   (privileged-programs (cons* (privileged-program
   (program (file-append opendoas "/bin/doas"))
-  (setuid? #t)) %default-privileged-programs)
+  (setuid? #t)) %default-privileged-programs))
   (users (cons* (user-account
   (name "minkieyume")
   (comment "Minkieyume")
