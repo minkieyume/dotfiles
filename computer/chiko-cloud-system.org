@@ -9,6 +9,7 @@
     <<env>>
     (bootloader <<bootloader>>)
     (initrd-modules (cons* <<initrd-module>> %base-initrd-modules))
+    (privileged-programs (cons* <<privileged-program>> %default-privileged-programs)
     (users (cons* <<user>> %base-user-accounts))
     (services (cons* <<service>> %base-services))
     (mapped-devices (list <<mapped-device>>))
@@ -120,6 +121,14 @@ Doas是比Sudo更简洁，也更为安全的提权工具。
   opendoas
 #+end_src
 
+由于自定义的doas服务默认不会更改程序掩码，Doas需要手动设置系统程序掩码。
+#+begin_src scheme :noweb-ref privileged-program
+  (privileged-program
+    (program (file-append opendoas "/bin/doas"))
+    (setuid? #t))
+#+end_src
+
+引入自定义的包定义的doas服务。
 #+begin_src scheme :noweb-ref module
   (chiko services doas)
 #+end_src
