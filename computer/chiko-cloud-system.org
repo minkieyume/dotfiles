@@ -5,6 +5,8 @@
 #+begin_src scheme :tangle ../reconfigure/chiko_cloud_system.scm :noweb yes :noweb-prefix no
   (use-modules <<module>>)
 
+  <<define>>
+
   (operating-system
     <<env>>
     (bootloader <<bootloader>>)
@@ -148,6 +150,11 @@ Doas是比Sudo更简洁，也更为安全的提权工具。
 
 #+begin_src scheme :noweb-ref service
   (service doas-service-type)
+#+end_src
+
+** GPG
+#+begin_src scheme :noweb-ref package
+  gnupg
 #+end_src
 
 * Tools
