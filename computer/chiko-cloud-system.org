@@ -188,7 +188,7 @@ Doas是比Sudo更简洁，也更为安全的提权工具。
       (image "ghcr.io/rakino/misskey:latest")
       (config
         `((url . "https://littlewing.yumieko.com")
-           (port . 54493)
+           (port . 3000)
            (db
              . ((host . localhost)
                  (port . 5432)
