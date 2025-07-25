@@ -184,8 +184,7 @@ Doas是比Sudo更简洁，也更为安全的提权工具。
 *** Misskey
 #+begin_src scheme :noweb-ref service
   (service misskey-service-type
-    (misskey-configuration
-      (image "ghcr.io/rakino/misskey:latest")
+    (misskey-configuration      
       (config
         `((url . "https://littlewing.yumieko.com")
            (port . 3000)
