@@ -2,10 +2,13 @@
 (gnu system)
 (gnu packages admin)
 (gnu system privilege)
+(rosenthal)
+(nonguix transformations)
 (gnu services networking)
 (gnu services ssh)
 (chiko services doas)
-(gnu packages emacs))
+(gnu packages emacs)
+(gnu packages databases))
 
 (operating-system
   (locale "zh_CN.utf8")
