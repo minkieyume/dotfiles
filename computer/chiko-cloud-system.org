@@ -105,11 +105,17 @@
   (gnu services ssh)
 #+end_src
 
+#+begin_src scheme :noweb-ref package
+  mosh
+#+end_src
+
 配置SSH配置的服务：
 #+begin_src scheme :noweb-ref service
   (service openssh-service-type
     (openssh-configuration
-      (permit-root-login #t)
+      (openssh (spec->pkg "openssh-sans-x"))
+      (password-authentication? #f)
+      (permit-root-login #f)
       (authorized-keys
         `(("minkieyume"
             ,(local-file "../../files/keys/yumemi_rsa.pub"))))))
@@ -149,3 +155,5 @@ Doas是比Sudo更简洁，也更为安全的提权工具。
 #+begin_src scheme :noweb-ref module
   (gnu packages emacs)
 #+end_src
+
+* Service

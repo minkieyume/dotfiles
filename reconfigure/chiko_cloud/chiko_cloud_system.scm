@@ -30,7 +30,9 @@
 (service ntp-service-type)
 (service openssh-service-type
   (openssh-configuration
-    (permit-root-login #t)
+    (openssh (spec->pkg "openssh-sans-x"))
+    (password-authentication? #f)
+    (permit-root-login #f)
     (authorized-keys
       `(("minkieyume"
           ,(local-file "../../files/keys/yumemi_rsa.pub"))))))
@@ -51,5 +53,6 @@
   (type "ext4")
   (dependencies mapped-devices)) %base-file-systems))
   (packages (cons* htop
+mosh
 opendoas
 emacs %base-packages)))
