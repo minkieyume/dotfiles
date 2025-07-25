@@ -118,10 +118,6 @@
   (gnu services ssh)
 #+end_src
 
-#+begin_src scheme :noweb-ref package
-  mosh
-#+end_src
-
 配置SSH配置的服务：
 #+begin_src scheme :noweb-ref service
   (service openssh-service-type
