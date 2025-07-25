@@ -2,7 +2,7 @@
 
 * Chiko Cloud System
 琪可云的系统配置，使用 `guix system reconfigure 文件名.scm` 即可应用更改
-#+begin_src scheme :tangle ../reconfigure/chiko_cloud/chiko_cloud_system.scm :noweb yes :noweb-prefix no
+#+begin_src scheme :tangle ../reconfigure/chiko_cloud_system.scm :noweb yes :noweb-prefix no
   (use-modules <<module>>)
 
   (operating-system
@@ -124,7 +124,7 @@
       (permit-root-login #f)
       (authorized-keys
         `(("minkieyume"
-            ,(local-file "../../files/keys/yumemi_rsa.pub"))))))
+            ,(local-file "../files/keys/yumemi_rsa.pub"))))))
 #+end_src
 
 ** Doas

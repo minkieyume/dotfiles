@@ -1,7 +1,7 @@
 #+TITLE: ChikoCloud - MinkieYume
 
 * MinkieYume Home
-#+begin_src scheme :tangle ../reconfigure/chiko_cloud/chiko_cloud_minkieyume.scm :noweb yes :noweb-prefix no
+#+begin_src scheme :tangle ../reconfigure/chiko_cloud_minkieyume.scm :noweb yes :noweb-prefix no
   (use-modules <<module>>)
   
   (home-environment
@@ -45,12 +45,12 @@ Bash的基础配置。
 #+begin_src scheme :noweb-ref service 
   (simple-service 'git-config home-files-service-type
     `((".gitconfig" ,(plain-file "gitconfig"
-                       (call-with-input-file "../../file/config/gitconfig" get-string-all)))))
+                       (call-with-input-file "../file/config/gitconfig" get-string-all)))))
 #+end_src
 
 ** SSH
 #+begin_src scheme :noweb-ref service 
   (simple-service 'ssh home-files-service-type
     `((".ssh/config" ,(plain-file "ssh-config"
-                        (call-with-input-file "../../file/config/chiko_cloud/ssh-config" get-string-all)))))
+                        (call-with-input-file "../file/config/chiko_cloud/ssh-config" get-string-all)))))
 #+end_src
