@@ -39,7 +39,34 @@
     (authorized-keys
       `(("minkieyume"
           ,(local-file "../../files/keys/yumemi_rsa.pub"))))))
-(service doas-service-type) %base-services))
+(service doas-service-type)
+(service postgresql-service-type
+  (postgresql-configuration
+    (postgresql (spec->pkg "postgresql@15"))))
+(service redis-service-type)
+(service misskey-service-type
+  (misskey-configuration
+    (image "ghcr.io/rakino/misskey:latest")
+    (config
+      `((url . "https://littlewing.yumieko.com")
+         (port . 54493)
+         (db
+           . ((host . localhost)
+               (port . 5432)
+               (db . misskey)
+               (user . misskey)
+               (pass . "misskey")))
+         (dbReplications . #f)
+         (redis
+           . ((host . localhost)
+               (port . 6379)))
+         (fulltextSearch
+           . ((provider . sqlLike)))
+         (id . "aid")
+         (clusterLimit . 4)
+         (outgoingAddressFamily . dual)
+         (proxyRemoteFiles . #t)
+         (signToActivityPubGet . #t))))) %base-services))
   (mapped-devices (list (mapped-device
   (source (uuid
             "31481dcb-adb6-4939-9e3e-00816e884e0c"))
