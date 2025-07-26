@@ -157,6 +157,10 @@ Doas是比Sudo更简洁，也更为安全的提权工具。
   gnupg
 #+end_src
 
+#+begin_src scheme :noweb-ref module
+  (gnu packages gnupg)
+#+end_src
+
 * Tools
 ** Emacs
 基础的包配置
