@@ -248,4 +248,7 @@ Doas是比Sudo更简洁，也更为安全的提权工具。
   (service dbus-root-service-type)
 #+end_src
 
-
+** elogind
+#+begin_src scheme :noweb-ref service
+  (service elogind-service-type)
+#+end_src
