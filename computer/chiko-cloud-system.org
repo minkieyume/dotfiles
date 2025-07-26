@@ -59,7 +59,7 @@
 #+end_src
 
 ** 密码导入
-#+begin_src scheme :noweb-ref env
+#+begin_src scheme :noweb-ref define
   (load "nyapasu.scm")
 #+end_src
 
