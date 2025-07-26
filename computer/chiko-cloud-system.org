@@ -200,7 +200,7 @@ Doas是比Sudo更简洁，也更为安全的提权工具。
                  (port . 5432)
                  (db . misskey)
                  (user . misskey)
-                 (pass . ,(nyapasu-ref 'misskeydb)))
+                 (pass . ,(nyapasu-ref 'misskeydb))))
            (dbReplications . #f)
            (redis
              . ((host . localhost)
