@@ -148,8 +148,31 @@ Doas是比Sudo更简洁，也更为安全的提权工具。
   (chiko services doas)
 #+end_src
 
-#+begin_src scheme :noweb-ref service
-  (service doas-service-type)
+自定义doas规则：
+#+begin_src scheme :noweb-ref service :noweb-prefix no
+  (service doas-service-type
+    (doas-configuration
+      (rules
+        (list <<doas-ruleset>>))))
+#+end_src
+
+*** Doas规则
+用于给root访问guix命令的规则
+#+begin_src scheme :noweb-ref doas-ruleset
+  (doas-rule
+    (permit #t)
+    (user ":wheel")
+    (options '("persist"))
+    (as-target "root")
+    (command "guix"))
+#+end_src
+
+这是最底层的规则，应用于组的规则
+#+begin_src scheme :noweb-ref doas-ruleset
+  (doas-rule
+    (permit #t)
+    (user ":wheel")
+    (options '("persist" "keepenv")))
 #+end_src
 
 ** GPG
