@@ -194,6 +194,10 @@ Doas是比Sudo更简洁，也更为安全的提权工具。
 
 ** web
 *** Misskey
+#+begin_src scheme :noweb-ref module
+  (rosenthal services web)
+#+end_src
+
 #+begin_src scheme :noweb-ref service
   (service misskey-service-type
     (misskey-configuration      
