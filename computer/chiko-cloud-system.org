@@ -176,6 +176,7 @@ Doas是比Sudo更简洁，也更为安全的提权工具。
 * Service
 ** Database
 #+begin_src scheme :noweb-ref module
+  (gnu services databases)
   (gnu packages databases)
 #+end_src
 
