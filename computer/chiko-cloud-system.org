@@ -162,7 +162,7 @@ Doas是比Sudo更简洁，也更为安全的提权工具。
   (doas-rule
     (permit #t)
     (user ":wheel")
-    (options '("persist"
+    (options '("persist" "keepenv"
                 "setenv { HOME=/root XDG_CACHE_HOME=/root/.cache GUIX_PROFILE=/root/.config/guix/current PATH=/run/setuid-programs:/root/.config/guix/current/bin:/root/.guix-profile/bin:/run/current-system/profile/bin:/run/current-system/profile/sbin GIT_EXEC_PATH=/root/.guix-profile/libexec/git-core}"))
     (as-target "root"))
 #+end_src
