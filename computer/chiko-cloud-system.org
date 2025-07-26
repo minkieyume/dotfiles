@@ -174,17 +174,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
     (user ":wheel")
     (options '("persist"
                 "setenv { HOME=/root XDG_CACHE_HOME=/root/.cache GUIX_PROFILE=/root/.config/guix/current PATH=/run/setuid-programs:/root/.config/guix/current/bin:/root/.guix-profile/bin:/run/current-system/profile/bin:/run/current-system/profile/sbin GIT_EXEC_PATH=/root/.guix-profile/libexec/git-core}"))
-    (as-target "root")
-    (command "guix")
-    (args '("*")))
-  (doas-rule
-    (permit #t)
-    (user ":wheel")
-    (options '("persist"
-                "setenv { HOME=/root XDG_CACHE_HOME=/root/.cache GUIX_PROFILE=/root/.config/guix/current PATH=/run/setuid-programs:/root/.config/guix/current/bin:/root/.guix-profile/bin:/run/current-system/profile/bin:/run/current-system/profile/sbin GIT_EXEC_PATH=/root/.guix-profile/libexec/git-core}"))
-    (as-target "root")
-    (command "git")
-    (args '("*")))
+    (as-target "root"))
 #+end_src
 
 ** GPG
