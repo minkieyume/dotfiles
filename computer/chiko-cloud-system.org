@@ -237,3 +237,15 @@ Doas是比Sudo更简洁，也更为安全的提权工具。
     (docker-configuration
       (enable-iptables? #f)))
 #+end_src
+
+* 进程管理
+#+begin_src scheme :noweb-ref module
+  (gnu services dbus)
+#+end_src
+
+** dbus
+#+begin_src scheme :noweb-ref service
+  (service dbus-root-service-type)
+#+end_src
+
+
