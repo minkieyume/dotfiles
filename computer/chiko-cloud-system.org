@@ -255,7 +255,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
         (list
           (nginx-server-configuration
             (server-name '("littlewing.yumieko.com"))
-            (listen '("3001 ssl"))
+            (listen '("443 ssl"))
             (ssl-certificate "/etc/certs/littlewing.yumieko.com/fullchain.pem")
             (ssl-certificate-key "/etc/certs/littlewing.yumieko.com/privkey.pem")
             (locations
