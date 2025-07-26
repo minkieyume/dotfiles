@@ -240,6 +240,7 @@ Doas是比Sudo更简洁，也更为安全的提权工具。
 #+begin_src scheme :noweb-ref service
   (service nginx-service-type
     (nginx-configuration
+      (extra-content "map $http_upgrade $connection_upgrade { default upgrade; '' close; }")
       (server-blocks
         (list
           (nginx-server-configuration
