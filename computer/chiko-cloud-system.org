@@ -48,7 +48,7 @@
 #+begin_src scheme :noweb-ref module
   (gnu)
   (gnu system)
-  (gnu packages admin)
+  (gnu packages admin)  
   (gnu system privilege)
 #+end_src
 
@@ -186,7 +186,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   (gnu packages gnupg)
 #+end_src
 
-* Tools
+* 工具
 ** Emacs
 基础的包配置
 #+begin_src scheme :noweb-ref package
@@ -196,6 +196,16 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 模块配置
 #+begin_src scheme :noweb-ref module
   (gnu packages emacs)
+#+end_src
+
+** 解压
+模块配置
+#+begin_src scheme :noweb-ref module
+  (gnu packages compression)
+#+end_src
+
+#+begin_src scheme :noweb-ref package
+  unzip
 #+end_src
 
 * 数据库
