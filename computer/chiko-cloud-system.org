@@ -218,6 +218,7 @@ Doas是比Sudo更简洁，也更为安全的提权工具。
 * 网页
 #+begin_src scheme :noweb-ref module
   (gnu services web)
+  (gnu services certbot)
   (rosenthal services web)
 #+end_src
 
