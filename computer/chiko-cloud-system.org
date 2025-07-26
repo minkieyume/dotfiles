@@ -157,6 +157,7 @@ Doas是比Sudo更简洁，也更为安全的提权工具。
 #+end_src
 
 *** Doas规则
+doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上面的规则最好作为默认和根规则，而下面的规则则作为覆盖上面规则的其它额外规则。
 
 这是最基础的规则，应用于组的规则
 #+begin_src scheme :noweb-ref doas-ruleset
