@@ -29,7 +29,7 @@ Bash的基础配置。
            (home-bash-configuration
             (guix-defaults? #t)
             (bash-profile (list (plain-file "bash-profile" "\n export HISTFILE=$XDG_CACHE_HOME/.bash_history")))
-  	         (bashrc (list (plain-file "bashrc" (call-with-input-file "../../files/config/chiko_cloud/bash/bashrc" get-string-all))))))
+  	         (bashrc (list (plain-file "bashrc" (call-with-input-file "../files/config/chiko_cloud/bash/bashrc" get-string-all))))))
 #+end_src
 
 * Tools
@@ -45,12 +45,12 @@ Bash的基础配置。
 #+begin_src scheme :noweb-ref service 
   (simple-service 'git-config home-files-service-type
     `((".gitconfig" ,(plain-file "gitconfig"
-                       (call-with-input-file "../file/config/gitconfig" get-string-all)))))
+                       (call-with-input-file "../files/config/gitconfig" get-string-all)))))
 #+end_src
 
 ** SSH
 #+begin_src scheme :noweb-ref service 
   (simple-service 'ssh home-files-service-type
     `((".ssh/config" ,(plain-file "ssh-config"
-                        (call-with-input-file "../file/config/chiko_cloud/ssh-config" get-string-all)))))
+                        (call-with-input-file "../files/config/chiko_cloud/ssh-config" get-string-all)))))
 #+end_src
