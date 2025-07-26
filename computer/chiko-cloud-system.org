@@ -244,8 +244,8 @@ Doas是比Sudo更简洁，也更为安全的提权工具。
           (nginx-server-configuration
             (server-name '("littlewing.yumieko.com"))
             (listen '("3001 ssl"))
-            (ssl-certificate (letsencrypt-certificate "littlewing.yumieko.com"))
-            (ssl-certificate-key (letsencrypt-key "littlewing.yumieko.com"))
+            (ssl-certificate "/etc/certs/littlewing.yumieko.com/fullchain.pem")
+            (ssl-certificate-key "/etc/certs/littlewing.yumieko.com/privkey.pem")
             (locations
               (list
                 (nginx-location-configuration
