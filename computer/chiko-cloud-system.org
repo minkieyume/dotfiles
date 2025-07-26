@@ -240,7 +240,7 @@ Doas是比Sudo更简洁，也更为安全的提权工具。
                  (port . 6379)))
            (fulltextSearch
              . ((provider . sqlLike)))
-           (id . "aid")
+           (id . ,(nyapasu-ref 'misskeyid))
            (clusterLimit . 4)
            (outgoingAddressFamily . dual)
            (proxyRemoteFiles . #t)
