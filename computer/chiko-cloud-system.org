@@ -221,7 +221,20 @@ Doas是比Sudo更简洁，也更为安全的提权工具。
   (rosenthal services web)
 #+end_src
 
+** Certbot
+用于自动签名域名
+#+begin_src scheme :noweb-ref service
+(service certbot-service-type
+         (certbot-configuration
+          (email "sign@yumieko.com")
+          (certificates
+           (list
+            (certificate-configuration
+             (domains '("littlewing.yumieko.com")))))))
+#+end_src
+
 ** Nginx
+用于转发网页代理
 #+begin_src scheme :noweb-ref service
   (service nginx-service-type
     (nginx-configuration
