@@ -197,31 +197,60 @@ Doas是比Sudo更简洁，也更为安全的提权工具。
   (gnu packages emacs)
 #+end_src
 
-* Service
-** Database
+* 数据库
 #+begin_src scheme :noweb-ref module
   (gnu services databases)
   (gnu packages databases)
 #+end_src
 
-*** Postgresql
+** Postgresql
 #+begin_src scheme :noweb-ref service
   (service postgresql-service-type
     (postgresql-configuration
       (postgresql (spec->pkg "postgresql@15"))))
 #+end_src
 
-*** Redis
+** Redis
 #+begin_src scheme :noweb-ref service
   (service redis-service-type)
 #+end_src
 
-** web
+* 网页
 #+begin_src scheme :noweb-ref module
+  (gnu services web)
   (rosenthal services web)
 #+end_src
 
-*** Misskey
+** Nginx
+#+begin_src scheme :noweb-ref service
+  (service nginx-service-type
+    (nginx-configuration
+      (server-blocks
+        (list
+          (nginx-server-configuration
+            (server-name '("littlewing.yumieko.com"))
+            (listen '("3001 ssl"))
+            (ssl-certificate (letsencrypt-certificate "littlewing.yumieko.com"))
+            (ssl-certificate-key (letsencrypt-key "littlewing.yumieko.com"))
+            (locations
+              (list
+                (nginx-location-configuration
+                  (uri "/")
+                  (body '("proxy_pass http://127.0.0.1:3000;"
+                          "proxy_set_header Host $host;"
+                          "proxy_http_version 1.1;"
+                          "proxy_redirect off;"
+                          "proxy_set_header Host $host;"
+                          "proxy_set_header X-Real-IP $remote_addr;"
+                          "proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;"
+                          "proxy_set_header X-Forwarded-Proto $scheme;"
+                          "proxy_set_header Upgrade $http_upgrade;"
+                          "proxy_set_header Connection $connection_upgrade;"))))))))))
+#+end_src
+
+
+
+** Misskey
 #+begin_src scheme :noweb-ref service
   (service misskey-service-type
     (misskey-configuration      
