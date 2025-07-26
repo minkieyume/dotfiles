@@ -149,7 +149,7 @@ Doas是比Sudo更简洁，也更为安全的提权工具。
 #+end_src
 
 自定义doas规则：
-#+begin_src scheme :noweb-ref service :noweb-prefix no
+#+begin_src scheme :noweb-ref service :noweb yes :noweb-prefix no
   (service doas-service-type
     (doas-configuration
       (rules
