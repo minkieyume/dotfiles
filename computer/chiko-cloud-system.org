@@ -286,7 +286,8 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 ** Misskey
 #+begin_src scheme :noweb-ref service
   (service misskey-service-type
-    (misskey-configuration      
+    (misskey-configuration
+      (image "misskey/misskey:2025.6.4-alpha.3")
       (config
         `((url . "https://littlewing.yumieko.com")
            (port . 3000)
