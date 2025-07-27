@@ -287,7 +287,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+begin_src scheme :noweb-ref service
   (service misskey-service-type
     (misskey-configuration
-      (image "misskey/misskey:2025.6.3")
+      (image "misskey/misskey:latest")
       (config
         `((url . "https://littlewing.yumieko.com")
            (port . 3000)
@@ -303,7 +303,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
                  (port . 6379)))
            (fulltextSearch
              . ((provider . sqlLike)))
-           (id . ,(nyapasu-ref 'misskeyid))
+           (id . "aidx")
            (clusterLimit . 4)
            (outgoingAddressFamily . dual)
            (proxyRemoteFiles . #t)
