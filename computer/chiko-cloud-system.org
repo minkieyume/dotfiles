@@ -107,10 +107,17 @@
   (gnu services networking)
 #+end_src
 
-配置网络服务：
+*** dhcpd和ntp
 #+begin_src scheme :noweb-ref service
   (service dhcpcd-service-type)
   (service ntp-service-type)
+#+end_src
+
+*** Nftables
+#+begin_src scheme :noweb-ref service
+  (service nftables-service-type
+    (nftables-configuration
+      (ruleset (local-file (testament-plain "../files/config/chiko_cloud/nftables.conf")))))
 #+end_src
 
 ** OpenSSH
