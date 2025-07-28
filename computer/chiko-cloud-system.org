@@ -67,6 +67,7 @@
 一些基础包
 #+begin_src scheme :noweb-ref package
   htop
+  glances
 #+end_src
 
 ** Bootloader配置
