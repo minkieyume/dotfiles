@@ -1,6 +1,6 @@
 (cons* (channel
          (name 'chikochannel)
-         (url "https://github.com/minkieyume/guix-channel.git")
+         (url "https://github.com/minkieyume/chiko-guix-channel.git")
          (branch "main")
          (introduction
            (make-channel-introduction

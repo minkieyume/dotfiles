@@ -282,8 +282,6 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
                           "proxy_set_header Connection $connection_upgrade;"))))))))))
 #+end_src
 
-
-
 ** Misskey
 #+begin_src scheme :noweb-ref service
   (service misskey-service-type
@@ -310,6 +308,10 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
            (proxyRemoteFiles . #t)
            (signToActivityPubGet . #t)))))
 #+end_src
+
+* 代理
+** NetBird
+
 
 * 容器
 #+begin_src scheme :noweb-ref module
