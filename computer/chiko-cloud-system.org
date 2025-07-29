@@ -311,7 +311,13 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 
 * 代理
 ** NetBird
+#+begin_src scheme :noweb-ref module
+  (glicid services vpn)
+#+end_src
 
+#+begin_src scheme :noweb-ref service
+  (service netbird-service-type)
+#+end_src
 
 * 容器
 #+begin_src scheme :noweb-ref module
