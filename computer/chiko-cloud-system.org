@@ -66,7 +66,7 @@
 ** 基础包
 一些基础包
 #+begin_src scheme :noweb-ref package
-  htop  
+  htop  curl
 #+end_src
 
 ** 性能监视
@@ -336,8 +336,6 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
     (yggdrasil-configuration
       (autoconf? #f) ;; use only the public peers
       (json-config
-        ;; choose one from
-        ;; https://github.com/yggdrasil-network/public-peers
         '((peers . #("tls://ygg.jjolly.dev:3443"
                       "tls://yg-hkg.magicum.net:32333"))
            (listen . #("tls://0.0.0.0:1234"
