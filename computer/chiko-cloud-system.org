@@ -116,19 +116,9 @@
   (gnu services networking)
 #+end_src
 
-*** 静态网络配置
-#+begin_src scheme :noweb-ref service
-  (service static-networking-service-type
-    (list (static-networking
-            (addresses '())
-            (name-servers '("192.168.122.1" "1.1.1.1" "8.8.8.8")))))
-#+end_src
-
 *** dhcpd和ntp
 #+begin_src scheme :noweb-ref service
-  (service dhcpcd-service-type
-    (dhcpcd-configuration
-      (no-hook '("resolv.conf"))))
+  (service dhcpcd-service-type)
   (service ntp-service-type)
 #+end_src
 
