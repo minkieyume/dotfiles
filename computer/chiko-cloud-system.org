@@ -332,13 +332,15 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 
 ** Yggdrasil
 #+begin_src scheme :noweb-ref service
-  (service yggdrasil-service-type
-    (yggdrasil-configuration
-      (autoconf? #t) ;; use only the public peers
-      (json-config
-        ;; choose one from
-        ;; https://github.com/yggdrasil-network/public-peers
-        '((peers . #("tls://ygg.jjolly.dev:3443"))))))
+      (service yggdrasil-service-type
+        (yggdrasil-configuration
+          (autoconf? #f) ;; use only the public peers
+          (json-config
+            ;; choose one from
+            ;; https://github.com/yggdrasil-network/public-peers
+            '((peers . #("tls://ygg.jjolly.dev:3443"))
+              (listen . #("tls://0.0.0.0:1234"
+                          "quic://0.0.0.0:1234"))))))
 #+end_src
 
 * 容器
