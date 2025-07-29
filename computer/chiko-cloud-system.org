@@ -317,6 +317,9 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
            (signToActivityPubGet . #t)))))
 #+end_src
 
+** NetBirdManagement
+
+
 * 代理
 ** NetBird
 #+begin_src scheme :noweb-ref module
@@ -325,6 +328,21 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 
 #+begin_src scheme :noweb-ref service
   (service netbird-service-type)
+#+end_src
+
+** Yggdrasi
+#+begin_src scheme :noweb-ref module
+  ()
+#+end_src
+
+#+begin_src scheme :noweb-ref service
+  (service yggdrasil-service-type
+    (yggdrasil-configuration
+      (autoconf? #t) ;; use only the public peers
+      (json-config
+        ;; choose one from
+        ;; https://github.com/yggdrasil-network/public-peers
+        '((peers . #("tls://ygg.jjolly.dev:3443"))))))
 #+end_src
 
 * 容器
