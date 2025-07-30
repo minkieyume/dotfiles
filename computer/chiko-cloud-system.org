@@ -266,7 +266,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+begin_src scheme :noweb-ref service
   (service nginx-service-type
     (nginx-configuration
-      (extra-content "map $http_upgrade $connection_upgrade { default upgrade; '' close; }")
+      (extra-content "map $http_upgrade $connection_upgrade { default upgrade; '' close; } client_max_body_size 50M;")
       (server-blocks
         (list
           (nginx-server-configuration
@@ -332,14 +332,16 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 
 ** Yggdrasil
 #+begin_src scheme :noweb-ref service
-  (service yggdrasil-service-type
-    (yggdrasil-configuration
-      (autoconf? #f) ;; use only the public peers
-      (json-config
-        '((peers . #("tls://ygg.jjolly.dev:3443"
-                      "tls://yg-hkg.magicum.net:32333"))
-           (listen . #("tls://0.0.0.0:1234"
-                        "quic://0.0.0.0:1234"))))))
+      (service yggdrasil-service-type
+        (yggdrasil-configuration
+          (autoconf? #f) ;; use only the public peers
+          (json-config
+            '((peers . #("tls://ygg.jjolly.dev:3443"
+                          "tls://yg-hkg.magicum.net:32333"))
+               (listen . #("tls://0.0.0.0:1234"
+                           "quic://0.0.0.0:1234"
+                            "tls://[::]:1234"
+                            "quic://[::]:1234"))))))
 #+end_src
 
 * 容器
