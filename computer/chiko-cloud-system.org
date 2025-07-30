@@ -65,6 +65,10 @@
 
 ** 基础包
 一些基础包
+#+begin_src scheme :noweb-ref module
+  (gnu packages curl)
+#+end_src
+
 #+begin_src scheme :noweb-ref package
   htop curl
 #+end_src
