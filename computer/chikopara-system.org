@@ -1,7 +1,7 @@
-#+TITLE: ChikoCloud
+#+TITLE: ChikoPara
 
-* Chiko Cloud System
-琪可云的系统配置，使用 `guix system reconfigure 文件名.scm` 即可应用更改
+* Chiko Para System
+琪可的NAS配置，存储各种东西同时运行奇怪的服务。
 #+begin_src scheme :tangle ../reconfigure/chiko_cloud_system.scm :noweb yes :noweb-prefix no
   (use-modules <<module>>)
 
@@ -25,7 +25,7 @@
   (locale "zh_CN.utf8")
   (timezone "Asia/Singapore")
   (keyboard-layout (keyboard-layout "us"))
-  (host-name "chikocloud")
+  (host-name "chikopara")
 #+end_src
 
 ** VPS支持
