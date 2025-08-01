@@ -126,15 +126,6 @@
 ** 文件系统
 这是被“挂载”的文件系统列表。
 #+begin_src scheme :noweb-ref filesystems
-  (list
-    (file-system
-      (mount-point "/boot/efi")
-      (device (uuid "2BB9-C31F"
-                'fat32))
-      (type "vfat")))
-#+end_src
-
-#+begin_src scheme :noweb-ref filesystems
   (let ((options-for-subvolume
           (lambda (subvolume)
             (string-join
@@ -154,6 +145,15 @@
       '(("@System" . "/")
         ("@Data"   . "/var/lib")
         (#f        . "/mnt/sabaru"))))
+#+end_src
+
+#+begin_src scheme :noweb-ref filesystems
+  (list
+    (file-system
+      (mount-point "/boot/efi")
+      (device (uuid "2BB9-C31F"
+                'fat32))
+      (type "vfat")))
 #+end_src
 
 #+begin_src scheme :noweb-ref transformation
