@@ -6,17 +6,20 @@
   (use-modules <<module>>)
 
   <<define>>
+  (define %os
+    (operating-system
+      <<env>>
+      (bootloader <<bootloader>>)
+      (initrd-modules (cons* <<initrd-module>> %base-initrd-modules))
+      (privileged-programs (cons* <<privileged-program>> %default-privileged-programs))
+      (users (cons* <<user>> %base-user-accounts))
+      (services (cons* <<service>> %base-services))
+      (mapped-devices (list <<mapped-device>>))
+      (file-systems (append <<filesystems>> %base-file-systems))
+      (packages (cons* <<package>> %base-packages))))
 
-  (operating-system
-    <<env>>
-    (bootloader <<bootloader>>)
-    (initrd-modules (cons* <<initrd-module>> %base-initrd-modules))
-    (privileged-programs (cons* <<privileged-program>> %default-privileged-programs))
-    (users (cons* <<user>> %base-user-accounts))
-    (services (cons* <<service>> %base-services))
-    (mapped-devices (list <<mapped-device>>))
-    (file-systems (cons* <<filesystem>> %base-file-systems))
-    (packages (cons* <<package>> %base-packages)))
+  ((compose <<transformation>>)
+    %os)
 #+end_src
 
 ** 基础信息
@@ -28,9 +31,9 @@
   (host-name "chikopara")
 #+end_src
 
-** VPS支持
+** 系统模块
 #+begin_src scheme :noweb-ref initrd-module
-  "virtio_scsi"
+  "dummy"
 #+end_src
 
 ** 用户配置
@@ -57,6 +60,7 @@
   (gnu system)
   (gnu packages admin)  
   (gnu system privilege)
+  (srfi srfi-26)
 #+end_src
 
 ** 频道模块
@@ -97,34 +101,74 @@
     (keyboard-layout keyboard-layout))
 #+end_src
 
+** 内核配置
+#+begin_src scheme :noweb-ref transformation
+  (nonguix-transformation-linux)
+
+  (lambda (os)
+    (operating-system
+      (inherit os)      
+      (kernel-arguments
+        (cons* "kernel.sysrq=0"
+          "zswap.enabled=1"
+          "zswap.max_pool_percent=90"
+          "modprobe.blacklist=pcspkr"
+          (operating-system-user-kernel-arguments os)))))
+
+#+end_src
+
 ** 驱动映射
 #+begin_src scheme :noweb-ref mapped-device
-  (mapped-device
-    (source (uuid
-              "31481dcb-adb6-4939-9e3e-00816e884e0c"))
-    (target "cryptroot")
-    (type luks-device-mapping))
 #+end_src
 
 ** 文件系统
-这是被“挂载”的文件系统列表。唯一的文件系统标识符（“UUID”）可以通过在终端运行 'blkid' 获得。
-#+begin_src scheme :noweb-ref filesystem
-  (file-system
-    (mount-point "/boot/efi")
-    (device (uuid "DD36-2C2F"
-              'fat32))
-    (type "vfat"))
-  (file-system
-    (mount-point "/")
-    (device "/dev/mapper/cryptroot")
-    (type "ext4")
-    (dependencies mapped-devices))
+这是被“挂载”的文件系统列表。
+#+begin_src scheme :noweb-ref filesystems
+  (let ((options-for-subvolume
+          (lambda (subvolume)
+            (string-join
+              (list "compress=zstd"
+                (or (and=> subvolume (cut string-append "subvol=" <>))
+                  "subvolid=5"))
+              ","))))
+    (map (match-lambda
+           ((subvolume . mount-point)
+             (file-system
+               (device (file-system-label "sabaru"))
+               (mount-point mount-point)
+               (type "btrfs")
+               (options (options-for-subvolume subvolume))
+               (create-mount-point? #t)
+               (check? (string=? mount-point "/")))))
+      '(("@System" . "/")
+         ("@Data"   . "/var/lib")
+         (#f        . "/mnt/sabaru"))))
 #+end_src
+
+#+begin_src scheme :noweb-ref transformation
+  (lambda (os)
+    (operating-system
+      (inherit os)
+      (swap-devices
+        (list (swap-space
+                (target (uuid "62da8bb4-d578-40f7-be9f-f76e7d7c1a91"))
+                (discard? #t))))))
+#+end_src
+
 
 * 基础服务
 ** 网络模块
 #+begin_src scheme :noweb-ref module
   (gnu services networking)
+#+end_src
+
+*** 系统网络
+#+begin_src scheme :noweb-ref service
+  ;; https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes
+  (simple-service 'udp-buffer-size
+      sysctl-service-type
+    '(("net.core.rmem_max" . "7500000")
+      ("net.core.wmem_max" . "7500000")))
 #+end_src
 
 *** dhcpd和ntp
@@ -161,13 +205,6 @@ Doas是比Sudo更简洁，也更为安全的提权工具。
 之所以用Doas而不用Sudo，是因为Sudo通常会有一定的安全漏洞，结构也比较复杂，而Doas结构相对简单，攻击面也更少，适合不需要复杂提权配置的服务器或个人。
 #+begin_src scheme :noweb-ref package
   opendoas
-#+end_src
-
-由于自定义的doas服务默认不会更改程序掩码，Doas需要手动设置系统程序掩码。
-#+begin_src scheme :noweb-ref privileged-program
-  (privileged-program
-    (program (file-append opendoas "/bin/doas"))
-    (setuid? #t))
 #+end_src
 
 引入自定义的包定义的doas服务。
@@ -248,11 +285,6 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
       (postgresql (spec->pkg "postgresql@15"))))
 #+end_src
 
-** Redis
-#+begin_src scheme :noweb-ref service
-  (service redis-service-type)
-#+end_src
-
 * 网页
 #+begin_src scheme :noweb-ref module
   (gnu services web)
@@ -260,99 +292,19 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   (rosenthal services web)
 #+end_src
 
-** Certbot
-用于自动签名域名
-#+begin_src scheme :noweb-ref service
-(service certbot-service-type
-         (certbot-configuration
-          (email "sign@yumieko.com")
-          (certificates
-           (list
-            (certificate-configuration
-             (domains '("littlewing.yumieko.com")))))))
-#+end_src
-
-** Nginx
-用于转发网页代理
-#+begin_src scheme :noweb-ref service
-  (service nginx-service-type
-    (nginx-configuration
-      (extra-content "map $http_upgrade $connection_upgrade { default upgrade; '' close; }\nclient_max_body_size 50M;")
-      (server-blocks
-        (list
-          (nginx-server-configuration
-            (server-name '("littlewing.yumieko.com"))
-            (listen '("443 ssl"))
-            (ssl-certificate "/etc/certs/littlewing.yumieko.com/fullchain.pem")
-            (ssl-certificate-key "/etc/certs/littlewing.yumieko.com/privkey.pem")
-            (locations
-              (list
-                (nginx-location-configuration
-                  (uri "/")
-                  (body '("proxy_pass http://127.0.0.1:3000;"
-                          "proxy_set_header Host $host;"
-                          "proxy_http_version 1.1;"
-                          "proxy_redirect off;"
-                          "proxy_set_header Host $host;"
-                          "proxy_set_header X-Real-IP $remote_addr;"
-                          "proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;"
-                          "proxy_set_header X-Forwarded-Proto $scheme;"
-                          "proxy_set_header Upgrade $http_upgrade;"
-                          "proxy_set_header Connection $connection_upgrade;"))))))))))
-#+end_src
-
-** Misskey
-#+begin_src scheme :noweb-ref service
-  (service misskey-service-type
-    (misskey-configuration
-      (image "misskey/misskey:latest")
-      (config
-        `((url . "https://littlewing.yumieko.com")
-           (port . 3000)
-           (db
-             . ((host . localhost)
-                 (port . 5432)
-                 (db . misskey)
-                 (user . misskey)
-                 (pass . ,(nyapasu-ref 'misskeydb))))
-           (dbReplications . #f)
-           (redis
-             . ((host . localhost)
-                 (port . 6379)))
-           (fulltextSearch
-             . ((provider . sqlLike)))
-           (id . "aidx")
-           (clusterLimit . 4)
-           (outgoingAddressFamily . dual)
-           (proxyRemoteFiles . #t)
-           (signToActivityPubGet . #t)))))
-#+end_src
-
-** NetBirdManagement
-
-
 * 代理
-** NetBird
-#+begin_src scheme :noweb-ref module
-  (glicid services vpn)
-#+end_src
-
-#+begin_src scheme :noweb-ref service
-  (service netbird-service-type)
-#+end_src
-
 ** Yggdrasil
 #+begin_src scheme :noweb-ref service
-      (service yggdrasil-service-type
-        (yggdrasil-configuration
-          (autoconf? #f) ;; use only the public peers
-          (json-config
-            '((peers . #("tls://ygg.jjolly.dev:3443"
-                          "tls://yg-hkg.magicum.net:32333"))
-               (listen . #("tls://0.0.0.0:1234"
-                           "quic://0.0.0.0:1234"
-                            "tls://[::]:1234"
-                            "quic://[::]:1234"))))))
+  (service yggdrasil-service-type
+    (yggdrasil-configuration
+      (autoconf? #f) ;; use only the public peers
+      (json-config
+        '((peers . #("tls://yg-hkg.magicum.net:32333"
+                     "quic://yg-hkg.magicum.net:32334"))
+           (listen . #("tls://0.0.0.0:1234"
+                       "quic://0.0.0.0:1234"
+                       "tls://[::]:1234"
+                       "quic://[::]:1234"))))))
 #+end_src
 
 * 容器
