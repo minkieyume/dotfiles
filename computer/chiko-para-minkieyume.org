@@ -1,7 +1,7 @@
 #+TITLE: ChikoCloud - MinkieYume
 
 * MinkieYume Home
-#+begin_src scheme :tangle ../reconfigure/chiko_cloud_minkieyume.scm :noweb yes :noweb-prefix no
+#+begin_src scheme :tangle ../reconfigure/chiko_para_minkieyume.scm :noweb yes :noweb-prefix no
   (use-modules <<module>>)
   
   (home-environment
