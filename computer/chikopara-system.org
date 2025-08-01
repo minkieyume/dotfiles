@@ -61,6 +61,7 @@
   (gnu packages admin)  
   (gnu system privilege)
   (srfi srfi-26)
+  (ice-9 match)
 #+end_src
 
 ** 频道模块
