@@ -208,7 +208,7 @@
                (device (file-system-label "riri"))
                (mount-point mount-point)
                (type "btrfs")
-               (options (options-for-subvolume subvolume))
+               (options (string-append (options-for-subvolume subvolume) ",uid=1000,gid=998,umask=0022"))
                (create-mount-point? #t)
                (check? (string=? mount-point "/")))))
       '((#f        . "/mnt/riri"))))
