@@ -125,6 +125,7 @@
 
 ** 文件系统
 这是被“挂载”的文件系统列表。
+*** 系统盘
 #+begin_src scheme :noweb-ref filesystems
   (let ((options-for-subvolume
           (lambda (subvolume)
@@ -167,6 +168,51 @@
                 (discard? #t))))))
 #+end_src
 
+*** Nana数据盘
+#+begin_src scheme :noweb-ref filesystems
+  (let ((options-for-subvolume
+          (lambda (subvolume)
+            (string-join
+              (list "compress=zstd"
+                (or (and=> subvolume (cut string-append "subvol=" <>))
+                  "subvolid=5"))
+              ","))))
+    (map (match-lambda
+           ((subvolume . mount-point)
+             (file-system
+               (device (file-system-label "nana"))
+               (mount-point mount-point)
+               (type "btrfs")
+               (options (options-for-subvolume subvolume))
+               (create-mount-point? #t)
+               (check? (string=? mount-point "/")))))
+      '(("@Picture" . "/resource/picture")
+        ("@Music"   . "/resource/music")
+        ("@Film"   . "/resource/film")
+        ("@Book"   . "/resource/book")
+        (#f        . "/mnt/nana"))))
+#+end_src
+
+*** Riri备份盘
+#+begin_src scheme :noweb-ref filesystems
+  (let ((options-for-subvolume
+          (lambda (subvolume)
+            (string-join
+              (list "compress=zstd"
+                (or (and=> subvolume (cut string-append "subvol=" <>))
+                  "subvolid=5"))
+              ","))))
+    (map (match-lambda
+           ((subvolume . mount-point)
+             (file-system
+               (device (file-system-label "riri"))
+               (mount-point mount-point)
+               (type "btrfs")
+               (options (options-for-subvolume subvolume))
+               (create-mount-point? #t)
+               (check? (string=? mount-point "/")))))
+      '((#f        . "/mnt/riri"))))
+#+end_src
 
 * 基础服务
 ** 网络模块
@@ -212,6 +258,28 @@
             ,(local-file "../files/keys/yumemi_rsa.pub"))))))
 #+end_src
 
+** Rsync
+Rsync是简单的备份工具，可以方便在不同设备之间同步和备份数据。
+#+begin_src scheme :noweb-ref module
+  (gnu packages rsync)
+#+end_src
+
+#+begin_src scheme :noweb-ref package
+  rsync
+#+end_src
+
+* 工具
+** Emacs
+基础的包配置
+#+begin_src scheme :noweb-ref package
+  emacs
+#+end_src
+
+模块配置
+#+begin_src scheme :noweb-ref module
+  (gnu packages emacs)
+#+end_src
+
 ** Doas
 Doas是比Sudo更简洁，也更为安全的提权工具。
 之所以用Doas而不用Sudo，是因为Sudo通常会有一定的安全漏洞，结构也比较复杂，而Doas结构相对简单，攻击面也更少，适合不需要复杂提权配置的服务器或个人。
@@ -253,6 +321,9 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
     (as-target "root"))
 #+end_src
 
+
+
+
 ** GPG
 #+begin_src scheme :noweb-ref package
   gnupg
@@ -262,17 +333,6 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   (gnu packages gnupg)
 #+end_src
 
-* 工具
-** Emacs
-基础的包配置
-#+begin_src scheme :noweb-ref package
-  emacs
-#+end_src
-
-模块配置
-#+begin_src scheme :noweb-ref module
-  (gnu packages emacs)
-#+end_src
 
 ** 解压
 模块配置
