@@ -26,6 +26,14 @@
 	      (openpgp-fingerprint
 	        "2A39 3FFF 68F4 EF7A 3D29  12AF 6F51 20A0 22FB B2D5"))))
   (channel
+    (name 'guixcn)
+    (url "https://codeberg.org/guixcn/guix-channel.git")
+    (introduction
+      (make-channel-introduction
+        "993d200265630e9c408028a022f32f34acacdf29"
+        (openpgp-fingerprint
+          "7EBE A494 60CE 5E2C 0875  7FDB 3B5A A993 E1A2 DFF0"))))
+  (channel
     (name 'glicid)
     (url "https://gitlab.univ-nantes.fr/glicid-public/guix-glicid.git")
     (branch "main"))

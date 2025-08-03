@@ -189,9 +189,15 @@
       '(("@Picture" . "/resource/picture")
         ("@Music"   . "/resource/music")
         ("@Film"   . "/resource/film")
+        ("@Video" .  "/resource/video")
+        ("@Download" . "/resource/download")
+        ("@Develop" . "/resource/develop")
         ("@Book"   . "/resource/book")
+        ("@Game"   . "/resource/game")
         ("@Creator"   . "/resource/creator")
         ("@Git"   . "/resource/git")
+        ("@Res" . "/resource/res")
+        ("@Data" . "/resource/data")
         (#f        . "/mnt/nana"))))
 #+end_src
 
