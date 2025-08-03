@@ -328,19 +328,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
            (signToActivityPubGet . #t)))))
 #+end_src
 
-** NetBirdManagement
-
-
 * 代理
-** NetBird
-#+begin_src scheme :noweb-ref module
-  (glicid services vpn)
-#+end_src
-
-#+begin_src scheme :noweb-ref service
-  (service netbird-service-type)
-#+end_src
-
 ** Yggdrasil
 #+begin_src scheme :noweb-ref service
       (service yggdrasil-service-type
@@ -384,3 +372,18 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+begin_src scheme :noweb-ref service
   (service elogind-service-type)
 #+end_src
+
+* 科研
+** 医学成像
+*** X-ray
+用于X光透视人体组织的医学软件。
+#+begin_src scheme :noweb-ref module
+(guixcn packages networking)
+#+end_src
+
+#+begin_src scheme :noweb-ref package
+xray-bin
+#+end_src
+
+*** CT
+用于核磁共振成像的医学软件。
