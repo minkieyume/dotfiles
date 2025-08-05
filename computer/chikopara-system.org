@@ -271,6 +271,8 @@
 Mcron是guix用于管理计划任务的服务，类似crontab。
 #+begin_src scheme :noweb-ref module
   (gnu services mcron)
+  (gnu packages mcron)
+  (gnu schedules)
 #+end_src
 
 #+begin_src scheme :noweb-ref service :noweb yes :noweb-prefix no
