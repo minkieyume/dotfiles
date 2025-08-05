@@ -267,6 +267,15 @@
             ,(local-file "../files/keys/yumemi_rsa.pub"))))))
 #+end_src
 
+** Mcron
+Mcron是guix用于管理计划任务的服务，类似crontab。
+
+#+begin_src scheme :noweb-ref service :noweb yes :noweb-prefix no
+  (service mcron-service-type
+    (mcron-configuration
+      (jobs (list <<mcron-job>>))))
+#+end_src
+
 ** Rsync
 Rsync是简单的备份工具，可以方便在不同设备之间同步和备份数据。
 #+begin_src scheme :noweb-ref module
@@ -275,6 +284,11 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 
 #+begin_src scheme :noweb-ref package
   rsync
+#+end_src
+
+*** Rsync同步任务
+#+begin_src scheme :noweb-ref mcron-job
+  (job "0 2 * * *" "rsync -a /resource /backup/nana")
 #+end_src
 
 * 工具
