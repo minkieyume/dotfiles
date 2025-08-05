@@ -273,6 +273,7 @@ Mcron是guix用于管理计划任务的服务，类似crontab。
   (gnu services mcron)
 #+end_src
 
+mcron的服务，值得注意的是，jobs的参数必须要用quote括起来，因为里面是一个传递给mcron的(job xxxx)的表达式，这个表达式不能在guix编译时运行。
 #+begin_src scheme :noweb-ref service :noweb yes :noweb-prefix no
   (service mcron-service-type
     (mcron-configuration
