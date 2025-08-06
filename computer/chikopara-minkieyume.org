@@ -29,7 +29,7 @@ Bash的基础配置。
            (home-bash-configuration
             (guix-defaults? #t)
             (bash-profile (list (plain-file "bash-profile" "\n export HISTFILE=$XDG_CACHE_HOME/.bash_history")))
-  	         (bashrc (list (local-file "../files/config/chiko_cloud/bash/bashrc")))))
+  	         (bashrc (list (local-file "../files/config/chikopara/bash/bashrc")))))
 #+end_src
 
 * Tools
