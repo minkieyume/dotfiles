@@ -37,6 +37,6 @@
                    ("short_id"
                      . #("chikochiko"))))))))))
 
-(call-with-output-file "config.json"
+(call-with-output-file "../../../reconfigure/streamer.json"
   (lambda (port)
     (display (scm->json-string %singbox-streamer #:pretty #t) port)))
