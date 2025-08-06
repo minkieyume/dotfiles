@@ -35,7 +35,7 @@
                      ("server_port" . 443))
                    ("private_key" . ,(nyapasu-ref 'reality-private-key))
                    ("short_id"
-                     . #("chikochiko"))))))))))
+                     . #("c10a110e"))))))))))
 
 (call-with-output-file "../../../reconfigure/streamer.json"
   (lambda (port)
