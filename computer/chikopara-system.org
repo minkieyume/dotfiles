@@ -348,8 +348,12 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
     (as-target "root"))
 #+end_src
 
-
-
+*** 禁用sudo
+为了安全，最好禁用sudo，避免sudo的漏洞影响安全性。
+#+begin_src scheme :noweb-ref env
+  (sudoers-file
+    (plain-file "sudoers" "# empty sudoers file\n"))
+#+end_src
 
 ** GPG
 #+begin_src scheme :noweb-ref package
