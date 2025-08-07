@@ -57,6 +57,7 @@
   (gnu system)
   (gnu packages admin)  
   (gnu system privilege)
+  (gnu services shepherd)
 #+end_src
 
 ** 频道模块
@@ -390,4 +391,30 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 
 #+begin_src scheme :noweb-ref package
 sing-box
+#+end_src
+
+#+begin_src scheme :noweb-ref service
+  (service shepherd-root-service-type
+    (shepherd-configuration
+      (list
+        (let ((config (local-file "../reconfigure/streamer.json"))
+          (shepherd-service
+            (documentation "Run sing-box singing streamer.")
+            (provision '(sing-box))
+            (requirement '(networking))
+            (start #~(make-forkexec-constructor
+                       (list #$(file-append sing-box "/bin/sing-box")
+                         "run" "-c" #$config)
+  		                 #:user "singbox"
+                       #:pid-file "/var/run/sing-box.pid"))
+            (stop #~(const #t)))))))
+#+end_src
+
+*** 用户态
+#+begin_src scheme :noweb-ref user
+  (user-account
+    (name "sing-box")
+    (group "nogroup")
+    (system? #t)
+    (home-directory "/var/empty/"))
 #+end_src
