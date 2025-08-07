@@ -35,7 +35,9 @@
                      ("server_port" . 443))
                    ("private_key" . ,(nyapasu-ref 'reality-private-key))
                    ("short_id"
-                     . #("c10a110e"))))))))))
+                     . #("c10a110e")))))))
+       ("route"
+         ("default_domain_resolver" . "direct")))))
 
 (call-with-output-file "../../../reconfigure/streamer.json"
   (lambda (port)
