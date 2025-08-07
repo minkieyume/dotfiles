@@ -394,7 +394,8 @@ sing-box
 #+end_src
 
 #+begin_src scheme :noweb-ref service
-  (service shepherd-root-service-type    
+  (simple-service 'sing-box-service
+    shepherd-root-service-type
     (list
       (let ((config (local-file "../reconfigure/streamer.json")))
         (shepherd-service
@@ -404,7 +405,7 @@ sing-box
           (start #~(make-forkexec-constructor
                      (list #$(file-append sing-box "/bin/sing-box")
                        "run" "-c" #$config)
-  		               #:user "singbox"
+    		             #:user "singbox"
                      #:pid-file "/var/run/sing-box.pid"))
           (stop #~(const #t))))))
 #+end_src
