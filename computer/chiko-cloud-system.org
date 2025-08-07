@@ -405,8 +405,7 @@ sing-box
           (start #~(make-forkexec-constructor
                      (list #$(file-append sing-box "/bin/sing-box")
                        "run" "-c" #$config)
-    		             #:user "singbox"
-                     #:pid-file "/var/run/sing-box.pid"))
+    		             #:user "singbox"))
           (stop #~(const #t))))))
 #+end_src
 
