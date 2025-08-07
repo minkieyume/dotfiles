@@ -407,7 +407,7 @@ sing-box
                          "run" "-c" #$config)
   		                 #:user "singbox"
                        #:pid-file "/var/run/sing-box.pid"))
-            (stop #~(const #t)))))))
+            (stop #~(const #t))))))))
 #+end_src
 
 *** 用户态
