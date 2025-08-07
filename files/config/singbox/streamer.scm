@@ -19,7 +19,7 @@
        ("inbounds"
          . #((("type" . "vless")
                ("tag" . "vitural less")
-               ("listen" . "0.0.0.0")
+               ("listen" . "::")
                ("listen_port" . 7890)
                ("users"
                  . #((("name" . "chiko")
