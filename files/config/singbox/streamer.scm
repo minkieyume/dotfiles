@@ -36,7 +36,7 @@
                    ("short_id"
                      . #("c10a110e")))))))
        ("route"
-         ("default_domain_resolver" . "direct")))))
+         ("default_domain_resolver" . "8.8.8.8")))))
 
 (call-with-output-file "../../../reconfigure/streamer.json"
   (lambda (port)
