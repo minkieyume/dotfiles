@@ -12,10 +12,10 @@
        ("dns"
          ("servers"
            . #((("type" . "tls")
-                ("tag" . "DNS Proxy")
+                ("tag" . "cloudflare")
                 ("server" . "1.1.1.1"))
                (("type" . "local")
-                ("tag" . "DNS Direct")))))
+                ("tag" . "direct")))))
        ("inbounds"
          . #((("type" . "vless")
                ("tag" . "vitural less")
@@ -36,7 +36,7 @@
                    ("short_id"
                      . #("c10a110e")))))))
        ("route"
-         ("default_domain_resolver" . "8.8.8.8")))))
+         ("default_domain_resolver" . "direct")))))
 
 (call-with-output-file "../../../reconfigure/streamer.json"
   (lambda (port)
