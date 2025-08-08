@@ -12,20 +12,20 @@
              "smartdns"))
          (%direct-rules
            '((("protocol" . "bittorrent"))
-              (("rule-set" . "geosite-location-cn"))
+              (("rule_set" . "geosite-location-cn"))
               (("type" . "logical")
                 ("mode" . "and")
                 ("rules"
-                  . #((("rule-set" . "geosite-location-!cn")
+                  . #((("rule_set" . "geosite-location-!cn")
                         ("invert" . #t))
-                       (("rule-set" . "geoip-cn"))))))))
+                       (("rule_set" . "geoip-cn"))))))))
     `(("log"
         ("level" . "warn")
         ("output" . "singbox.log"))
        ("dns"
          ("servers"
            . #((("type" . "tls")
-                 ("tag" . "DNS Proxy")
+                 ("tag" . "dns_proxy")
                  ("server" . "1.1.1.1"))
                 (("type" . "local")
                   ("tag" . "dns_direct")))))
@@ -44,13 +44,16 @@
                ("flow" . "xtls-rprx-vision")
                ("tls"
                  ("enabled" . #t)
+                 ("utls"
+                   ("enabled" . #t)
+                   ("fingerprint" . "firefox"))
                  ("reality"
                    ("enabled" . #t)
                    ("public_key" . ,(nyapasu-ref 'reality-pubic-key))
                    ("short_id"  . "c10a110e"))))
               (("type" . "direct")
                 ("tag" . "out_direct")
-                ("doamin_resolver" . "dns_direct"))
+                ("domain_resolver" . "dns_direct"))
               (("type" . "block")
                 ("tag" . "block"))))
        ("route"
@@ -77,7 +80,7 @@
                     ("tag" . "geoip-cn")
                     ("url" . "https://raw.githubusercontent.com/SagerNet/sing-geoip/refs/heads/rule-set/geoip-cn.srs"))))
            ("final" . "vless_out")
-           ("default_domain_resolver" . "dns_direct")))))
+           ("default_domain_resolver" . "dns_proxy")))))
 
 (call-with-output-file "../../../reconfigure/listener.json"
   (lambda (port)
