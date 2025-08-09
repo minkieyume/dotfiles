@@ -13,6 +13,11 @@
          (%direct-rules
            '((("protocol" . "bittorrent"))
               (("rule_set" . "geosite-location-cn"))
+              (("domain_suffix"
+                 . #("yumieko.com"
+                     "frp-add.com"
+                     "frp-pet.com"
+                     "frp-fit.com")))
               (("type" . "logical")
                 ("mode" . "and")
                 ("rules"
