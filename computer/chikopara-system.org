@@ -471,6 +471,10 @@ sing-box
 
 
 * 网盘
+#+begin_src scheme :noweb-ref module
+(gnu services nfs)
+#+end_src
+
 #+begin_src scheme :noweb-ref service
   (service nfs-service-type
     (exports
