@@ -439,3 +439,33 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+begin_src scheme :noweb-ref service
   (service elogind-service-type)
 #+end_src
+
+* 网盘
+#+begin_src scheme :noweb-ref service
+  (service nfs-service-type
+    (exports
+      '(("/mnt/nana"
+          "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt,fsid=0)")
+         ("/resource/picture"
+           "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt)")
+         ("/resource/music"
+           "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt)")
+         ("/resource/film"
+           "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt)")
+         ("/resource/video"
+           "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt)")
+         ("/resource/download"
+           "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt)")
+         ("/resource/develop"
+           "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt)")
+         ("/resource/book"
+           "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt)")
+         ("/resource/game"
+           "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt)")
+         ("/resource/creator"
+           "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt)")
+         ("/resource/git"
+           "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt)")
+         ("/resource/data"
+           "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt)"))))
+#+end_src
