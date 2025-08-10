@@ -406,7 +406,6 @@ sing-box
                      (list #$(file-append sing-box "/bin/sing-box")
                        "run" "-c" #$config)
                              #:log-file "/var/log/sing-box.log"
-                             #:respawn? #t
     		             #:user "singbox"))
           (stop #~(const #t))))))
 #+end_src
