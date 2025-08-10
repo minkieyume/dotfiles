@@ -440,6 +440,36 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   (service elogind-service-type)
 #+end_src
 
+* 音乐创作
+** SingBox
+八音盒软件
+#+begin_src scheme :noweb-ref module
+(rosenthal packages networking)
+#+end_src
+
+#+begin_src scheme :noweb-ref package
+sing-box
+#+end_src
+
+#+begin_src scheme :noweb-ref service
+  (simple-service 'sing-box-service
+    shepherd-root-service-type
+    (list
+      (let ((config (local-file "../reconfigure/listener.json")))
+        (shepherd-service
+          (documentation "Run sing-box singing streamer.")
+          (provision '(sing-box))
+          (requirement '(networking))
+          (start #~(make-forkexec-constructor
+                     (list #$(file-append sing-box "/bin/sing-box")
+                       "run" "-c" #$config)
+                             #:log-file "/var/log/sing-box.log"
+                             #:respawn? #t
+    		             #:user "singbox"))
+          (stop #~(const #t))))))
+#+end_src
+
+
 * 网盘
 #+begin_src scheme :noweb-ref service
   (service nfs-service-type
