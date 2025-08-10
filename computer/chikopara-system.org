@@ -478,7 +478,7 @@ sing-box
   (service nfs-service-type
     (nfs-configuration
       (exports
-        '(("/mnt/nana"
+        '(("/resource"
             "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt,fsid=0)")
            ("/resource/picture"
              "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt)")
