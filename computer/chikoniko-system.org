@@ -546,6 +546,7 @@ sing-box
 
 config-file
 #+begin_src scheme :noweb-ref define
+  (load "../files/config/singbox/listener.scm")
   (define %sing-box-config-file
     (computed-file "sing-box.json"
       (with-extensions (map specification->package '("guile-json@4"))
