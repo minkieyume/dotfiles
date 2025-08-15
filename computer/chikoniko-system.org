@@ -551,7 +551,7 @@ config-file
     (computed-file "sing-box.json"
       (with-extensions (map specification->package '("guile-json@4"))
         #~(begin
-            (output-singbox-listener)))))
+            (output-singbox-listener #$output)))))
 #+end_src
 
 #+begin_src scheme :noweb-ref service
