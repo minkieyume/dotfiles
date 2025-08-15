@@ -19,6 +19,25 @@
     (packages (cons* <<package>> %base-packages)))
 #+end_src
 
+* Chiko Cloud Home
+#+begin_src scheme :noweb yes :noweb-ref service :noweb-prefix no
+  (service guix-home-service-type
+    `(("minkieyume" ,(home-environment
+                 (services (cons* <<home-service>> %rosenthal-desktop-home-services))))))
+#+end_src
+
+#+begin_src scheme :noweb yes :noweb-ref home-service
+  (service home-dotfiles-service-type
+    (home-dotfiles-configuration
+      (directories '("../files/dotfiles"))))
+#+end_src
+
+#+begin_src scheme :noweb yes :noweb-ref home-service :noweb-prefix no
+  (simple-service 'extra-environment-variables
+      home-environment-variables-service-type
+    `(<<home-environment-variable>>))
+#+end_src
+
 ** 基础信息
 本地化、时区、键盘布局、主机名
 #+begin_src scheme :noweb-ref env
@@ -242,6 +261,15 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 
 #+begin_src scheme :noweb-ref package
   unzip
+#+end_src
+
+** Git
+#+begin_src scheme :noweb-ref module
+  (gnu packages version-control)
+#+end_src
+
+#+begin_src scheme :noweb-ref package
+  git
 #+end_src
 
 * 数据库

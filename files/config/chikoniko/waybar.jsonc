@@ -1,0 +1,83 @@
+{
+    "layer": "normal",
+    // Using margin-bottom with a negative value in order to reduce the space between Hyprland window and waybar
+    "margin-bottom": -10,
+    "margin-top": 10,
+    "modules-left": ["cpu","memory", "network","tray"],
+    "modules-center": ["hyprland/workspaces"],
+    "modules-right": ["backlight","wireplumber","clock", "battery"],
+    "wireplumber": {
+	"tooltip": false,
+	"scroll-step": 5,
+	"format": "{icon} {volume}%",
+	"format-muted": "静音模式",
+	"on-click": "$$bin/wpctl$$ set-mute @DEFAULT_AUDIO_SINK@ toggle",
+        "on-click-right": "flatpak run com.saivert.pwvucontrol",
+	
+	"format-icons": {
+	    "default": ["", "", ""]
+	}
+    },
+    "network": {
+	// "interface": "wlp2*", // (Optional) To force the use of this interface
+	"format-wifi": "",
+	"format-ethernet": "",
+	"tooltip-format": "{essid} ({signalStrength}%)",
+	"format-linked": "{ifname} (No IP) ",
+	"format-disconnected": "⚠",
+	"format-alt": "{ifname}: {ipaddr}/{cidr}"
+    },
+    "backlight": {
+        "on-scroll-down": "$$bin/light$$ -U 5",
+        "on-scroll-up": "$$bin/light$$ -A 5",
+        "format": "{icon} {percent}%",
+        "format-icons": ["\uF186", "\uF0EB"],
+        "tooltip": false,
+    },
+    "battery": {
+        "states": {
+            "good": 95,
+            "warning": 30,
+            "critical": 20
+        },
+        "format": "{icon}  {capacity}%",
+        "format-charging": " {capacity}%",
+        "format-plugged": " {capacity}%",
+        "format-alt": "{time} {icon}",
+        "format-icons": ["", "", "", "", ""]
+    },
+    "tray":{
+	"icon-size":18,
+	"spacing": 10,
+	"hidden_by_default":false,
+	"hidden":["blueman-tray","blueman","blueman-manager","blueman-applet"]
+    },
+    "clock": {
+        "format": " {:%I:%M %p}",
+	"tooltip-format": "{:%Y年%m月%d日 %I:%M %p}"
+    },
+    "cpu": {
+        "interval": 15,
+        "format": " {}%",
+        "max-length": 10
+    },
+    "memory": {
+        "interval": 30,
+        "format": " {}%",
+        "max-length": 10
+    },
+    "bluetooth": {
+	"format": "{icon}",
+	"format-icons": {
+	    "enabled": "",
+	    "disabled": "!"},
+	"on-click": "blueman-manager"
+    },
+    // The code following below is given in the great documentation for Waybar status bar under Useful Utilities in Hyprland wiki
+    "hyrpland/workspaces": {
+    	"format": "{icon}",
+	"on-scroll-up": "hyprctl dispatch workspace e+1",
+	"on-scroll-down": "hyprctl dispatch workspace e-1",
+	"on-click": "activate"
+    }
+}

@@ -9,7 +9,8 @@
              "wineserver"
              "syncthing"
              "yggdrasil"
-             "smartdns"))
+             "smartdns"
+             "PHOGS.exe"))
          (%direct-rules
            '((("protocol" . "bittorrent"))
               (("rule_set" . "geosite-location-cn"))

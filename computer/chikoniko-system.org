@@ -1,7 +1,7 @@
 #+TITLE: ChikoPara
 
-* Chiko Para System
-琪可的NAS配置，存储各种东西同时运行奇怪的服务。
+* Chiko Niko System
+琪可的笔记本配置。
 #+begin_src scheme :tangle ../reconfigure/chikopara_system.scm :noweb yes :noweb-prefix no
   (use-modules <<module>>)
 
@@ -28,7 +28,7 @@
   (locale "zh_CN.utf8")
   (timezone "Asia/Singapore")
   (keyboard-layout (keyboard-layout "us"))
-  (host-name "chikopara")
+  (host-name "chikoniko")
 #+end_src
 
 ** 系统模块
@@ -63,6 +63,8 @@
   (srfi srfi-26)
   (ice-9 match)
   (gnu services sysctl)
+  (gnu home services dotfiles)
+  (gnu home services shells)
 #+end_src
 
 ** 频道模块
@@ -73,7 +75,7 @@
 
 ** 密码导入
 #+begin_src scheme :noweb-ref define
-  (load "nyapasu.scm")
+  (load "../secret/nyapasu.scm")
 #+end_src
 
 ** 基础包
@@ -111,7 +113,7 @@
     (operating-system
       (inherit os)      
       (kernel-arguments
-        (cons* "kernel.sysrq=0"
+        (cons* "kernel.sysrq=1"
           "zswap.enabled=1"
           "zswap.max_pool_percent=90"
           "modprobe.blacklist=pcspkr"
@@ -168,62 +170,8 @@
                 (discard? #t))))))
 #+end_src
 
-*** Nana数据盘
-#+begin_src scheme :noweb-ref filesystems
-  (let ((options-for-subvolume
-          (lambda (subvolume)
-            (string-join
-              (list "compress=zstd"
-                (or (and=> subvolume (cut string-append "subvol=" <>))
-                  "subvolid=5"))
-              ","))))
-    (map (match-lambda
-           ((subvolume . mount-point)
-             (file-system
-               (device (file-system-label "nana"))
-               (mount-point mount-point)
-               (type "btrfs")
-               (options (string-append (options-for-subvolume subvolume)))
-               (create-mount-point? #t)
-               (check? (string=? mount-point "/")))))
-      '(("@Picture" . "/resource/picture")
-        ("@Music"   . "/resource/music")
-        ("@Film"   . "/resource/film")
-        ("@Video" .  "/resource/video")
-        ("@Download" . "/resource/download")
-        ("@Develop" . "/resource/develop")
-        ("@Book"   . "/resource/book")
-        ("@Game"   . "/resource/game")
-        ("@Creator"   . "/resource/creator")
-        ("@Git"   . "/resource/git")
-        ("@Res" . "/resource/res")
-        ("@Data" . "/resource/data")
-        (#f        . "/mnt/nana"))))
-#+end_src
 
-*** Riri备份盘
-#+begin_src scheme :noweb-ref filesystems
-    (let ((options-for-subvolume
-            (lambda (subvolume)
-              (string-join
-                (list "compress=zstd"
-                  (or (and=> subvolume (cut string-append "subvol=" <>))
-                    "subvolid=5"))
-                ","))))
-      (map (match-lambda
-             ((subvolume . mount-point)
-               (file-system
-                 (device (file-system-label "riri"))
-                 (mount-point mount-point)
-                 (type "btrfs")
-                 (options (string-append (options-for-subvolume subvolume)))
-                 (create-mount-point? #t)
-                 (check? (string=? mount-point "/")))))
-        '(("@NanaBackup" . "/backup/nana")
-          (#f        . "/mnt/riri"))))
-#+end_src
-
-* Chiko Para Home
+* Chiko Niko Home
 #+begin_src scheme :noweb yes :noweb-ref service :noweb-prefix no
   (service guix-home-service-type
     `(("minkieyume" ,(home-environment
@@ -241,6 +189,7 @@
       home-environment-variables-service-type
     `(<<home-environment-variable>>))
 #+end_src
+
 
 * 基础服务
 ** 网络模块
@@ -297,21 +246,6 @@ mcron的服务，值得注意的是，jobs的参数必须要用quote括起来，
   (service mcron-service-type
     (mcron-configuration
       (jobs '(<<mcron-job>>))))
-#+end_src
-
-** Rsync
-Rsync是简单的备份工具，可以方便在不同设备之间同步和备份数据。
-#+begin_src scheme :noweb-ref module
-  (gnu packages rsync)
-#+end_src
-
-#+begin_src scheme :noweb-ref package
-  rsync
-#+end_src
-
-*** Rsync同步任务
-#+begin_src scheme :noweb-ref mcron-job
-  (job "0 2 * * *" "rsync -a /resource /backup/nana")
 #+end_src
 
 * 工具
@@ -390,8 +324,17 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 
 #+begin_src scheme :noweb-ref module
   (gnu packages gnupg)
+  (gnu home services gnupg)
 #+end_src
 
+#+begin_src scheme :noweb-ref service
+  (service home-gpg-agent-service-type
+    (home-gpg-agent-configuration
+      (pinentry-program
+        (file-append (spec->pkg "pinentry-emacs") "/bin/pinentry-emacs"))
+      (ssh-support? #t)
+      (extra-content "allow-loopback-pinentry")))
+#+end_src
 
 ** 解压
 模块配置
@@ -401,26 +344,6 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 
 #+begin_src scheme :noweb-ref package
   unzip
-#+end_src
-
-* 数据库
-#+begin_src scheme :noweb-ref module
-  (gnu services databases)
-  (gnu packages databases)
-#+end_src
-
-** Postgresql
-#+begin_src scheme :noweb-ref service
-  (service postgresql-service-type
-    (postgresql-configuration
-      (postgresql (spec->pkg "postgresql@15"))))
-#+end_src
-
-* 网页
-#+begin_src scheme :noweb-ref module
-  (gnu services web)
-  (gnu services certbot)
-  (rosenthal services web)
 #+end_src
 
 * 代理
@@ -468,6 +391,66 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   (service elogind-service-type)
 #+end_src
 
+* 桌面环境
+** Wayland
+*** niri
+#+begin_src scheme :noweb-ref package
+  niri
+  wl-clipboard
+  imv
+  foot
+  light
+  swaylock-effects
+  wireplumber
+  xwayland-satellite
+#+end_src
+
+#+begin_src scheme :noweb-ref home-service
+  (service home-niri-service-type
+    (home-niri-configuration
+      (config
+        (computed-substitution-with-inputs "niri.kdl"
+          (local-file "../files/config/chikoniko/niri.kdl")
+          (specs->pkgs "foot"
+            "light"
+            "swaylock-effects"
+            "wireplumber"
+            "xwayland-satellite")))))
+#+end_src
+
+*** xdg-desktop-portal
+#+begin_src scheme :noweb-ref package
+  xdg-desktop-portal
+  xdg-desktop-portal-gnome
+  xdg-desktop-portal-gtk
+#+end_src
+
+*** waybar
+#+begin_src scheme :noweb-ref home-service
+  (service home-waybar-service-type
+    (home-waybar-configuration
+      (config
+        (computed-substitution-with-inputs "config.jsonc"
+          (local-file "../files/config/chikoniko/waybar.jsonc")
+          (specs->pkgs "light" "wireplumber")))
+      (style
+        (local-file "../files/config/chikoniko/waybar.css"))))
+#+end_src
+
+*** swaybg
+#+begin_src scheme :noweb-ref home-service
+  (service home-swaybg-service-type
+    (home-swaybg-configuration
+      (background (local-file "../secret/wallpapers/wp3283230-oneshot-wallpapers.jpg"))))
+#+end_src
+
+*** mako
+#+begin_src scheme :noweb-ref home-service
+  (service home-mako-service-type
+    (home-mako-configuration
+      (config (local-file "../files/config/chikoniko/mako.conf"))))
+#+end_src
+
 * 音乐创作
 ** SingBox
 八音盒软件
@@ -502,40 +485,4 @@ sing-box
     (group "nogroup")
     (system? #t)
     (home-directory "/var/empty/"))
-#+end_src
-
-
-* 网盘
-#+begin_src scheme :noweb-ref module
-(gnu services nfs)
-#+end_src
-
-#+begin_src scheme :noweb-ref service
-  (service nfs-service-type
-    (nfs-configuration
-      (exports
-        '(("/resource"
-            "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt,fsid=0)")
-           ("/resource/picture"
-             "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt)")
-           ("/resource/music"
-             "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt)")
-           ("/resource/film"
-             "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt)")
-           ("/resource/video"
-             "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt)")
-           ("/resource/download"
-             "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt)")
-           ("/resource/develop"
-             "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt)")
-           ("/resource/book"
-             "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt)")
-           ("/resource/game"
-             "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt)")
-           ("/resource/creator"
-             "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt)")
-           ("/resource/git"
-             "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt)")
-           ("/resource/data"
-             "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt)")))))
 #+end_src
