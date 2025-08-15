@@ -63,6 +63,8 @@
   (srfi srfi-26)
   (ice-9 match)
   (gnu services sysctl)
+  (gnu home services dotfiles)
+  (gnu home services shells)
 #+end_src
 
 ** 频道模块
