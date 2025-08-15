@@ -73,7 +73,7 @@
 
 ** 密码导入
 #+begin_src scheme :noweb-ref define
-  (load "nyapasu.scm")
+  (load "../secret/nyapasu.scm")
 #+end_src
 
 ** 基础包
@@ -504,8 +504,8 @@ sing-box
     (home-directory "/var/empty/"))
 #+end_src
 
-
-* 网盘
+ 网盘
+** NFS
 #+begin_src scheme :noweb-ref module
 (gnu services nfs)
 #+end_src
@@ -538,4 +538,9 @@ sing-box
              "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt)")
            ("/resource/data"
              "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt)")))))
+#+end_src
+
+** Navidrome
+#+begin_src scheme :noweb-ref service
+  (service navidrome-service-type)
 #+end_src
