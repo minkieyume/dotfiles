@@ -181,7 +181,7 @@
 #+begin_src scheme :noweb yes :noweb-ref home-service
   (service home-dotfiles-service-type
     (home-dotfiles-configuration
-      (directories '("../files/dotfiles"))))
+      (directories '("../files/config/dotfiles"))))
 #+end_src
 
 #+begin_src scheme :noweb yes :noweb-ref home-service :noweb-prefix no
@@ -544,13 +544,22 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 sing-box
 #+end_src
 
+config-file
+#+begin_src scheme :noweb-ref define
+  (define %sing-box-config-file
+    (computed-file "sing-box.json"
+      (with-extensions (map specification->package '("guile-json@4"))
+        #~(begin
+            (output-singbox-listener)))))
+#+end_src
+
 #+begin_src scheme :noweb-ref service
   (simple-service 'sing-box-service
     shepherd-root-service-type
     (list
-      (let ((config (local-file "../reconfigure/listener.json")))
+      (let ((config %sing-box-config-file))
         (shepherd-service
-          (documentation "Run sing-box singing streamer.")
+          (documentation "Run sing-box singing listener.")
           (provision '(sing-box))
           (requirement '(networking))
           (start #~(make-forkexec-constructor
@@ -560,6 +569,7 @@ sing-box
     		             #:user "singbox"))
           (stop #~(const #t))))))
 #+end_src
+
 *** 用户态
 #+begin_src scheme :noweb-ref user
   (user-account

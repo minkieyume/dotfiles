@@ -235,7 +235,7 @@
 #+begin_src scheme :noweb yes :noweb-ref home-service
   (service home-dotfiles-service-type
     (home-dotfiles-configuration
-      (directories '("../files/dotfiles"))))
+      (directories '("../files/config/dotfiles"))))
 #+end_src
 
 #+begin_src scheme :noweb yes :noweb-ref home-service :noweb-prefix no
@@ -506,6 +506,7 @@ config-file
     		             #:user "singbox"))
           (stop #~(const #t))))))
 #+end_src
+
 *** 用户态
 #+begin_src scheme :noweb-ref user
   (user-account
