@@ -1,5 +1,4 @@
 (use-modules (json))
-(load "../../../reconfigure/nyapasu.scm")
 
 (define %singbox-listener
   (let ((%direct-process
@@ -89,6 +88,7 @@
            ("final" . "vless_out")
            ("default_domain_resolver" . "dns_proxy")))))
 
-(call-with-output-file "../../../reconfigure/listener.json"
-  (lambda (port)
-    (display (scm->json-string %singbox-listener #:pretty #t) port)))
+(define (output-singbox-listener file-name)
+  (call-with-output-file file-name
+    (lambda (port)
+      (display (scm->json-string %singbox-listener #:pretty #t) port))))

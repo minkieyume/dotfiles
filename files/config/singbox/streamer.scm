@@ -1,5 +1,4 @@
 (use-modules (json))
-(load "../../../reconfigure/nyapasu.scm")
 
 (define %singbox-streamer
   (let ((direct-process
@@ -38,6 +37,7 @@
        ("route"
          ("default_domain_resolver" . "direct")))))
 
-(call-with-output-file "../../../reconfigure/streamer.json"
-  (lambda (port)
-    (display (scm->json-string %singbox-streamer #:pretty #t) port)))
+(define (output-singbox-streamer file-name)
+  (call-with-output-file file-name
+    (lambda (port)
+      (display (scm->json-string %singbox-streamer #:pretty #t) port))))
