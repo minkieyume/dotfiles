@@ -483,7 +483,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 sing-box
 #+end_src
 
-config-file
+*** 配置导入
 #+begin_src scheme :noweb-ref define
   (define %sing-box-listener
     (local-file "../files/config/singbox/listener.scm"))
@@ -496,6 +496,14 @@ config-file
             (output-singbox-listener #$output)))))
 #+end_src
 
+*** 权限
+#+begin_src scheme :noweb-ref privileged-program
+  (privileged-program
+    (program (file-append sing-box "/bin/sing-box"))
+    (capabilities "cap_net_admin,cap_net_raw+ep"))
+#+end_src
+
+*** 服务
 #+begin_src scheme :noweb-ref service
   (simple-service 'sing-box-service
     shepherd-root-service-type
@@ -523,7 +531,7 @@ config-file
     (home-directory "/var/empty/"))
 #+end_src
 
- 网盘
+* 网盘
 ** NFS
 #+begin_src scheme :noweb-ref module
 (gnu services nfs)
