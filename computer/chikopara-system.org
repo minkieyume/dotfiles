@@ -491,6 +491,7 @@ config-file
     (computed-file "sing-box.json"
       (with-extensions (map specification->package '("guile-json@4"))
         #~(begin
+            (primitive-load #nyapasu)
             (primitive-load #$%sing-box-listener)
             (output-singbox-listener #$output)))))
 #+end_src
