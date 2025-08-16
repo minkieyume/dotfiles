@@ -75,7 +75,7 @@
 
 ** 密码导入
 #+begin_src scheme :noweb-ref define
-  (define nyapasu
+  (define %nyapasu-script
     (local-file "../secret/nyapasu.scm"))
   (load "../secret/nyapasu.scm")
 #+end_src
@@ -491,7 +491,7 @@ config-file
     (computed-file "sing-box.json"
       (with-extensions (map specification->package '("guile-json@4"))
         #~(begin
-            (primitive-load #$nyapasu)
+            (primitive-load #$%nyapasu-script)
             (primitive-load #$%sing-box-listener)
             (output-singbox-listener #$output)))))
 #+end_src
