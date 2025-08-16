@@ -488,6 +488,8 @@ config-file
       (computed-file "sing-box.json"
         (with-extensions (map specification->package '("guile-json@4"))
           #~(begin
+              (load "../secret/nyapasu.scm")
+              (load "../files/config/singbox/listener.scm")
               (output-singbox-listener #$output)))))
 #+end_src
 
