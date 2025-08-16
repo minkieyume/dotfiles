@@ -38,8 +38,7 @@
          . #((("type". "mixed")
                ("tag" . "mixed-in")
                ("listen" . "::")
-               ("listen_port" . 7890)
-               ("set_system_proxy" . #t))))
+               ("listen_port" . 7890))))
        ("outbounds"
          . #((("type" . "vless")
                ("tag" . "vless_out")
