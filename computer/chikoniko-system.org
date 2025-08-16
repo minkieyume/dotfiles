@@ -75,6 +75,8 @@
 
 ** 密码导入
 #+begin_src scheme :noweb-ref define
+  (define %nyapasu-script
+    (local-file "../secret/nyapasu.scm"))
   (load "../secret/nyapasu.scm")
 #+end_src
 
@@ -201,9 +203,13 @@
 #+begin_src scheme :noweb-ref service
   ;; https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes
   (simple-service 'udp-buffer-size
-      sysctl-service-type
+    sysctl-service-type
     '(("net.core.rmem_max" . "7500000")
-      ("net.core.wmem_max" . "7500000")))
+       ("net.core.wmem_max" . "7500000")))
+  (simple-service 'ip-forward
+    sysctl-service-type
+    '(("net.ipv4.ip_forward" . "1")
+       ("net.ipv6.conf.all.forwarding" . "1")))
 #+end_src
 
 *** dhcpd和ntp
@@ -544,16 +550,27 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 sing-box
 #+end_src
 
-config-file
+*** 配置导入
 #+begin_src scheme :noweb-ref define
-  (load "../files/config/singbox/listener.scm")
+  (define %sing-box-listener
+    (local-file "../files/config/singbox/listener.scm"))
   (define %sing-box-config-file
     (computed-file "sing-box.json"
       (with-extensions (map specification->package '("guile-json@4"))
         #~(begin
+            (primitive-load #$%nyapasu-script)
+            (primitive-load #$%sing-box-listener)
             (output-singbox-listener #$output)))))
 #+end_src
 
+*** 权限
+#+begin_src scheme :noweb-ref privileged-program
+  (privileged-program
+    (program (file-append sing-box "/bin/sing-box"))
+    (capabilities "cap_net_admin,cap_net_raw+ep"))
+#+end_src
+
+*** 服务
 #+begin_src scheme :noweb-ref service
   (simple-service 'sing-box-service
     shepherd-root-service-type
@@ -567,6 +584,7 @@ config-file
                      (list #$(file-append sing-box "/bin/sing-box")
                        "run" "-c" #$config)
                              #:log-file "/var/log/sing-box.log"
+                             #:supplementary-groups '("netdev")
     		             #:user "singbox"))
           (stop #~(const #t))))))
 #+end_src
