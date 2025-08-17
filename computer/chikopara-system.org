@@ -591,10 +591,10 @@ sing-box
 
 ** Navidrome
 #+begin_src scheme :noweb-ref service
-        (service navidrome-service-type
-          (navidrome-configuration
-            (extra-config (string-append "LogLevel = 'DEBUG'\n"
-                                         "Scanner.Schedule = '@every 24h'\n"
-    			                 "TranscodingCacheSize = '150MiB'\n"
-                                         "MusicFolder = '/resource/music/musics'"))))
+  (service navidrome-service-type
+    (navidrome-configuration
+      (extra-config (string-append "LogLevel = 'DEBUG'\n"
+                      "Scanner.Schedule = '@every 24h'\n"
+  		                "TranscodingCacheSize = '150MiB'\n"
+                      "MusicFolder = '/resource/music/musics'"))))
 #+end_src
