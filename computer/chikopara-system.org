@@ -113,7 +113,7 @@
 
   (lambda (os)
     (operating-system
-      (inherit os)      
+      (inherit os)
       (kernel-arguments
         (cons* "kernel.sysrq=0"
           "zswap.enabled=1"
@@ -389,12 +389,6 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+begin_src scheme :noweb-ref env
   (sudoers-file
     (plain-file "sudoers" "# empty sudoers file\n"))
-#+end_src
-
-#+begin_src scheme :noweb-ref privileged-program
-  (privileged-program
-    (program (file-append sudo "/bin/sudo"))
-    (setuid? #f))
 #+end_src
 
 ** GPG
