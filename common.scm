@@ -9,5 +9,5 @@
   (nonguix transformations)
   (rosenthal))
 
-(define (chiko-path rel-path)  
+(define-syntax-rule (chiko-path rel-path)
   (string-append (dirname (current-filename)) "/" rel-path))
