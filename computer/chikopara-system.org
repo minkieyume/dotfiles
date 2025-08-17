@@ -391,6 +391,12 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
     (plain-file "sudoers" "# empty sudoers file\n"))
 #+end_src
 
+#+begin_src scheme :noweb-ref privileged-program
+  (privileged-program
+    (program (file-append sudo "/bin/sudo"))
+    (setuid? #f))
+#+end_src
+
 ** GPG
 #+begin_src scheme :noweb-ref package
   gnupg
