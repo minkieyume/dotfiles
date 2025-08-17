@@ -39,6 +39,8 @@
                ("listen" . "::")
                ("listen_port" . 7890))
               (("type" . "tproxy")
+               ("listen" . "::")
+               ("listen_port" . 7891)
                ("tag" . "tproxy-in"))))
        ("outbounds"
          . #((("type" . "vless")
