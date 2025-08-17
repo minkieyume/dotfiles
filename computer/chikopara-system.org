@@ -592,5 +592,5 @@ sing-box
 #+begin_src scheme :noweb-ref service
   (service navidrome-service-type
     (navidrome-configuration
-      (extra-config (file-content "../files/config/navidrome.toml"))))
+      (extra-config (file-content #$(local-file "../files/config/navidrome.toml")))))
 #+end_src
