@@ -9,3 +9,6 @@
   (nonguix transformations)
   (rosenthal))
 
+(define (chiko-path rel-path)
+  (file-contents
+    (string-append (dirname (current-filename)) "/" rel-path)))

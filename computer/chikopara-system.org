@@ -3,6 +3,7 @@
 * Chiko Para System
 琪可的NAS配置，存储各种东西同时运行奇怪的服务。
 #+begin_src scheme :tangle ../reconfigure/chikopara_system.scm :noweb yes :noweb-prefix no
+  (load ../common.scm)
   (use-modules <<module>>)
 
   <<define>>
@@ -592,5 +593,5 @@ sing-box
 #+begin_src scheme :noweb-ref service
   (service navidrome-service-type
     (navidrome-configuration
-      (extra-config (file-content #$(local-file "../files/config/navidrome.toml")))))
+      (extra-config (file-content (chiko-path "../files/config/navidrome.toml")))))
 #+end_src
