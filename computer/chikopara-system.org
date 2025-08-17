@@ -518,7 +518,7 @@ sing-box
           (provision '(sing-box))
           (requirement '(networking))
           (start #~(make-forkexec-constructor
-                     (list "sing-box" "run" "-c" #$config)
+                     (list "/run/privileged/bin/sing-box" "run" "-c" #$config)
                              #:log-file "/var/log/sing-box.log"
                              #:supplementary-groups '("netdev")
     		             #:user "singbox"))
