@@ -250,6 +250,7 @@
 ** 网络模块
 #+begin_src scheme :noweb-ref module
   (gnu services networking)
+  (gnu packages networking)
 #+end_src
 
 *** 系统网络
