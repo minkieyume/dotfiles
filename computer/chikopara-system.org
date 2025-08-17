@@ -250,7 +250,6 @@
 ** 网络模块
 #+begin_src scheme :noweb-ref module
   (gnu services networking)
-  (gnu packages networking)
 #+end_src
 
 *** 系统网络
@@ -537,7 +536,7 @@ sing-box
           (requirement '(networking))
           (one-shot? #t)
           (start #~(lambda _
-                     (let* ((ip-rote #$(file-append iproute2 "/sbin/ip"))
+                     (let* ((ip-rote #$(file-append (spec->package "iproute2") "/sbin/ip"))
                             (cmd (string-append ip-route " route add local default dev lo table 100\n"
                                   ip-route " rule add fwmark 1 table 100"))
                             (status (system cmd)))
