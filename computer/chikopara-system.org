@@ -518,12 +518,11 @@ sing-box
           (provision '(sing-box))
           (requirement '(networking))
           (start #~(make-forkexec-constructor
-                     (list #$(file-append sing-box "/bin/sing-box")
-                       "run" "-c" #$config)
+                     (list "sing-box" "run" "-c" #$config)
                              #:log-file "/var/log/sing-box.log"
                              #:supplementary-groups '("netdev")
     		             #:user "singbox"))
-          (stop #~(const #t))))))
+          (stop #~(make-kill-destructor))))))
 #+end_src
 
 *** 用户态
