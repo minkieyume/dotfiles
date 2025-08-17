@@ -380,7 +380,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
     (permit #t)
     (user ":wheel")
     (options '("persist"
-                "setenv { HOME=/root XDG_CACHE_HOME=/root/.cache GUIX_PROFILE=/root/.config/guix/current PATH=/run/setuid-programs:/root/.config/guix/current/bin:/root/.guix-profile/bin:/run/current-system/profile/bin:/run/current-system/profile/sbin GIT_EXEC_PATH=/root/.guix-profile/libexec/git-core}"))
+               "setenv { http_proxy https_proxy HOME=/root XDG_CACHE_HOME=/root/.cache PATH=/run/setuid-programs:/root/.config/guix/current/bin:/run/current-system/profile/bin:/run/current-system/profile/sbin INFOPATH=/root/.config/guix/current/share/info:/run/current-system/profile/share/info GIT_EXEC_PATH=/root/.guix-profile/libexec/git-core}"))
     (as-target "root"))
 #+end_src
 
