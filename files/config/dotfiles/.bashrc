@@ -22,6 +22,7 @@ fi
 for i in /etc/bashrc.d/*.sh; do
     [[ -r $i ]] && source "$i"
 done
+
 unset i
 alias sudo='doas'
 export TERM=xterm-256color
