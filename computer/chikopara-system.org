@@ -536,7 +536,7 @@ sing-box
         (requirement '(networking))
         (one-shot? #t)
         (start #~(lambda _
-                   (let ((cmd (string-append "ip route add local default dev lo table 100"
+                   (let ((cmd (string-append "ip route add local default dev lo table 100\n"
                                 "ip rule add fwmark 1 table 100"))
                           (status (system cmd)))
   		               (= 0 (status:exit-val status))))))))
