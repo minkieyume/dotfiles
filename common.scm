@@ -8,6 +8,3 @@
   (guix store)
   (nonguix transformations)
   (rosenthal))
-
-(define-syntax-rule (chiko-path rel-path)
-  (string-append (dirname (current-filename)) "/" rel-path))
