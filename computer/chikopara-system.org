@@ -591,6 +591,7 @@ sing-box
 
 ** Navidrome
 #+begin_src scheme :noweb-ref service
+  (display (chiko-path "../files/config/navidrome.toml"))
   (service navidrome-service-type
     (navidrome-configuration
       (extra-config (file-content (chiko-path "../files/config/navidrome.toml")))))
