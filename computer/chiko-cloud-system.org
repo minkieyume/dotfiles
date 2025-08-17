@@ -450,12 +450,11 @@ sing-box
     (list
       (let ((config %sing-box-config-file))
         (shepherd-service
-          (documentation "Run sing-box singing listener.")
+          (documentation "Run sing-box singing streamer.")
           (provision '(sing-box))
           (requirement '(networking))
           (start #~(make-forkexec-constructor
-                     (list #$(file-append sing-box "/bin/sing-box")
-                       "run" "-c" #$config)
+                     (list "/run/privileged/bin/sing-box" "run" "-c" #$config)
                              #:log-file "/var/log/sing-box.log"
                              #:supplementary-groups '("netdev")
     		             #:user "singbox"))
