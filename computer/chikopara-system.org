@@ -3,7 +3,7 @@
 * Chiko Para System
 琪可的NAS配置，存储各种东西同时运行奇怪的服务。
 #+begin_src scheme :tangle ../reconfigure/chikopara_system.scm :noweb yes :noweb-prefix no
-  (load ../common.scm)
+  (load "../common.scm")
   (use-modules <<module>>)
 
   <<define>>
