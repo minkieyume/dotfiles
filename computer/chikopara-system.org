@@ -536,7 +536,7 @@ sing-box
           (requirement '(networking))
           (one-shot? #t)
           (start #~(lambda _
-                     (let* ((ip-rote #$(file-append (spec->pkg "iproute2") "/sbin/ip"))
+                     (let* ((ip-route #$(file-append (spec->pkg "iproute2") "/sbin/ip"))
                             (cmd (string-append ip-route " route add local default dev lo table 100\n"
                                   ip-route " rule add fwmark 1 table 100"))
                             (status (system cmd)))
