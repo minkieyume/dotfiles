@@ -87,7 +87,9 @@
 
 ** 密码导入
 #+begin_src scheme :noweb-ref define
-  (load "nyapasu.scm")
+  (define %nyapasu-script
+    (local-file "../secret/nyapasu.scm"))
+  (load "../secret/nyapasu.scm")
 #+end_src
 
 ** 基础包
@@ -220,7 +222,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
     (permit #t)
     (user ":wheel")
     (options '("persist"
-                "setenv { HOME=/root XDG_CACHE_HOME=/root/.cache GUIX_PROFILE=/root/.config/guix/current PATH=/run/setuid-programs:/root/.config/guix/current/bin:/root/.guix-profile/bin:/run/current-system/profile/bin:/run/current-system/profile/sbin GIT_EXEC_PATH=/root/.guix-profile/libexec/git-core}"))
+                "setenv { HOME=/root XDG_CACHE_HOME=/root/.cache GUIX_PROFILE=/root/.config/guix/current PATH=/run/setuid-programs:/root/.config/guix/current/bin:/root/.guix-profile/bin:/run/current-system/profile/bin:/run/current-system/profile/sbin INFOPATH=/root/.config/guix/current/share/info:/run/current-system/profile/share/info GIT_EXEC_PATH=/root/.guix-profile/libexec/git-core}"))
     (as-target "root"))
 #+end_src
 
@@ -229,6 +231,12 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+begin_src scheme :noweb-ref env
   (sudoers-file
     (plain-file "sudoers" "# empty sudoers file\n"))
+#+end_src
+
+#+begin_src scheme :noweb-ref privileged-program
+  (privileged-program
+    (program (file-append sudo "/bin/sudo"))
+    (setuid? #f))
 #+end_src
 
 
@@ -421,29 +429,42 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 sing-box
 #+end_src
 
-config-file
+
+*** 配置导入
 #+begin_src scheme :noweb-ref define
-(load "../files/config/singbox/streamer.scm")
+  (define %sing-box-streamer
+    (local-file "../files/config/singbox/streamer.scm"))
   (define %sing-box-config-file
-      (computed-file "sing-box.json"
-        (with-extensions (map specification->package '("guile-json@4"))
-          #~(begin
-              (output-singbox-streamer #$output)))))
+    (computed-file "sing-box.json"
+      (with-extensions (map specification->package '("guile-json@4"))
+        #~(begin
+            (primitive-load #$%nyapasu-script)
+            (primitive-load #$%sing-box-streamer)
+            (output-singbox-listener #$output)))))
 #+end_src
 
+*** 权限
+#+begin_src scheme :noweb-ref privileged-program
+  (privileged-program
+    (program (file-append sing-box "/bin/sing-box"))
+    (capabilities "cap_net_admin,cap_net_raw+ep"))
+#+end_src
+
+*** 服务
 #+begin_src scheme :noweb-ref service
   (simple-service 'sing-box-service
     shepherd-root-service-type
     (list
       (let ((config %sing-box-config-file))
         (shepherd-service
-          (documentation "Run sing-box singing streamer.")
+          (documentation "Run sing-box singing listener.")
           (provision '(sing-box))
           (requirement '(networking))
           (start #~(make-forkexec-constructor
                      (list #$(file-append sing-box "/bin/sing-box")
                        "run" "-c" #$config)
                              #:log-file "/var/log/sing-box.log"
+                             #:supplementary-groups '("netdev")
     		             #:user "singbox"))
           (stop #~(const #t))))))
 #+end_src
