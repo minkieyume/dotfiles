@@ -25,8 +25,7 @@
                         ("invert" . #t))
                        (("rule_set" . "geoip-cn"))))))))
     `(("log"
-        ("level" . "warn")
-        ("output" . "singbox.log"))
+        ("level" . "warn"))
        ("dns"
          ("servers"
            . #((("type" . "tls")
