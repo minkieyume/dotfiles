@@ -19,25 +19,6 @@
     (packages (cons* <<package>> %base-packages)))
 #+end_src
 
-* Chiko Cloud Home
-#+begin_src scheme :noweb yes :noweb-ref service :noweb-prefix no
-  (service guix-home-service-type
-    `(("minkieyume" ,(home-environment
-                 (services (cons* <<home-service>> %base-home-services))))))
-#+end_src
-
-#+begin_src scheme :noweb yes :noweb-ref home-service
-  (service home-dotfiles-service-type
-    (home-dotfiles-configuration
-      (directories '("../files/dotfiles"))))
-#+end_src
-
-#+begin_src scheme :noweb yes :noweb-ref home-service :noweb-prefix no
-  (simple-service 'extra-environment-variables
-      home-environment-variables-service-type
-    `(<<home-environment-variable>>))
-#+end_src
-
 ** 基础信息
 本地化、时区、键盘布局、主机名
 #+begin_src scheme :noweb-ref env
@@ -74,9 +55,12 @@
 #+begin_src scheme :noweb-ref module
   (gnu)
   (gnu system)
-  (gnu packages admin)  
+  (gnu packages admin)
   (gnu system privilege)
   (gnu services shepherd)
+  (srfi srfi-26)
+  (ice-9 match)
+  (gnu services sysctl)
 #+end_src
 
 ** 频道模块
@@ -142,6 +126,32 @@
     (type "ext4")
     (dependencies mapped-devices))
 #+end_src
+
+* Chiko Cloud Home
+#+begin_src scheme :noweb yes :noweb-ref module
+  (gnu home services dotfiles)
+  (gnu home services shells)
+#+end_src
+
+
+#+begin_src scheme :noweb yes :noweb-ref service :noweb-prefix no
+  (service guix-home-service-type
+    `(("minkieyume" ,(home-environment
+                 (services (cons* <<home-service>> %base-home-services))))))
+#+end_src
+
+#+begin_src scheme :noweb yes :noweb-ref home-service
+  (service home-dotfiles-service-type
+    (home-dotfiles-configuration
+      (directories '("../files/dotfiles"))))
+#+end_src
+
+#+begin_src scheme :noweb yes :noweb-ref home-service :noweb-prefix no
+  (simple-service 'extra-environment-variables
+      home-environment-variables-service-type
+    `(<<home-environment-variable>>))
+#+end_src
+
 
 * 基础服务
 ** 网络模块
