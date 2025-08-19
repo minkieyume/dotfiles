@@ -29,7 +29,7 @@
        ("dns"
          ("servers"
            . #((("type" . "tls")
-                 ("tag" . "dns_proxy")
+                 ("tag" . "cloudflare")
                  ("server" . "1.1.1.1"))
                 (("type" . "local")
                   ("tag" . "dns_direct")))))
@@ -91,7 +91,7 @@
                     ("url" . "https://raw.githubusercontent.com/SagerNet/sing-geoip/refs/heads/rule-set/geoip-cn.srs")
                     ("download_detour" . "out_direct"))))
            ("final" . "vless_out")
-           ("default_domain_resolver" . "dns_proxy")))))
+           ("default_domain_resolver" . "cloudflare")))))
 
 (define (output-singbox-listener file-name)
   (call-with-output-file file-name
