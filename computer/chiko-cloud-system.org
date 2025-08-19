@@ -490,7 +490,7 @@ sing-box
         #~(begin
             (primitive-load #$%nyapasu-script)
             (primitive-load #$%sing-box-streamer)
-            (output-singbox-listener #$output)))))
+            (output-singbox-streamer #$output)))))
 #+end_src
 
 *** 权限
