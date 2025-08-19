@@ -311,6 +311,7 @@ mcron的服务，值得注意的是，jobs的参数必须要用quote括起来，
 ** Rsync
 Rsync是简单的备份工具，可以方便在不同设备之间同步和备份数据。
 #+begin_src scheme :noweb-ref module
+  (gnu services rsync)
   (gnu packages rsync)
 #+end_src
 
