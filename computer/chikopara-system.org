@@ -566,7 +566,12 @@ sing-box
 * 网盘
 ** NFS
 #+begin_src scheme :noweb-ref module
-(gnu services nfs)
+  (gnu services nfs)
+  (gnu packages nfs)
+#+end_src
+
+#+begin_src scheme :noweb-ref package
+  nfs-utils
 #+end_src
 
 #+begin_src scheme :noweb-ref service
