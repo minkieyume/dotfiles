@@ -449,7 +449,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 
 ** Tailscale
 #+begin_src scheme :noweb-ref module
-  (rosenthal service networking)
+  (rosenthal services networking)
 #+end_src
 
 #+begin_src scheme :noweb-ref service
