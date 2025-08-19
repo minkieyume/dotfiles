@@ -323,7 +323,7 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
   (service rsync-service-type
   	 (rsync-configuration
   	  (uid "minkieyume")
-  	  (modules (list (<<rsync-module>>)))))
+  	  (modules (list <<rsync-module>>))))
 #+end_src
 
 *** Rsync同步文件
