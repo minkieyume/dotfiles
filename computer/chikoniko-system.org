@@ -51,7 +51,7 @@
     (comment "Minkieyume")
     (group "users")
     (home-directory "/home/minkieyume")
-    (supplementary-groups '("wheel" "netdev" "audio" "video")))
+    (supplementary-groups '("wheel" "netdev" "audio" "video" "niko")))
 #+end_src
 
 ** 基础模块
@@ -139,23 +139,31 @@
     (map (match-lambda
            ((subvolume . mount-point)
              (file-system
-               (device (file-system-label "sabaru"))
+               (device (file-system-label "niko"))
                (mount-point mount-point)
                (type "btrfs")
                (options (options-for-subvolume subvolume))
                (create-mount-point? #t)
                (check? (string=? mount-point "/")))))
       '(("@System" . "/")
-        ("@Data"   . "/var/lib")
-        ("@Home"   . "/home")
-        (#f        . "/mnt/sabaru"))))
+        ("@Data"      .      "/var/lib")
+        ("@GNU"       .          "/gnu")
+        ("@Home"      .         "/home")
+        ("@Creator"   . "/niko/creator")
+        ("@Develop"   . "/niko/develop")
+        ("@Picture"   . "/niko/picture")
+        ("@Music"     .   "/niko/music")
+        ("@Program"   . "/niko/program")
+        ("@Games"     .   "/niko/games")
+        ("@Download"  ."/niko/download")
+        (#f           .     "/mnt/niko"))))
 #+end_src
 
 #+begin_src scheme :noweb-ref filesystems
   (list
     (file-system
       (mount-point "/boot/efi")
-      (device (uuid "2BB9-C31F"
+      (device (uuid "1A2E-A4AA"
                 'fat32))
       (type "vfat")))
 #+end_src
@@ -163,11 +171,11 @@
 #+begin_src scheme :noweb-ref transformation
   (lambda (os)
     (operating-system
-      (inherit os)
-      (swap-devices
-        (list (swap-space
-                (target (uuid "d113fc46-c2e4-4211-87de-49892502b016"))
-                (discard? #t))))))
+     (inherit os)
+     (swap-devices
+      (list (swap-space
+             (target (uuid "204fc3c3-89b6-449b-9b32-9df5ed18d024"))
+             (discard? #t))))))
 #+end_src
 
 
