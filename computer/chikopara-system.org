@@ -322,7 +322,6 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 #+begin_src scheme :noweb-ref service  :noweb yes :noweb-prefix no
   (service rsync-service-type
   	 (rsync-configuration
-  	  (uid 1000)
   	  (modules (list <<rsync-module>>))))
 #+end_src
 
