@@ -241,7 +241,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   (doas-rule
    (permit #t)
    (user "root")
-   (options '("persist" "nopass"))
+   (options '("nopass"))
    (as-target "misskey"))
 #+end_src
 
