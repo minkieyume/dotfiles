@@ -23,7 +23,7 @@
 #+begin_src scheme :noweb yes :noweb-ref service :noweb-prefix no
   (service guix-home-service-type
     `(("minkieyume" ,(home-environment
-                 (services (cons* <<home-service>> %rosenthal-desktop-home-services))))))
+                 (services (cons* <<home-service>> %base-home-services))))))
 #+end_src
 
 #+begin_src scheme :noweb yes :noweb-ref home-service
@@ -246,7 +246,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 ** Emacs
 基础的包配置
 #+begin_src scheme :noweb-ref package
-  emacs
+  emacs-no-x
 #+end_src
 
 模块配置
@@ -369,16 +369,25 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 * 代理
 ** Yggdrasil
 #+begin_src scheme :noweb-ref service
-      (service yggdrasil-service-type
-        (yggdrasil-configuration
-          (autoconf? #f) ;; use only the public peers
-          (json-config
-            '((peers . #("tls://ygg.jjolly.dev:3443"
-                          "tls://yg-hkg.magicum.net:32333"))
+  (service yggdrasil-service-type
+  	 (yggdrasil-configuration
+  	  (autoconf? #f) ;; use only the public peers
+  	  (json-config
+  	   '((peers . #("tls://ygg.jjolly.dev:3443"
+  			"tls://yg-hkg.magicum.net:32333"))
                (listen . #("tls://0.0.0.0:1234"
-                           "quic://0.0.0.0:1234"
-                            "tls://[::]:1234"
-                            "quic://[::]:1234"))))))
+  			 "quic://0.0.0.0:1234"
+  			 "tls://[::]:1234"
+  			 "quic://[::]:1234"))))))
+#+end_src
+
+** Tailscale
+#+begin_src scheme :noweb-ref module
+  (rosenthal service networking)
+#+end_src
+
+#+begin_src scheme :noweb-ref service
+  (service tailscale-service-type)
 #+end_src
 
 * 容器
