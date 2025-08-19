@@ -336,7 +336,7 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 ** Emacs
 基础的包配置
 #+begin_src scheme :noweb-ref package
-  emacs
+  emacs-no-x
 #+end_src
 
 模块配置

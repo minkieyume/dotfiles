@@ -222,7 +222,7 @@
 #+begin_src scheme :noweb-ref service
   (service nftables-service-type
     (nftables-configuration
-      (ruleset (local-file "../files/config/chikopara/nftables.conf"))))
+      (ruleset (local-file "../files/config/chikoniko/nftables.conf"))))
 #+end_src
 
 ** OpenSSH
@@ -540,6 +540,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 
 
 * 音乐创作
+
 ** SingBox
 八音盒软件
 #+begin_src scheme :noweb-ref module
@@ -588,6 +589,23 @@ sing-box
           (stop #~(make-kill-destructor))))))
 #+end_src
 
+*** 透明唱片
+#+begin_src scheme :noweb-ref service
+    (simple-service 'tcd
+      shepherd-root-service-type
+      (list
+        (shepherd-service
+          (documentation "运行一个TCD，透明唱片播放程序")
+          (provision '(tcd-init))
+          (requirement '(networking))
+          (one-shot? #t)
+          (start #~(lambda _
+                     (let* ((ip-route #$(file-append (spec->pkg "iproute2") "/sbin/ip"))
+                            (cmd (string-append ip-route " route add local default dev lo table 100\n"
+                                  ip-route " rule add fwmark 1 table 100"))
+                            (status (system cmd)))
+    		               (= 0 (status:exit-val status))))))))
+#+end_src
 
 *** 用户态
 #+begin_src scheme :noweb-ref user
@@ -597,3 +615,4 @@ sing-box
     (system? #t)
     (home-directory "/var/empty/"))
 #+end_src
+
