@@ -226,7 +226,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
     (as-target "root"))
 #+end_src
 
-为root用户设置数据库用户的访问权限
+为root用户设置misskey数据库用户的访问权限
 #+begin_src scheme :noweb-ref doas-ruleset
   (doas-rule
    (permit #t)
