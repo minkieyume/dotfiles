@@ -267,7 +267,7 @@ mcron的服务，值得注意的是，jobs的参数必须要用quote括起来，
 ** Emacs
 基础的包配置
 #+begin_src scheme :noweb-ref package
-  emacs
+  emacs-pgtk
 #+end_src
 
 模块配置
