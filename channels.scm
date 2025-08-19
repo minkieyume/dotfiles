@@ -33,8 +33,4 @@
           "993d200265630e9c408028a022f32f34acacdf29"
           (openpgp-fingerprint
            "7EBE A494 60CE 5E2C 0875  7FDB 3B5A A993 E1A2 DFF0"))))
-       (channel
-	(name 'glicid)
-	(url "https://gitlab.univ-nantes.fr/glicid-public/guix-glicid.git")
-	(branch "main"))
        %default-channels)

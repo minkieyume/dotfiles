@@ -318,6 +318,18 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
   rsync
 #+end_src
 
+#+begin_src scheme :noweb-ref service  :noweb yes :noweb-prefix no
+  (service rsync-service-type
+  	 (rsync-configuration
+  	  (uid "minkieyume")
+  	  (modules (list (<<rsync-module>>)))))
+#+end_src
+
+*** Rsync同步文件
+#+begin_src scheme :noweb-ref rsync-module
+(rsync-module )
+#+end_src
+
 *** Rsync同步任务
 #+begin_src scheme :noweb-ref mcron-job
   (job "0 2 * * *" "rsync -a /resource /backup/nana")
