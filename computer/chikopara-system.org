@@ -326,8 +326,11 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 #+end_src
 
 *** Rsync同步文件
+备份文件夹：
 #+begin_src scheme :noweb-ref rsync-module
-(rsync-module )
+  (rsync-module (name "backup")
+  	      (file-name "/resource/data/backup/")
+  	      (read-only? #f))
 #+end_src
 
 *** Rsync同步任务
