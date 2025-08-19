@@ -277,7 +277,7 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 
 *** 备份数据库
 #+begin_src scheme :noweb-ref mcron-job
-  (job "0 2 * * *" "doas -u misskey pg_dump -U misskey -d misskey > /tmp/misskey.sql")
+  (job "0 2 * * *" "doas -u misskey pg_dump -U misskey -d misskey > /tmp/misskey.sql && ( echo rsync_misskey ; rm /tmp/misskey.sql)")
 #+end_src
 
 ** GPG
