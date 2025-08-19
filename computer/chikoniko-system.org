@@ -147,6 +147,7 @@
                (check? (string=? mount-point "/")))))
       '(("@System" . "/")
         ("@Data"      .      "/var/lib")
+        ("@Log"      .       "/var/log")
         ("@GNU"       .          "/gnu")
         ("@Home"      .         "/home")
         ("@Creator"   . "/niko/creator")
