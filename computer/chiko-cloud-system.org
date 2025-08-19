@@ -226,11 +226,49 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
     (as-target "root"))
 #+end_src
 
+为root用户设置数据库用户的访问权限
+#+begin_src scheme :noweb-ref doas-ruleset
+  (doas-rule
+   (permit #t)
+   (user "root")
+   (options '("persist" "nopass"))
+   (as-target "misskey"))
+#+end_src
+
+
 *** 禁用sudo
 为了安全，最好禁用sudo，避免sudo的漏洞影响安全性。
 #+begin_src scheme :noweb-ref env
   (sudoers-file
     (plain-file "sudoers" "# empty sudoers file\n"))
+#+end_src
+
+** Mcron
+Mcron是guix用于管理计划任务的服务，类似crontab。
+#+begin_src scheme :noweb-ref module
+  (gnu services mcron)
+#+end_src
+
+mcron的服务，值得注意的是，jobs的参数必须要用quote括起来，因为里面是一个传递给mcron的(job xxxx)的表达式，这个表达式不能在guix编译时运行。
+#+begin_src scheme :noweb-ref service :noweb yes :noweb-prefix no
+  (service mcron-service-type
+    (mcron-configuration
+      (jobs '(<<mcron-job>>))))
+#+end_src
+
+** Rsync
+Rsync是简单的备份工具，可以方便在不同设备之间同步和备份数据。
+#+begin_src scheme :noweb-ref module
+  (gnu packages rsync)
+#+end_src
+
+#+begin_src scheme :noweb-ref package
+  rsync
+#+end_src
+
+*** 备份数据库
+#+begin_src scheme :noweb-ref mcron-job
+  (job "0 2 * * *" "echo Hello")
 #+end_src
 
 ** GPG
@@ -383,7 +421,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 
 ** Tailscale
 #+begin_src scheme :noweb-ref module
-  (rosenthal service networking)
+  (rosenthal services networking)
 #+end_src
 
 #+begin_src scheme :noweb-ref service
