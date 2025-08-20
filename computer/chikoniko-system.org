@@ -16,7 +16,7 @@
       (services (cons* <<service>> %base-services))
       (mapped-devices (list <<mapped-device>>))
       (file-systems (append <<filesystems>> %base-file-systems))
-      (packages (cons* <<package>> %base-packages))))
+      (packages (append (spec->pkg <<package>>)%base-packages))))
 
   ((compose <<transformation>>)
     %os)
@@ -58,7 +58,7 @@
 #+begin_src scheme :noweb-ref module
   (gnu)
   (gnu system)
-  (gnu packages admin)  
+  (gnu packages admin)
   (gnu system privilege)
   (srfi srfi-26)
   (ice-9 match)
@@ -85,7 +85,7 @@
 #+end_src
 
 #+begin_src scheme :noweb-ref package
-  htop curl
+  "htop" "curl"
 #+end_src
 
 ** 性能监视
@@ -94,7 +94,7 @@
 #+end_src
 
 #+begin_src scheme :noweb-ref package
-  glances
+  "glances"
 #+end_src
 
 ** Bootloader配置
@@ -275,13 +275,13 @@ mcron的服务，值得注意的是，jobs的参数必须要用quote括起来，
 #+end_src
 
 #+begin_src scheme :noweb-ref package
-  git
+  "git"
 #+end_src
 
 ** Emacs
 基础的包配置
 #+begin_src scheme :noweb-ref package
-  emacs-pgtk
+  "emacs-pgtk"
 #+end_src
 
 模块配置
@@ -293,7 +293,7 @@ mcron的服务，值得注意的是，jobs的参数必须要用quote括起来，
 Doas是比Sudo更简洁，也更为安全的提权工具。
 之所以用Doas而不用Sudo，是因为Sudo通常会有一定的安全漏洞，结构也比较复杂，而Doas结构相对简单，攻击面也更少，适合不需要复杂提权配置的服务器或个人。
 #+begin_src scheme :noweb-ref package
-  opendoas
+  "opendoas"
 #+end_src
 
 引入自定义的包定义的doas服务。
@@ -339,7 +339,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 
 ** GPG
 #+begin_src scheme :noweb-ref package
-  gnupg
+  "gnupg"
 #+end_src
 
 #+begin_src scheme :noweb-ref module
@@ -363,7 +363,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+end_src
 
 #+begin_src scheme :noweb-ref package
-  unzip
+  "unzip"
 #+end_src
 
 * 代理
@@ -413,16 +413,22 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 
 * 桌面环境
 ** Wayland
+#+begin_src scheme :noweb-ref module
+  (rosenthal packages xorg)
+  (rosenthal packages wm)
+  (gnu packages xdisorg)
+#+end_src
+
 *** niri
 #+begin_src scheme :noweb-ref package
-  niri
-  wl-clipboard
-  imv
-  foot
-  light
-  swaylock-effects
-  wireplumber
-  xwayland-satellite
+  "niri"
+  "wl-clipboard"
+  "imv"
+  "foot"
+  "light"
+  "swaylock-effects"
+  "wireplumber"
+  "xwayland-satellite"
 #+end_src
 
 #+begin_src scheme :noweb-ref home-service
@@ -440,9 +446,9 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 
 *** xdg-desktop-portal
 #+begin_src scheme :noweb-ref package
-  xdg-desktop-portal
-  xdg-desktop-portal-gnome
-  xdg-desktop-portal-gtk
+  "xdg-desktop-portal"
+  "xdg-desktop-portal-gnome"
+  "xdg-desktop-portal-gtk"
 #+end_src
 
 *** waybar
@@ -473,15 +479,16 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 
 *** fontconfig
 #+begin_src scheme :noweb-ref package
-  font-awesome
-  font-adobe-source-serif
-  font-apple-new-york
-  font-apple-sf-pro
-  font-google-noto
-  font-google-noto-emoji
-  font-victor-mono
-  font-noto-cjk
-  font-sarasa-gothic
+  "font-awesome"
+  "font-adobe-source-serif"
+  "font-apple-new-york"
+  "font-apple-sf-pro"
+  "font-google-noto"
+  "font-google-noto-sans-cjk"
+  "font-google-noto-serif-cjk"
+  "font-google-noto-emoji"
+  "font-victor-mono"
+  "font-sarasa-gothic"
 #+end_src
 
 #+begin_src scheme :noweb-ref home-service
@@ -562,7 +569,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+end_src
 
 #+begin_src scheme :noweb-ref package
-sing-box
+"sing-box"
 #+end_src
 
 *** 配置导入
