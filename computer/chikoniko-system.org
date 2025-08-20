@@ -594,7 +594,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
       (let ((config %sing-box-config-file))
         (shepherd-service
           (documentation "Run sing-box singing listener.")
-          (provision '((spec->pkg "sing-box")))
+          (provision '(sing-box))
           (requirement '(networking))
           (start #~(make-forkexec-constructor
                      (list "/run/privileged/bin/sing-box" "run" "-c" #$config)
