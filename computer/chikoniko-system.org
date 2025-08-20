@@ -412,6 +412,10 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+end_src
 
 * 桌面环境
+#+begin_src scheme :noweb-ref module
+  (gnu home services fontutils)
+#+end_src
+
 ** Wayland
 *** niri
 #+begin_src scheme :noweb-ref package
@@ -558,10 +562,6 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 
 ** SingBox
 八音盒软件
-#+begin_src scheme :noweb-ref module
-(rosenthal packages networking)
-#+end_src
-
 #+begin_src scheme :noweb-ref package
 "sing-box"
 #+end_src
