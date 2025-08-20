@@ -165,7 +165,7 @@
   (list
     (file-system
       (mount-point "/boot/efi")
-      (device (uuid "1A2E-A4AA"
+      (device (uuid "639A-B4E6"
                 'fat32))
       (type "vfat")))
 #+end_src
