@@ -3,6 +3,7 @@
 * Chiko Niko System
 琪可的笔记本配置。
 #+begin_src scheme :tangle ../reconfigure/chikoniko-system.scm :noweb yes :noweb-prefix no
+  (load ../common.scm)
   (use-modules <<module>>)
 
   <<define>>
@@ -58,17 +59,21 @@
 #+begin_src scheme :noweb-ref module
   (gnu)
   (gnu system)
-  (gnu packages admin)
   (gnu system privilege)
   (srfi srfi-26)
   (ice-9 match)
   (gnu services sysctl)
 #+end_src
 
-** 频道模块
 #+begin_src scheme :noweb-ref module
   (rosenthal)
   (nonguix transformations)
+#+end_src
+
+** 基础包
+一些基础包
+#+begin_src scheme :noweb-ref package
+  "htop" "curl"
 #+end_src
 
 ** 密码导入
@@ -76,12 +81,6 @@
   (define %nyapasu-script
     (local-file "../secret/nyapasu.scm"))
   (load "../secret/nyapasu.scm")
-#+end_src
-
-** 基础包
-一些基础包
-#+begin_src scheme :noweb-ref package
-  "htop" "curl"
 #+end_src
 
 ** 性能监视
