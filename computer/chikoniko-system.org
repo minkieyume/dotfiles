@@ -232,10 +232,29 @@
        ("net.ipv6.conf.all.forwarding" . "1")))
 #+end_src
 
-*** dhcpd和ntp
-#+begin_src scheme :noweb-ref service
-  (service dhcpcd-service-type)
-  (service ntp-service-type)
+*** NetworkManager
+#+begin_src scheme :noweb-ref transformation
+  (lambda (os)
+    (operating-system
+     (inherit os)
+     (services
+      (modify-services (operating-system-user-services os)
+  		     (network-manager-service-type
+  		      config => (network-manager-configuration
+  				 (inherit config)
+  				 (extra-configuration-files
+  				  `(("wifi_rand_mac.conf"
+  				     ,(plain-file "wifi_rand_mac.conf" "\
+  # Generate a random MAC for each network connection and associate the two
+  # permanently.
+  [connection-mac-randomization]
+  ethernet.cloned-mac-address=stable
+  wifi.cloned-mac-address=stable\n"))
+  				    ("ip6-privacy.conf"
+  				     ,(plain-file "ip6-privacy.conf" "\
+  # Use IPv6 Privacy Extensions.
+  [connection]
+  ipv6.ip6-privacy=2\n"))))))))))
 #+end_src
 
 *** Nftables
