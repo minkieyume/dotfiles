@@ -489,7 +489,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   "font-sarasa-gothic"
 #+end_src
 
-#+begin_src scheme :noweb-ref home-service
+#+begin_src scheme
   (simple-service 'extra-fontconfig
       home-fontconfig-service-type
     (let ((sans  "SF Pro Text")
