@@ -3,7 +3,7 @@
 * Chiko Niko System
 琪可的笔记本配置。
 #+begin_src scheme :tangle ../reconfigure/chikoniko-system.scm :noweb yes :noweb-prefix no
-  (load ../common.scm)
+  (load "../common.scm")
   (use-modules <<module>>)
 
   <<define>>
