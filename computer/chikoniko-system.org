@@ -193,6 +193,14 @@
                  (services (cons* <<home-service>> %rosenthal-desktop-home-services))))))
 #+end_src
 
+#+begin_src scheme :noweb yes :noweb-ref home-service :noweb-prefix no
+  (service home-profile-service-type (list (map spec->pkg '(<<minkieyume-home-package>>))))
+#+end_src
+
+#+begin_src scheme :noweb yes :noweb-ref home-service
+  (service home-shepherd-service-type)
+#+end_src
+
 #+begin_src scheme :noweb yes :noweb-ref home-service
   (service home-dotfiles-service-type
     (home-dotfiles-configuration
@@ -419,7 +427,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 
 ** Wayland
 *** niri
-#+begin_src scheme :noweb-ref package
+#+begin_src scheme :noweb-ref minkieyume-home-package
   "niri"
   "wl-clipboard"
   "imv"
@@ -444,7 +452,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+end_src
 
 *** xdg-desktop-portal
-#+begin_src scheme :noweb-ref package
+#+begin_src scheme :noweb-ref minkieyume-home-package
   "xdg-desktop-portal"
   "xdg-desktop-portal-gnome"
   "xdg-desktop-portal-gtk"
@@ -547,7 +555,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+end_src
 
 *** librewolf
-#+begin_src scheme :noweb-ref package
+#+begin_src scheme :noweb-ref minkieyume-home-package
   "librewolf"
   "adaptive-tab-bar-colour-icecat"
   "bitwarden-icecat"
