@@ -14,7 +14,7 @@
       (initrd-modules (cons* <<initrd-module>> %base-initrd-modules))
       (privileged-programs (cons* <<privileged-program>> %default-privileged-programs))
       (users (cons* <<user>> %base-user-accounts))
-      (services (cons* <<service>> %base-services))
+      (services (cons* <<service>> %rosenthal-desktop-services))
       (mapped-devices (list <<mapped-device>>))
       (file-systems (append <<filesystems>> %base-file-systems))
       (packages (append (map spec->pkg '(<<package>>)) %base-packages))))
@@ -190,7 +190,7 @@
 #+begin_src scheme :noweb yes :noweb-ref service :noweb-prefix no
   (service guix-home-service-type
   	 `(("minkieyume" ,(home-environment
-  			   (services (cons* <<home-service>> %base-home-services))))))
+  			   (services (cons* <<home-service>> %rosenthal-desktop-home-services))))))
 #+end_src
 
 #+begin_src scheme :noweb yes :noweb-ref home-service
