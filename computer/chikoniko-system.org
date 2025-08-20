@@ -396,12 +396,6 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
       (enable-iptables? #f)))
 #+end_src
 
-* 进程管理
-** elogind
-#+begin_src scheme :noweb-ref service
-  (service elogind-service-type)
-#+end_src
-
 * 桌面环境
 #+begin_src scheme :noweb-ref module
   (gnu home services fontutils)
