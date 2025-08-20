@@ -413,12 +413,6 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 
 * 桌面环境
 ** Wayland
-#+begin_src scheme :noweb-ref module
-  (rosenthal packages xorg)
-  (rosenthal packages wm)
-  (gnu packages xdisorg)
-#+end_src
-
 *** niri
 #+begin_src scheme :noweb-ref package
   "niri"
