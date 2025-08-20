@@ -429,17 +429,17 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   "xwayland-satellite"
 #+end_src
 
-#+begin_src scheme :noweb-ref home-service
-  ;; (service home-niri-service-type
-  ;;   (home-niri-configuration
-  ;;     (config
-  ;;       (computed-substitution-with-inputs "niri.kdl"
-  ;;         (local-file "../files/config/chikoniko/niri.kdl")
-  ;;         (specs->pkgs "foot"
-  ;;           "light"
-  ;;           "swaylock-effects"
-  ;;           "wireplumber"
-  ;;           "xwayland-satellite")))))
+#+begin_src scheme
+  (service home-niri-service-type
+    (home-niri-configuration
+      (config
+        (computed-substitution-with-inputs "niri.kdl"
+          (local-file "../files/config/chikoniko/niri.kdl")
+          (specs->pkgs "foot"
+            "light"
+            "swaylock-effects"
+            "wireplumber"
+            "xwayland-satellite")))))
 #+end_src
 
 *** xdg-desktop-portal
@@ -450,29 +450,29 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+end_src
 
 *** waybar
-#+begin_src scheme :noweb-ref home-service
-  ;; (service home-waybar-service-type
-  ;;   (home-waybar-configuration
-  ;;     (config
-  ;;       (computed-substitution-with-inputs "config.jsonc"
-  ;;         (local-file "../files/config/chikoniko/waybar.jsonc")
-  ;;         (specs->pkgs "light" "wireplumber")))
-  ;;     (style
-  ;;       (local-file "../files/config/chikoniko/waybar.css"))))
+#+begin_src scheme
+  (service home-waybar-service-type
+    (home-waybar-configuration
+      (config
+        (computed-substitution-with-inputs "config.jsonc"
+          (local-file "../files/config/chikoniko/waybar.jsonc")
+          (specs->pkgs "light" "wireplumber")))
+      (style
+        (local-file "../files/config/chikoniko/waybar.css"))))
 #+end_src
 
 *** swaybg
-#+begin_src scheme :noweb-ref home-service
-  ;; (service home-swaybg-service-type
-  ;;   (home-swaybg-configuration
-  ;;     (background (local-file "../secret/wallpapers/wp3283230-oneshot-wallpapers.jpg"))))
+#+begin_src scheme
+  (service home-swaybg-service-type
+    (home-swaybg-configuration
+      (background (local-file "../secret/wallpapers/wp3283230-oneshot-wallpapers.jpg"))))
 #+end_src
 
 *** mako
-#+begin_src scheme :noweb-ref home-service
-  ;; (service home-mako-service-type
-  ;;   (home-mako-configuration
-  ;;     (config (local-file "../files/config/chikoniko/mako.conf"))))
+#+begin_src scheme
+  (service home-mako-service-type
+    (home-mako-configuration
+      (config (local-file "../files/config/chikoniko/mako.conf"))))
 #+end_src
 
 *** fontconfig
@@ -538,11 +538,11 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+end_src
 
 *** fcitx5
-#+begin_src scheme :noweb-ref home-service
-  ;; (service home-fcitx5-service-type
-  ;;   (home-fcitx5-configuration
-  ;;     (themes (specs->pkgs "fcitx5-material-color-theme"))
-  ;;     (input-method-editors (specs->pkgs "fcitx5-rime"))))
+#+begin_src scheme
+  (service home-fcitx5-service-type
+    (home-fcitx5-configuration
+      (themes (specs->pkgs "fcitx5-material-color-theme"))
+      (input-method-editors (specs->pkgs "fcitx5-rime"))))
 #+end_src
 
 *** librewolf
