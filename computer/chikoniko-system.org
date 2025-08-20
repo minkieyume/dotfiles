@@ -189,8 +189,8 @@
 ** Home服务
 #+begin_src scheme :noweb yes :noweb-ref service :noweb-prefix no
   (service guix-home-service-type
-    `(("minkieyume" ,(home-environment
-                 (services (cons* <<home-service>> %rosenthal-desktop-home-services))))))
+  	 `(("minkieyume" ,(home-environment
+  			   (services (cons* <<home-service>> %base-home-services))))))
 #+end_src
 
 #+begin_src scheme :noweb yes :noweb-ref home-service
