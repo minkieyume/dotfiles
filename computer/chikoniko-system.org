@@ -179,10 +179,19 @@
 
 ** Guix配置
 #+begin_src scheme :noweb-ref service
-  (service guix-service-type
-  	 (guix-configuration
-  	  (substitute-urls %chiko-substitute-urls)
-  	  (channels %chiko-channels)))
+  (lambda (os)
+    (operating-system
+     (inherit os)
+     (services
+      (modify-services (operating-system-user-services os)
+  		     (guix-service-type
+  		      config => (guix-configuration
+  				 (substitute-urls %chiko-substitute-urls)
+  				 (channels %chiko-channels)
+  				 (inherit config)
+  				 (discover? #t)
+  				 (extra-options '("--cores=0"))
+  				 (tmpdir "/mnt/niko/@Build")))))))
 #+end_src
 
 * Chiko Niko Home
