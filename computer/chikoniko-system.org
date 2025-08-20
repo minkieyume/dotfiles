@@ -16,7 +16,7 @@
       (services (cons* <<service>> %base-services))
       (mapped-devices (list <<mapped-device>>))
       (file-systems (append <<filesystems>> %base-file-systems))
-      (packages (append (spec->pkg <<package>>)%base-packages))))
+      (packages (append (map spec->pkg '(<<package>>)) %base-packages))))
 
   ((compose <<transformation>>)
     %os)
