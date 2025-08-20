@@ -80,19 +80,11 @@
 
 ** 基础包
 一些基础包
-#+begin_src scheme :noweb-ref module
-  (gnu packages curl)
-#+end_src
-
 #+begin_src scheme :noweb-ref package
   "htop" "curl"
 #+end_src
 
 ** 性能监视
-#+begin_src scheme :noweb-ref module
-  (gnu packages python-xyz)
-#+end_src
-
 #+begin_src scheme :noweb-ref package
   "glances"
 #+end_src
