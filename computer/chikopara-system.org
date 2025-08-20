@@ -237,8 +237,7 @@
   		      config => (guix-configuration
   				 (inherit config)
   				 (substitute-urls %chiko-substitute-urls)
-  				 (channels %chiko-channels)  				 
-  				 (discover? #t)
+  				 (channels %chiko-channels)
   				 (extra-options '("--cores=0"))))))))
 #+end_src
 
