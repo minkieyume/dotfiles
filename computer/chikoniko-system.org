@@ -187,7 +187,7 @@
 #+end_src
 
 ** Home服务
-#+begin_src scheme :noweb yes :noweb-ref service :noweb-prefix no
+#+begin_src scheme :noweb yes :noweb-prefix no :noweb-ref service
   (service guix-home-service-type
   	 `(("minkieyume" ,(home-environment
   			   (services (cons* <<home-service>> %rosenthal-desktop-home-services))))))
@@ -347,7 +347,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   (gnu home services gnupg)
 #+end_src
 
-#+begin_src scheme :noweb-ref service
+#+begin_src scheme :noweb-ref home-service
   (service home-gpg-agent-service-type
     (home-gpg-agent-configuration
       (pinentry-program
