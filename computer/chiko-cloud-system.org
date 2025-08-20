@@ -129,11 +129,18 @@
 #+end_src
 
 ** Guix配置
-#+begin_src scheme :noweb-ref service
-  (service guix-service-type
-  	 (guix-configuration
-  	  (substitute-urls %chiko-substitute-urls)
-  	  (channels %chiko-channels)))
+#+begin_src scheme :noweb-ref transformation
+  (lambda (os)
+    (operating-system
+     (inherit os)
+     (services
+      (modify-services (operating-system-user-services os)
+  		     (guix-service-type
+  		      config => (guix-configuration
+  				 (inherit config)
+  				 (substitute-urls %chiko-substitute-urls)
+  				 (channels %chiko-channels)
+  				 (extra-options '("--cores=0"))))))))
 #+end_src
 
 
@@ -173,6 +180,13 @@
 #+end_src
 
 * 基础服务
+** 登陆管理
+#+begin_src scheme :noweb-ref service
+  (service pam-limits-service-type
+  	 (list
+            (pam-limits-entry "*" 'both 'nofile 100000)))
+#+end_src
+
 ** 网络模块
 #+begin_src scheme :noweb-ref module
   (gnu services networking)

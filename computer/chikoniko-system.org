@@ -224,6 +224,13 @@
 
 
 * 基础服务
+** 登陆管理
+#+begin_src scheme :noweb-ref service
+  (service pam-limits-service-type
+  	 (list
+            (pam-limits-entry "*" 'both 'nofile 100000)))
+#+end_src
+
 ** 网络模块
 #+begin_src scheme :noweb-ref module
   (gnu services networking)
