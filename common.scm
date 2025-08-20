@@ -6,6 +6,7 @@
 	     (guix diagnostics)
 	     (guix i18n)
 	     (guix store)
+	     (guix channels)
 	     (nonguix transformations)
 	     (rosenthal))
 
