@@ -14,6 +14,7 @@
       (initrd-modules (cons* <<initrd-module>> %base-initrd-modules))
       (privileged-programs (cons* <<privileged-program>> %default-privileged-programs))
       (users (cons* <<user>> %base-user-accounts))
+      (groups (cons* <<group>> %base-groups))
       (services (cons* <<service>> %rosenthal-desktop-services))
       (mapped-devices (list <<mapped-device>>))
       (file-systems (append <<filesystems>> %base-file-systems))
@@ -53,6 +54,11 @@
     (group "users")
     (home-directory "/home/minkieyume")
     (supplementary-groups '("wheel" "netdev" "audio" "video" "niko")))
+#+end_src
+
+#+begin_src scheme :noweb-ref group
+  (user-group
+   (name "niko"))
 #+end_src
 
 ** 基础模块
