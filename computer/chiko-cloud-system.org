@@ -127,6 +127,14 @@
     (dependencies mapped-devices))
 #+end_src
 
+** Guix配置
+#+begin_src scheme :noweb-ref service
+  (service guix-service-type
+  	 (guix-configuration
+  	  (substitute-urls %chiko-substitute-urls)
+  	  (channels %chiko-channels)))
+#+end_src
+
 * Chiko Cloud Home
 #+begin_src scheme :noweb yes :noweb-ref module
   (gnu home services dotfiles)
