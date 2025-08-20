@@ -147,6 +147,7 @@
         ("@Log"      .       "/var/log")
         ("@GNU"       .          "/gnu")
         ("@Home"      .         "/home")
+        ("@Tmp"       .         "/tmp")
         ("@Creator"   . "/niko/creator")
         ("@Develop"   . "/niko/develop")
         ("@Picture"   . "/niko/picture")
