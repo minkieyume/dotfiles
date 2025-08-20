@@ -136,17 +136,27 @@
   	  (channels %chiko-channels)))
 #+end_src
 
+
 * Chiko Cloud Home
 #+begin_src scheme :noweb yes :noweb-ref module
+  (gnu home services)
   (gnu home services dotfiles)
   (gnu home services shells)
 #+end_src
 
+** Home服务
+#+begin_src scheme :noweb yes :noweb-ref home-service
+  (service home-profile-service-type)
+#+end_src
+
+#+begin_src scheme :noweb yes :noweb-ref home-service
+  (service home-shepherd-service-type)
+#+end_src
 
 #+begin_src scheme :noweb yes :noweb-ref service :noweb-prefix no
   (service guix-home-service-type
-    `(("minkieyume" ,(home-environment
-                 (services (cons* <<home-service>> %base-home-services))))))
+  	 `(("minkieyume" ,(home-environment
+  			   (services (cons* <<home-service>> %base-home-services))))))
 #+end_src
 
 #+begin_src scheme :noweb yes :noweb-ref home-service
@@ -155,12 +165,12 @@
       (directories '("../files/config/dotfiles"))))
 #+end_src
 
+** 环境变量
 #+begin_src scheme :noweb yes :noweb-ref home-service :noweb-prefix no
   (simple-service 'extra-environment-variables
       home-environment-variables-service-type
     `(<<home-environment-variable>>))
 #+end_src
-
 
 * 基础服务
 ** 网络模块

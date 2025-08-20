@@ -181,6 +181,7 @@
 
 * Chiko Niko Home
 #+begin_src scheme :noweb yes :noweb-ref module
+  (gnu home services)
   (gnu home services dotfiles)
   (gnu home services shells)
 #+end_src
