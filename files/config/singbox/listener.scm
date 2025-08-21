@@ -32,7 +32,7 @@
                  ("tag" . "cloudflare")
                  ("server" . "1.1.1.1"))
 	       (("type" . "udp")
-		("tag"  . "tailcale_dns")
+		("tag"  . "tailscale_dns")
 		("server" . "100.100.100.100"))
                (("type" . "local")
                 ("tag" . "dns_direct")))))
