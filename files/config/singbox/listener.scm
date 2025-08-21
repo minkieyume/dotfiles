@@ -33,7 +33,8 @@
                  ("server" . "1.1.1.1"))
 	       (("type" . "udp")
 		("tag"  . "tailscale_dns")
-		("server" . "100.100.100.100"))
+		("server" . "100.100.100.100")
+		("detour" . "out_direct"))
                (("type" . "local")
                 ("tag" . "dns_direct")))))
        ("inbounds"
