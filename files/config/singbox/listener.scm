@@ -30,7 +30,7 @@
          ("servers"
            . #((("type" . "https")
                  ("tag" . "cloudflare")
-                 ("server" . "https://1.1.1.1/dns-query")
+                 ("server" . "https://1.1.1.1")
 		 ("detour" . "vless_out"))
 	       (("type" . "udp")
 		("tag" . "tailscale_dns")
