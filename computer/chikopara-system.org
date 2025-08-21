@@ -300,7 +300,7 @@
   (service dhcpcd-service-type
   	 (dhcpcd-configuration
   	  (no-hook '("hostname" "resolv.conf"))
-  	  (static '("domain_name_servers=192.168.8.1"))))
+  	  (static '("domain_name_servers=192.168.8.1 fdf9:dc80:2c9::1"))))
   (service ntp-service-type)
 #+end_src
 
