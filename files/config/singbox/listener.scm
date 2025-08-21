@@ -46,7 +46,7 @@
          . #((("type" . "vless")
                ("tag" . "vless_out")
                ("detour" . "out_direct")
-               ("server" . ,(nyapasu-ref 'sing-box-ip))
+               ("server" . "chikocloud")
                ("server_port" . 7890)
                ("uuid" . ,(nyapasu-ref 'sing-box-chiko-uuid))
                ("flow" . "xtls-rprx-vision")

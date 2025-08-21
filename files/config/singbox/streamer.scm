@@ -4,8 +4,7 @@
   (let ((direct-process
           '())
          (direct-rules
-           '())
-         (proxy "..."))
+           '()))
     `(("log"
         ("level" . "warn"))
        ("dns"
