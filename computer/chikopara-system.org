@@ -561,8 +561,8 @@ sing-box
 *** 权限
 #+begin_src scheme :noweb-ref privileged-program
   (privileged-program
-    (program (file-append sing-box "/bin/sing-box"))
-    (capabilities "cap_net_admin,cap_net_raw+ep"))
+   (program (file-append (spec->pkg "sing-box") "/bin/sing-box"))
+   (capabilities "cap_net_admin,cap_net_bind_service,cap_net_raw+ep"))
 #+end_src
 
 *** 服务
