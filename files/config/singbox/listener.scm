@@ -38,7 +38,7 @@
                 ("tag" . "dns_direct"))))
 	 ("rules"
 	  . #((("domain_suffix" . #(".tailb8a678.ts.net"))
-	       ("domain_keyword" . #("chiko"))
+	       ("domain" . #("chikocloud" "chikopara" "dreamtwi" "yumemios"))
 	       ("server" . "tailscale_dns")))))
        ("inbounds"
          . #((("type". "mixed")
@@ -52,7 +52,6 @@
        ("outbounds"
          . #((("type" . "vless")
                ("tag" . "vless_out")
-               ("detour" . "out_direct")
                ("server" . "chikocloud")
                ("server_port" . 7890)
                ("uuid" . ,(nyapasu-ref 'sing-box-chiko-uuid))
