@@ -51,14 +51,7 @@
                ("uuid" . ,(nyapasu-ref 'sing-box-chiko-uuid))
                ("flow" . "xtls-rprx-vision")
                ("tls"
-                 ("enabled" . #t)
-                 ("utls"
-                   ("enabled" . #t)
-                   ("fingerprint" . "firefox"))
-                 ("reality"
-                   ("enabled" . #t)
-                   ("public_key" . ,(nyapasu-ref 'reality-pubic-key))
-                   ("short_id"  . "c10a110e"))))
+                 ("enabled" . #f)))
               (("type" . "direct")
                 ("tag" . "out_direct")
                 ("domain_resolver" . "dns_direct"))

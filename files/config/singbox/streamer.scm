@@ -17,22 +17,14 @@
        ("inbounds"
          . #((("type" . "vless")
                ("tag" . "vitural less")
-               ("listen" . "::")
+               ("listen" . "0.0.0.0")
                ("listen_port" . 7890)
                ("users"
                  . #((("name" . "chiko")
                      ("uuid" . ,(nyapasu-ref 'sing-box-chiko-uuid))
                      ("flow" . "xtls-rprx-vision"))))
                ("tls"
-                 ("enabled" . #t)
-                 ("reality"
-                   ("enabled" . #t)
-                   ("handshake"
-                     ("server" . "www.bilibili.com")
-                     ("server_port" . 443))
-                   ("private_key" . ,(nyapasu-ref 'reality-private-key))
-                   ("short_id"
-                     . #("c10a110e")))))))
+                 ("enabled" . #f)))))
        ("route"
          ("default_domain_resolver" . "direct")))))
 
