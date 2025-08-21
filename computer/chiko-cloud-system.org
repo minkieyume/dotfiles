@@ -186,7 +186,9 @@
 
 *** dhcpd和ntp
 #+begin_src scheme :noweb-ref service
-  (service dhcpcd-service-type)
+  (service dhcpcd-service-type
+  	 (dhcpcd-configuration
+  	  (no-hook '("hostname"))))
   (service ntp-service-type)
 #+end_src
 
