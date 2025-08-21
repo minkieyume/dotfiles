@@ -47,14 +47,13 @@
                ("tag" . "tproxy-in"))))
        ("outbounds"
          . #((("type" . "vless")
-               ("tag" . "vless_out")
-               ("detour" . "out_direct")
-	       ("domain_resolver" . "tailscale_dns")
+               ("tag" . "vless_out")	       
                ("server" . "chikocloud")
                ("server_port" . 7890)
                ("uuid" . ,(nyapasu-ref 'sing-box-chiko-uuid))
                ("tls"
-                 ("enabled" . #f)))
+                 ("enabled" . #f))
+	       ("domain_resolver" . "tailscale_dns"))
               (("type" . "direct")
                 ("tag" . "out_direct")
                 ("domain_resolver" . "dns_direct"))
