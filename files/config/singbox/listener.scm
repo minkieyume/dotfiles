@@ -28,9 +28,10 @@
         ("level" . "warn"))
        ("dns"
          ("servers"
-           . #((("type" . "tls")
+           . #((("type" . "https")
                  ("tag" . "cloudflare")
-                 ("server" . "1.1.1.1"))
+                 ("server" . "https://1.1.1.1/dns-query")
+		 ("detour" . "vless_out"))
 	       (("type" . "udp")
 		("tag" . "tailscale_dns")
 		("server" . "100.100.100.100"))
