@@ -35,7 +35,11 @@
 		("tag" . "tailscale_dns")
 		("server" . "100.100.100.100"))
                (("type" . "local")
-                ("tag" . "dns_direct")))))
+                ("tag" . "dns_direct"))))
+	 ("rules"
+	  . #((("domain_suffix" . #(".tailb8a678.ts.net"))
+	       ("domain_keyword" . #("chiko"))
+	       ("server" . "tailscale_dns")))))
        ("inbounds"
          . #((("type". "mixed")
                ("tag" . "mixed-in")
@@ -48,20 +52,16 @@
        ("outbounds"
          . #((("type" . "vless")
                ("tag" . "vless_out")
-               ("detour" . "out_tailscale")
+               ("detour" . "out_direct")
                ("server" . "chikocloud")
                ("server_port" . 7890)
                ("uuid" . ,(nyapasu-ref 'sing-box-chiko-uuid))
                ("tls"
                  ("enabled" . #f)))
-	     (("type" . "direct")
-              ("tag" . "out_tailscale")
-              ("domain_resolver" . "tailscale_dns"))
              (("type" . "direct")
-              ("tag" . "out_direct")
-              ("domain_resolver" . "dns_direct"))
-              (("type" . "block")
-                ("tag" . "block"))))
+              ("tag" . "out_direct"))
+             (("type" . "block")
+              ("tag" . "block"))))
        ("route"
          ("rules"
            . #((("action" . "sniff"))
@@ -89,7 +89,7 @@
                     ("url" . "https://raw.githubusercontent.com/SagerNet/sing-geoip/refs/heads/rule-set/geoip-cn.srs")
                     ("download_detour" . "vless_out"))))
            ("final" . "vless_out")
-           ("default_domain_resolver" . "dns_direct")))))
+           ("default_domain_resolver" . "cloudflare")))))
 
 (define (output-singbox-listener file-name)
   (call-with-output-file file-name
