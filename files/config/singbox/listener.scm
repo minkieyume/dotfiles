@@ -83,7 +83,7 @@
                     ("url" . "https://raw.githubusercontent.com/SagerNet/sing-geoip/refs/heads/rule-set/geoip-cn.srs")
                     ("download_detour" . "vless_out"))))
            ("final" . "vless_out")
-           ("default_domain_resolver" . "cloudflare")))))
+           ("default_domain_resolver" . "dns_direct")))))
 
 (define (output-singbox-listener file-name)
   (call-with-output-file file-name
