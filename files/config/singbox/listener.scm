@@ -49,7 +49,6 @@
                ("server" . "chikocloud")
                ("server_port" . 7890)
                ("uuid" . ,(nyapasu-ref 'sing-box-chiko-uuid))
-               ("flow" . "xtls-rprx-vision")
                ("tls"
                  ("enabled" . #f)))
               (("type" . "direct")

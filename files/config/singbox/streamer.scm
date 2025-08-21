@@ -21,8 +21,7 @@
                ("listen_port" . 7890)
                ("users"
                  . #((("name" . "chiko")
-                     ("uuid" . ,(nyapasu-ref 'sing-box-chiko-uuid))
-                     ("flow" . "xtls-rprx-vision"))))
+                     ("uuid" . ,(nyapasu-ref 'sing-box-chiko-uuid)))))
                ("tls"
                  ("enabled" . #f)))))
        ("route"
