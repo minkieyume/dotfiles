@@ -506,8 +506,6 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+begin_src scheme :noweb-ref package
   "font-awesome"
   "font-adobe-source-serif"
-  "font-apple-new-york"
-  "font-apple-sf-pro"
   "font-google-noto"
   "font-google-noto-sans-cjk"
   "font-google-noto-serif-cjk"
@@ -548,9 +546,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
                    (prefer
                     (family ,sans)
                     (family "sans-serif"))))
-               '("BlinkMacSystemFont"
-                 "-apple-system"
-                 "system-ui"
+               '("system-ui"
                  "ui-sans-serif"))
         (alias
          (family "ui-serif")
