@@ -52,6 +52,7 @@
        ("outbounds"
          . #((("type" . "vless")
                ("tag" . "vless_out")
+	       ("domain_resolver" . "tailscale_dns")
                ("server" . "chikocloud")
                ("server_port" . 7890)
                ("uuid" . ,(nyapasu-ref 'sing-box-chiko-uuid))
