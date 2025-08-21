@@ -616,19 +616,20 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 *** 服务
 #+begin_src scheme :noweb-ref service
   (simple-service 'sing-box-service
-    shepherd-root-service-type
-    (list
-      (let ((config %sing-box-config-file))
-        (shepherd-service
-          (documentation "Run sing-box singing listener.")
-          (provision '(sing-box))
-          (requirement '(networking))
-          (start #~(make-forkexec-constructor
-                     (list "/run/privileged/bin/sing-box" "run" "-c" #$config)
-                             #:log-file "/var/log/sing-box.log"
-                             #:supplementary-groups '("netdev")
-    		             #:user "singbox"))
-          (stop #~(make-kill-destructor))))))
+  		shepherd-root-service-type
+  		(list
+  		 (let ((config %sing-box-config-file))
+  		   (shepherd-service
+  		    (documentation "Run sing-box singing listener.")
+  		    (provision '(sing-box))
+  		    (requirement '(networking))
+  		    (start #~(make-forkexec-constructor
+  			      (list "/run/privileged/bin/sing-box" "run" "-c" #$config)
+                                #:log-file "/var/log/sing-box.log"
+                                #:supplementary-groups '("netdev")
+    		                #:user "singbox"
+  			      #:resource-limits '((nofile 100000 100000))))
+  		    (stop #~(make-kill-destructor))))))
 #+end_src
 
 *** 透明唱片
