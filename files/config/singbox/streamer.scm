@@ -25,7 +25,11 @@
                ("tls"
                  ("enabled" . #f)))))
        ("route"
-         ("default_domain_resolver" . "direct")))))
+	("rules"
+         . #((("inbound" . "in")
+	      ("action" . "resolve")
+	      ("strategy" . "ipv4_only"))))
+        ("default_domain_resolver" . "direct")))))
 
 (define (output-singbox-streamer file-name)
   (call-with-output-file file-name
