@@ -530,19 +530,20 @@ sing-box
 *** 服务
 #+begin_src scheme :noweb-ref service
   (simple-service 'sing-box-service
-    shepherd-root-service-type
-    (list
-      (let ((config %sing-box-config-file))
-        (shepherd-service
-          (documentation "Run sing-box singing streamer.")
-          (provision '(sing-box))
-          (requirement '(networking))
-          (start #~(make-forkexec-constructor
-                     (list "/run/privileged/bin/sing-box" "run" "-c" #$config)
-                             #:log-file "/var/log/sing-box.log"
-                             #:supplementary-groups '("netdev")
-    		             #:user "singbox"))
-          (stop #~(const #t))))))
+  		shepherd-root-service-type
+  		(list
+  		 (let ((config %sing-box-config-file))
+  		   (shepherd-service
+  		    (documentation "Run sing-box singing streamer.")
+  		    (provision '(sing-box))
+  		    (requirement '(networking))
+  		    (start #~(make-forkexec-constructor
+  			      (list "/run/privileged/bin/sing-box" "run" "-c" #$config)
+                                #:log-file "/var/log/sing-box.log"
+                                #:supplementary-groups '("netdev")
+    		                #:user "singbox"
+  			      #:resource-limits '((nofile 100000 100000))))
+  		    (stop #~(const #t))))))
 #+end_src
 
 *** 用户态
