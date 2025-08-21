@@ -54,7 +54,7 @@
                ("uuid" . ,(nyapasu-ref 'sing-box-chiko-uuid))
                ("tls"
                  ("enabled" . #f)))
-	     (("type" . "tailscale")
+	     (("type" . "direct")
               ("tag" . "out_tailscale")
               ("domain_resolver" . "tailscale_dns"))
              (("type" . "direct")
