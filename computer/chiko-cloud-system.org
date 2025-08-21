@@ -188,7 +188,8 @@
 #+begin_src scheme :noweb-ref service
   (service dhcpcd-service-type
   	 (dhcpcd-configuration
-  	  (no-hook '("hostname" "resolv.conf"))))
+  	  (no-hook '("hostname" "resolv.conf"))
+  	  (static '("domain_name_servers=192.168.122.1"))))
   (service ntp-service-type)
 #+end_src
 
