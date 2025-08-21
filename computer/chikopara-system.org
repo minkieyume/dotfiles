@@ -299,8 +299,7 @@
 #+begin_src scheme :noweb-ref service
   (service dhcpcd-service-type
   	 (dhcpcd-configuration
-  	  (no-hook '("hostname" "resolv.conf"))
-  	  (static '("domain_name_servers=100.100.100.100 192.168.8.1 fdf9:dc80:2c9::1" "domain_search=tailb8a678.ts.net"))))
+  	  (no-hook '("hostname" "resolv.conf"))))
   (service ntp-service-type)
 #+end_src
 
