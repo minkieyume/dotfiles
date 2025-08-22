@@ -44,7 +44,7 @@
       (("domain_suffix" . "boiledscript.com"))
       (("domain_suffix" . "freedesktop.org"))
       (("rule_set" . "geoip-telegram"))
-      (("inbound" . "out_proxy"))))
+      (("inbound" . "proxy_in"))))
   
   (define %config
     `(("log"
@@ -70,13 +70,13 @@
             ("listen_port" . 53)
             ("network" . "udp"))
 	   (("type". "mixed")
-            ("tag" . "mixed-in")
+            ("tag" . "proxy_in")
             ("listen" . "::")
             ("listen_port" . 7890))
            (("type" . "tproxy")
             ("listen" . "::")
             ("listen_port" . 7891)
-            ("tag" . "tproxy-in"))))
+            ("tag" . "tproxy_in"))))
       ("outbounds"
        . #((("type" . "vless")
             ("tag" . "out_proxy")
@@ -88,7 +88,7 @@
            (("type" . "direct")
             ("tag" . "out_direct"))
            (("type" . "block")
-            ("tag" . "block"))))
+            ("tag" . "out_block"))))
       ("route"
        ("rules"
         . #((("action" . "sniff"))
@@ -98,13 +98,14 @@
              ("outbound" . "out_direct"))
 	    ,@(map (lambda (rule)
                      `(,@rule
-                       ("outbound" . "OUT: Block")))
+                       ("outbound" . "out_block")))
                    %block-rules)
 
             ,@(map (lambda (rule)
                      `(,@rule
 		       ("outbound" . "out_direct")))
                    %direct-rules)
+	    
 	    ,@(map (lambda (rule)
                      `(,@rule
 		       ("outbound" . "out_proxy")))
@@ -115,6 +116,7 @@
         . #(,@%rule-sets))
        ("final" . "out_direct")
        ("default_domain_resolver" . "dns_proxy"))))
+  
   (call-with-output-file file-name
     (lambda (port)
       (display (scm->json-string %config #:pretty #t) port))))
