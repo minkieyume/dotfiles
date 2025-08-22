@@ -25,7 +25,16 @@
        (map geoip
             '("cn"
               "telegram")))))
-
+  (define %direct-process
+    '("rclone"
+      "steam"
+      "sing-box"
+      "wineserver"
+      "syncthing"
+      "yggdrasil"
+      "smartdns"
+      "PHOGS.exe"))
+  
   (define %block-rules
     '((("rule_set" . "geosite-category-ads-all"))))
 

@@ -1,5 +1,5 @@
 (load "../../../secret/nyapasu.scm")
 (load "listener.scm")
 (load "streamer.scm")
-(output-singbox-listener "../../../secret/listener.json")
-(output-singbox-streamer "../../../secret/streamer.json")
+(sing-box-listener "../../../secret/listener.json")
+(sing-box-streamer "../../../secret/streamer.json")
