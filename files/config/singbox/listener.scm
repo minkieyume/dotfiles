@@ -94,6 +94,7 @@
             ("tag" . "out_proxy")
             ("server" . "chikocloud.tailb8a678.ts.net")
             ("server_port" . 7890)
+	    ("domain_resolver" . "dns_proxy")
             ("uuid" . ,(nyapasu-ref 'sing-box-chiko-uuid))
             ("tls"
              ("enabled" . #f)))
