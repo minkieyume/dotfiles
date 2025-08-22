@@ -1,6 +1,6 @@
 (use-modules (json))
 
-(define (sing-box-streamer)
+(define (sing-box-streamer file-name)
   `(("log"
      ("level" . "warn"))
     ("dns"
