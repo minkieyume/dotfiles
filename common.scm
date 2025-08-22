@@ -51,4 +51,6 @@
 
 ;;预编译包链接
 (define %chiko-substitute-urls
-  (cons* "https://mirrors.sjtug.sjtu.edu.cn/guix" %default-substitute-urls))
+  (cons* "https://substitutes.nonguix.org/"
+	 "https://mirrors.sjtug.sjtu.edu.cn/guix"
+	 %default-substitute-urls))
