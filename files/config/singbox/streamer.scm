@@ -28,8 +28,8 @@
             ("tls"
              ("enabled" . #f)))))
       ("outbounds"
-       . #(("type" . "direct")
-	   ("tag" . "direct_out")))
+       . #((("type" . "direct")
+	    ("tag" . "direct_out"))))
       ("route"
        ("rules"
 	. #((("action" . "sniff"))
