@@ -4,7 +4,9 @@
   
   (define %config
     `(("log"
-       ("level" . "warn"))
+       ("disabled" . #f)
+       ("level" . "warn")
+       ("timestamp" . #t))
       ("dns"
        ("servers"
 	. #((("type" . "local")

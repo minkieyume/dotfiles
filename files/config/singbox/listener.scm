@@ -7,13 +7,13 @@
              `(("type" . "remote")
                ("tag" . ,(format #f "geosite-~a" rule-set))
                ("url" . ,(format #f "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/sing/geo/geosite/~a.srs" rule-set))
-               ("download_detour" . "out_proxy"))))
+               ("download_detour" . "out_direct"))))
           (geoip
            (lambda (rule-set)
              `(("type" . "remote")
                ("tag" . ,(format #f "geoip-~a" rule-set))
                ("url" . ,(format #f "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/sing/geo/geoip/~a.srs" rule-set))
-               ("download_detour" . "out_proxy")))))
+               ("download_detour" . "out_direct")))))
       (append
        (map geosite
             '("category-ads-all"
@@ -57,12 +57,15 @@
   
   (define %config
     `(("log"
-       ("level" . "warn"))
+       ("disable" . #f)
+       ("level" . "warn")
+       ("timestamp" . #t))
       ("dns"
        ("servers"
         . #((("type" . "udp")
 	     ("tag" . "dns_proxy")
-	     ("server" . "chikocloud.tailb8a678.ts.net"))
+	     ("server" . "chikocloud.tailb8a678.ts.net")
+	     ("domain_resolver" . "tailscale_dns"))
 	    (("type" . "udp")
 	     ("tag" . "tailscale_dns")
 	     ("server" . "100.100.100.100"))
@@ -94,6 +97,8 @@
             ("uuid" . ,(nyapasu-ref 'sing-box-chiko-uuid))
             ("tls"
              ("enabled" . #f)))
+	   (("type" . "direct")
+            ("tag" . "out_ruleset"))
            (("type" . "direct")
             ("tag" . "out_direct"))
            (("type" . "block")
@@ -124,7 +129,7 @@
        ("rule_set"
         . #(,@%rule-sets))
        ("final" . "out_direct")
-       ("default_domain_resolver" . "dns_proxy"))))
+       ("default_domain_resolver" . "dns_direct"))))
   
   (call-with-output-file file-name
     (lambda (port)
