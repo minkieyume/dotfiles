@@ -52,6 +52,7 @@
       (("rule_set" . "geosite-stripe"))      
       (("domain_suffix" . "boiledscript.com"))
       (("domain_suffix" . "freedesktop.org"))
+      (("domain" . "substitutes.nonguix.org"))
       (("rule_set" . "geoip-telegram"))
       (("inbound" . "proxy_in"))))
   
