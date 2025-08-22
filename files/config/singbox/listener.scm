@@ -98,8 +98,6 @@
             ("uuid" . ,(nyapasu-ref 'sing-box-chiko-uuid))
             ("tls"
              ("enabled" . #f)))
-	   (("type" . "direct")
-            ("tag" . "out_ruleset"))
            (("type" . "direct")
             ("tag" . "out_direct"))
            (("type" . "block")
