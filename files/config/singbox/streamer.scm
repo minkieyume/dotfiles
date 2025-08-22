@@ -1,37 +1,43 @@
 (use-modules (json))
 
-(define %singbox-streamer
-  (let ((direct-process
-          '())
-         (direct-rules
-           '()))
-    `(("log"
-        ("level" . "warn"))
-       ("dns"
-         ("servers"
-           . #((("type" . "tls")
-                ("tag" . "cloudflare")
-                ("server" . "1.1.1.1"))
-               (("type" . "local")
-                ("tag" . "direct")))))
-       ("inbounds"
-         . #((("type" . "vless")
-               ("tag" . "vitural less")
-               ("listen" . "0.0.0.0")
-               ("listen_port" . 7890)
-               ("users"
-                 . #((("name" . "chiko")
-                     ("uuid" . ,(nyapasu-ref 'sing-box-chiko-uuid)))))
-               ("tls"
-                 ("enabled" . #f)))))
-       ("route"
-	("rules"
-         . #((("inbound" . "in")
-	      ("action" . "resolve")
-	      ("strategy" . "ipv4_only"))))
-        ("default_domain_resolver" . "direct")))))
-
-(define (output-singbox-streamer file-name)
+(define (sing-box-streamer)
+  `(("log"
+     ("level" . "warn"))
+    ("dns"
+     ("servers"
+      . #((("type" . "local")
+           ("tag" . "direct"))))
+     ("rules"
+      . #((("server" . "direct")
+	   ("strategy" . "ipv4_only")))))
+    ("inbounds"
+     . #((("type" . "direct")
+	  ("tag" . "dns_in")
+	  ("listen" . "0.0.0.0")
+          ("listen_port" . 53)
+          ("network" . "udp"))
+	 (("type" . "vless")
+          ("tag" . "proxy_in")
+          ("listen" . "0.0.0.0")
+          ("listen_port" . 7890)
+          ("users"
+           . #((("name" . "chiko")
+                ("uuid" . ,(nyapasu-ref 'sing-box-chiko-uuid)))))
+          ("tls"
+           ("enabled" . #f)))))
+    ("outbounds"
+     . #(("type" . "direct")
+	 ("tag" . "direct_out")))
+    ("route"
+     ("rules"
+      . #((("action" . "sniff"))
+          (("protocol" . "dns")
+           ("action" . "hijack-dns"))
+	  (("action" . "resolve")
+	   ("strategy" . "ipv4_only"))))
+     ("final" . "direct_out")
+     ("default_domain_resolver" . "direct")))
+  
   (call-with-output-file file-name
     (lambda (port)
       (display (scm->json-string %singbox-streamer #:pretty #t) port))))

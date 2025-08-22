@@ -517,14 +517,14 @@ sing-box
         #~(begin
             (primitive-load #$%nyapasu-script)
             (primitive-load #$%sing-box-streamer)
-            (output-singbox-streamer #$output)))))
+            (sing-box-streamer #$output)))))
 #+end_src
 
 *** 权限
 #+begin_src scheme :noweb-ref privileged-program
   (privileged-program
-    (program (file-append sing-box "/bin/sing-box"))
-    (capabilities "cap_net_admin,cap_net_raw+ep"))
+   (program (file-append (spec->pkg "sing-box") "/bin/sing-box"))
+   (capabilities "cap_net_admin,cap_net_bind_service,cap_net_raw+ep"))
 #+end_src
 
 *** 服务
