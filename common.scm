@@ -54,3 +54,7 @@
   (cons* "https://substitutes.nonguix.org/"
 	 "https://mirrors.sjtug.sjtu.edu.cn/guix"
 	 %default-substitute-urls))
+
+(define %authorized-keys
+  (cons* (local-file "./files/keys/non-guix.pub")
+	 %default-authorized-guix-keys))
