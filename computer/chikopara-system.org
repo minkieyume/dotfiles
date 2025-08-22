@@ -555,7 +555,7 @@ sing-box
         #~(begin
             (primitive-load #$%nyapasu-script)
             (primitive-load #$%sing-box-listener)
-            (output-singbox-listener #$output)))))
+            (sing-box-listener #$output)))))
 #+end_src
 
 *** 权限

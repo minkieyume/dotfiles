@@ -599,7 +599,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
         #~(begin
             (primitive-load #$%nyapasu-script)
             (primitive-load #$%sing-box-listener)
-            (output-singbox-listener #$output)))))
+            (sing-box-listener #$output)))))
 #+end_src
 
 *** 权限
