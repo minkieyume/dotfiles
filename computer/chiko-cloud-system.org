@@ -412,7 +412,7 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
                           "proxy_set_header Upgrade $http_upgrade;"
                           "proxy_set_header Connection $connection_upgrade;")))
   	       (nginx-location-configuration
-  		(uri ,(nyapasu-ref 'ws-transport-path))
+  		(uri (nyapasu-ref 'ws-transport-path))
   		(body '("proxy_redirect off;"
   			"proxy_pass http://127.0.0.1:7890;"
   			"proxy_http_version 1.1;"
