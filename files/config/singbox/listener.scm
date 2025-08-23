@@ -89,7 +89,7 @@
        . #((("type" . "vless")
             ("tag" . "out_proxy")
             ("server" . "littlewing.yumieko.com")
-            ("server_port" . 7890)
+            ("server_port" . 443)
             ("uuid" . ,(nyapasu-ref 'sing-box-chiko-uuid))
 	    ("transport"
 	     ("type" . "ws")
