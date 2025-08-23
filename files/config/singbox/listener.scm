@@ -74,7 +74,7 @@
       ("inbounds"
        . #((("type" . "direct")
 	    ("tag" . "dns_in")
-	    ("listen" . "0.0.0.0")
+	    ("listen" . "::")
             ("listen_port" . 53)
             ("network" . "udp"))
 	   (("type". "mixed")
@@ -90,7 +90,9 @@
             ("tag" . "out_proxy")
             ("server" . "chikocloud.tailb8a678.ts.net")
             ("server_port" . 7890)
-	    ("domain_resolver" . "dns_tailscale")
+	    ("domain_resolver"
+	     ("server" . "tailscale_dns")
+	     ("strategy" . "ipv4_only"))
             ("uuid" . ,(nyapasu-ref 'sing-box-chiko-uuid))
             ("tls"
              ("enabled" . #f)))

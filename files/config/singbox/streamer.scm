@@ -10,9 +10,9 @@
       ("dns"
        ("servers"
 	. #((("type" . "local")
-             ("tag" . "direct"))))
+             ("tag" . "direct_dns"))))
        ("rules"
-	. #((("server" . "direct")
+	. #((("server" . "direct_dns")
 	     ("strategy" . "ipv4_only")))))
       ("inbounds"
        . #((("type" . "direct")
@@ -20,8 +20,9 @@
 	    ("listen" . "0.0.0.0")
             ("listen_port" . 53)
             ("network" . "udp"))
+	   (("type" . ""))
 	   (("type" . "vless")
-            ("tag" . "proxy_in")
+            ("tag" . "vless_in")
             ("listen" . "0.0.0.0")
             ("listen_port" . 7890)
             ("users"
@@ -31,17 +32,13 @@
              ("enabled" . #f)))))
       ("outbounds"
        . #((("type" . "direct")
-	    ("tag" . "direct_out"))))
+	    ("tag" . "direct_out")
+	    ("domain_resolver"
+	     ("server" . "direct_dns")
+	     ("strategy" . "ipv4_only")))))
       ("route"
-       ("rules"
-	. #((("action" . "sniff"))
-            (("protocol" . "dns")
-             ("action" . "hijack-dns"))
-	    (("action" . "resolve")
-	     ("strategy" . "ipv4_only"))))
        ("final" . "direct_out")
-       ("default_domain_resolver" . "direct"))))
-  
+       ("default_domain_resolver" . "direct_dns"))))
   
   (call-with-output-file file-name
     (lambda (port)
