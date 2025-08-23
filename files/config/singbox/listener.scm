@@ -88,14 +88,12 @@
       ("outbounds"
        . #((("type" . "vless")
             ("tag" . "out_proxy")
-            ("server" . "chikocloud.tailb8a678.ts.net")
+            ("server" . "littlewing.yumieko.com")
             ("server_port" . 7890)
-	    ("domain_resolver"
-	     ("server" . "tailscale_dns")
-	     ("strategy" . "ipv4_only"))
             ("uuid" . ,(nyapasu-ref 'sing-box-chiko-uuid))
-            ("tls"
-             ("enabled" . #f)))
+	    ("transport"
+	     ("type" . "ws")
+	     ("path" . ,(nyapasu-ref 'ws-transport-path))))
            (("type" . "direct")
             ("tag" . "out_direct"))
            (("type" . "block")
