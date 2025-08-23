@@ -389,21 +389,20 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 用于转发网页代理
 #+begin_src scheme :noweb-ref service
   (service nginx-service-type
-    (nginx-configuration
-      (extra-content "map $http_upgrade $connection_upgrade { default upgrade; '' close; }\nclient_max_body_size 50M;")
-      (server-blocks
-        (list
-          (nginx-server-configuration
-            (server-name '("littlewing.yumieko.com"))
-            (listen '("443 ssl"))
-            (ssl-certificate "/etc/certs/littlewing.yumieko.com/fullchain.pem")
-            (ssl-certificate-key "/etc/certs/littlewing.yumieko.com/privkey.pem")
-            (locations
-              (list
-                (nginx-location-configuration
+  	 (nginx-configuration
+  	  (extra-content "map $http_upgrade $connection_upgrade { default upgrade; '' close; }\nclient_max_body_size 50M;")
+  	  (server-blocks
+  	   (list
+              (nginx-server-configuration
+               (server-name '("littlewing.yumieko.com"))
+               (listen '("443 ssl"))
+               (ssl-certificate "/etc/certs/littlewing.yumieko.com/fullchain.pem")
+               (ssl-certificate-key "/etc/certs/littlewing.yumieko.com/privkey.pem")
+               (locations
+                (list
+                 (nginx-location-configuration
                   (uri "/")
                   (body '("proxy_pass http://127.0.0.1:3000;"
-                          "proxy_set_header Host $host;"
                           "proxy_http_version 1.1;"
                           "proxy_redirect off;"
                           "proxy_set_header Host $host;"
@@ -411,7 +410,17 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
                           "proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;"
                           "proxy_set_header X-Forwarded-Proto $scheme;"
                           "proxy_set_header Upgrade $http_upgrade;"
-                          "proxy_set_header Connection $connection_upgrade;"))))))))))
+                          "proxy_set_header Connection $connection_upgrade;")))
+  	       (nginx-location-configuration
+  		(uri ,(nyapasu-ref 'ws-transport-path))
+  		(body '("proxy_redirect off;"
+  			"proxy_pass http://127.0.0.1:7890;"
+  			"proxy_http_version 1.1;"
+  			"proxy_set_header Host $host;"
+  			"proxy_set_header X-Real-IP $remote_addr;"
+  			"proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;"
+  			"proxy_set_header Upgrade $http_upgrade;"
+  			"proxy_set_header Connection $connection_upgrade;"))))))))))
 #+end_src
 
 ** Misskey

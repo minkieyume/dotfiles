@@ -20,16 +20,16 @@
 	    ("listen" . "0.0.0.0")
             ("listen_port" . 53)
             ("network" . "udp"))
-	   (("type" . ""))
 	   (("type" . "vless")
             ("tag" . "vless_in")
-            ("listen" . "0.0.0.0")
+            ("listen" . "127.0.0.1")
             ("listen_port" . 7890)
             ("users"
              . #((("name" . "chiko")
                   ("uuid" . ,(nyapasu-ref 'sing-box-chiko-uuid)))))
-            ("tls"
-             ("enabled" . #f)))))
+	    ("transport"
+	     ("type" . "ws")
+	     ("path" . ,(nyapasu-ref 'ws-transport-path))))))
       ("outbounds"
        . #((("type" . "direct")
 	    ("tag" . "direct_out")
