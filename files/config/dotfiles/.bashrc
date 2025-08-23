@@ -26,5 +26,3 @@ done
 unset i
 alias sudo='doas'
 export TERM=xterm-256color
-export GUIX_PROFILE=$HOME/.guix-profile
-. $GUIX_PROFILE/etc/profile
