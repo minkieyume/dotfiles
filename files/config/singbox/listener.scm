@@ -91,6 +91,8 @@
             ("server" . "littlewing.yumieko.com")
             ("server_port" . 443)
             ("uuid" . ,(nyapasu-ref 'sing-box-chiko-uuid))
+	    ("tls"
+	     ("enabled" . #t))
 	    ("transport"
 	     ("type" . "ws")
 	     ("path" . ,(nyapasu-ref 'ws-transport-path))))
