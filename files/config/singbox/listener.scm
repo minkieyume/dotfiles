@@ -63,10 +63,6 @@
       ("dns"
        ("servers"
         . #((("type" . "udp")
-	     ("tag" . "dns_proxy")
-	     ("server" . "chikocloud.tailb8a678.ts.net")
-	     ("domain_resolver" . "tailscale_dns"))
-	    (("type" . "udp")
 	     ("tag" . "tailscale_dns")
 	     ("server" . "100.100.100.100"))
             (("type" . "local")
@@ -94,7 +90,7 @@
             ("tag" . "out_proxy")
             ("server" . "chikocloud.tailb8a678.ts.net")
             ("server_port" . 7890)
-	    ("domain_resolver" . "dns_proxy")
+	    ("domain_resolver" . "dns_tailscale")
             ("uuid" . ,(nyapasu-ref 'sing-box-chiko-uuid))
             ("tls"
              ("enabled" . #f)))

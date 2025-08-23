@@ -451,6 +451,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   "imv"
   "foot"
   "light"
+  "swaylock"
   "swaylock-effects"
   "wireplumber"
   "xwayland-satellite"
@@ -464,6 +465,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   					      (local-file "../files/config/chikoniko/niri.kdl")
   					      (specs->pkgs "foot"
   							   "light"
+  							   "swaylock"
   							   "swaylock-effects"
   							   "wireplumber"
   							   "xwayland-satellite")))))
