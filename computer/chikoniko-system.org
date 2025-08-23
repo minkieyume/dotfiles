@@ -458,15 +458,15 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 
 #+begin_src scheme :noweb-ref home-service
   (service home-niri-service-type
-    (home-niri-configuration
-      (config
-        (computed-substitution-with-inputs "niri.kdl"
-          (local-file "../files/config/chikoniko/niri.kdl")
-          (specs->pkgs "foot"
-            "light"
-            "swaylock-effects"
-            "wireplumber"
-            "xwayland-satellite")))))
+  	 (home-niri-configuration
+  	  (config
+  	   (computed-substitution-with-inputs "niri.kdl"
+  					      (local-file "../files/config/chikoniko/niri.kdl")
+  					      (specs->pkgs "foot"
+  							   "light"
+  							   "swaylock-effects"
+  							   "wireplumber"
+  							   "xwayland-satellite")))))
 #+end_src
 
 *** xdg-desktop-portal
