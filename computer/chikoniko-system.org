@@ -295,14 +295,14 @@
 
 配置SSH配置的服务：
 #+begin_src scheme :noweb-ref service
-    (service openssh-service-type
-      (openssh-configuration
-        (password-authentication? #f)
-        (permit-root-login #f)
-        (authorized-keys
-          `(("minkieyume"
-              ,(local-file "../files/keys/yumemi_ssh_rsa.pub")
-  	    ,(local-file "../files/keys/niko_ssh_rsa.pub")))))
+  (service openssh-service-type
+  	 (openssh-configuration
+  	  (password-authentication? #f)
+  	  (permit-root-login #f)
+  	  (authorized-keys
+  	   `(("minkieyume"
+                ,(local-file "../files/keys/yumemi_ssh_rsa.pub")
+  	      ,(local-file "../files/keys/niko_ssh_rsa.pub"))))))
 #+end_src
 
 ** Mcron
