@@ -48,6 +48,7 @@
     (name "minkieyume")
     (comment "Minkieyume")
     (group "users")
+    (shell (file-append (spec->pkg "fish") "/bin/fish"))
     (home-directory "/home/minkieyume")
     (supplementary-groups '("wheel" "netdev" "audio" "video")))
 #+end_src
@@ -208,12 +209,13 @@
 配置SSH配置的服务：
 #+begin_src scheme :noweb-ref service
   (service openssh-service-type
-    (openssh-configuration
-      (password-authentication? #f)
-      (permit-root-login #f)
-      (authorized-keys
-        `(("minkieyume"
-            ,(local-file "../files/keys/yumemi_rsa.pub"))))))
+  	 (openssh-configuration
+  	  (password-authentication? #f)
+  	  (permit-root-login #f)
+  	  (authorized-keys
+  	   `(("minkieyume"
+                ,(local-file "../files/keys/yumemi_rsa.pub")
+  	      ,(local-file "../files/keys/niko_ssh_rsa.pub"))))))
 #+end_src
 
 ** Doas
@@ -291,6 +293,12 @@ mcron的服务，值得注意的是，jobs的参数必须要用quote括起来，
   (service mcron-service-type
     (mcron-configuration
       (jobs '(<<mcron-job>>))))
+#+end_src
+
+** Fish
+fish，开箱即用的终端解释器。
+#+begin_src scheme :noweb-ref package
+  "fish"
 #+end_src
 
 ** Rsync

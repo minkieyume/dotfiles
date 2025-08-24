@@ -49,11 +49,12 @@
 *** MinkieYume
 #+begin_src scheme :noweb-ref user
   (user-account
-    (name "minkieyume")
-    (comment "Minkieyume")
-    (group "users")
-    (home-directory "/home/minkieyume")
-    (supplementary-groups '("wheel" "netdev" "audio" "video" "niko")))
+   (name "minkieyume")
+   (comment "Minkieyume")
+   (group "users")
+   (shell (file-append (spec->pkg "fish") "/bin/fish"))
+   (home-directory "/home/minkieyume")
+   (supplementary-groups '("wheel" "netdev" "audio" "video" "niko")))
 #+end_src
 
 #+begin_src scheme :noweb-ref group
@@ -211,8 +212,14 @@
 
 #+begin_src scheme :noweb yes :noweb-ref home-service
   (service home-dotfiles-service-type
-    (home-dotfiles-configuration
-      (directories '("../files/config/dotfiles"))))
+  	 (home-dotfiles-configuration
+  	  (directories '("../files/config/dotfiles"))))
+#+end_src
+
+#+begin_src scheme :noweb-ref home-service
+  (service home-files-service-type
+  	 `((".ssh/id_rsa" ,(local-file "../secret/keys/niko_ssh_rsa"))
+  	   ("Downloads" ,(symlink-to "/niko/download")))
 #+end_src
 
 ** 环境变量
@@ -298,11 +305,6 @@
   	    ,(local-file "../files/keys/niko_ssh_rsa.pub")))))
 #+end_src
 
-#+begin_src scheme :noweb-ref home-service
-  (service home-files-service-type
-  	 `((".ssh/id_rsa" ,(local-file "../secret/keys/niko_ssh_rsa"))))
-#+end_src
-
 ** Mcron
 Mcron是guix用于管理计划任务的服务，类似crontab。
 #+begin_src scheme :noweb-ref module
@@ -314,6 +316,12 @@ mcron的服务，值得注意的是，jobs的参数必须要用quote括起来，
   (service mcron-service-type
     (mcron-configuration
       (jobs '(<<mcron-job>>))))
+#+end_src
+
+** Fish
+fish，开箱即用的终端解释器。
+#+begin_src scheme :noweb-ref package
+  "fish"
 #+end_src
 
 * 工具
