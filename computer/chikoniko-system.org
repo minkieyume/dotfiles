@@ -437,6 +437,16 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
                        "quic://[::]:1234"))))))
 #+end_src
 
+** Tailscale
+#+begin_src scheme :noweb-ref module
+  (rosenthal services networking)
+#+end_src
+
+#+begin_src scheme :noweb-ref service
+  (service tailscale-service-type)
+#+end_src
+
+
 * 容器
 #+begin_src scheme :noweb-ref module
   (gnu services docker)
