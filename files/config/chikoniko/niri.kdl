@@ -81,12 +81,12 @@ binds {
     XF86AudioMicMute      allow-when-locked=true { spawn "$$bin/wpctl$$" "set-mute"   "@DEFAULT_AUDIO_SOURCE@" "toggle"; }
     XF86MonBrightnessDown allow-when-locked=true { spawn "$$bin/light$$" "-U" "5"; }
     XF86MonBrightnessUp   allow-when-locked=true { spawn "$$bin/light$$" "-A" "5"; }
-    XF86Lock              hotkey-overlay-title="锁屏: swaylock" { spawn "$$bin/swaylock$$" "--clock" "--daemonize" "--ignore-empty-password" "--image" "$$wp3283230-oneshot-wallpapers.jpg$$"; }
-    XF86ScreenSaver       hotkey-overlay-title="锁屏: swaylock" { spawn "$$bin/swaylock$$" "--clock" "--daemonize" "--ignore-empty-password" "--image" "$$wp3283230-oneshot-wallpapers.jpg$$"; }
+    XF86Lock              hotkey-overlay-title="锁屏: swaylock" { spawn "$$bin/swaylock$$" "--clock" "--daemonize" "--ignore-empty-password" "--image" "wp3283230-oneshot-wallpapers.jpg"; }
+    XF86ScreenSaver       hotkey-overlay-title="锁屏: swaylock" { spawn "$$bin/swaylock$$" "--clock" "--daemonize" "--ignore-empty-password" "--image" "wp3283230-oneshot-wallpapers.jpg"; }
 
     Mod+E      hotkey-overlay-title="开启编辑器: emacsclient"  { spawn "emacsclient" "--create-frame" "--no-wait"; }
     Mod+R      hotkey-overlay-title="打开程序: rofi"  { spawn "$$bin/rofi$$" "-show" "drun"; }
-    Mod+L      hotkey-overlay-title="锁屏: swaylock" { spawn "$$bin/swaylock$$" "--clock" "--daemonize" "--ignore-empty-password" "--image" "$$wp3283230-oneshot-wallpapers.jpg$$"; }
+    Mod+L      hotkey-overlay-title="锁屏: swaylock" { spawn "$$bin/swaylock$$" "--clock" "--daemonize" "--ignore-empty-password" "--image" "wp3283230-oneshot-wallpapers.jpg"; }
     Mod+T      hotkey-overlay-title="开启终端: foot"       { spawn "$$bin/foot$$"; }
 
     Mod+Left                  { focus-column-left; }
