@@ -487,7 +487,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   	  (config
   	   (computed-substitution-with-inputs "niri.kdl"
   					      (local-file "../files/config/chikoniko/niri.kdl")
-  					      (cons* (local-file "../secret/wallpapers/wp3283230-oneshot-wallpapers.jpg")
+  					      (cons* (local-file "../secret/wallpapers" #:recursive? #t)
   					       (specs->pkgs "foot"
   							    "light"
   							    "rofi-wayland"
