@@ -66,12 +66,10 @@ input {
     warp-mouse-to-focus
 }
 
-output "eDP-2" {
-    mode "2560x1440@239.999"
-}
-
-output "DP-1" {
+output "eDP-1" {
     focus-at-startup
+    mode "1920x1080@60.001"
+    scale 1.5
 }
 
 binds {
@@ -83,11 +81,13 @@ binds {
     XF86AudioMicMute      allow-when-locked=true { spawn "$$bin/wpctl$$" "set-mute"   "@DEFAULT_AUDIO_SOURCE@" "toggle"; }
     XF86MonBrightnessDown allow-when-locked=true { spawn "$$bin/light$$" "-U" "5"; }
     XF86MonBrightnessUp   allow-when-locked=true { spawn "$$bin/light$$" "-A" "5"; }
+    XF86Lock              hotkey-overlay-title="锁屏: swaylock" { spawn "$$bin/swaylock$$" "--clock" "--daemonize" "--ignore-empty-password" "--image" "$$wp3283230-oneshot-wallpapers.jpg$$"; }
+    XF86ScreenSaver       hotkey-overlay-title="锁屏: swaylock" { spawn "$$bin/swaylock$$" "--clock" "--daemonize" "--ignore-empty-password" "--image" "$$wp3283230-oneshot-wallpapers.jpg$$"; }
 
-    Mod+Return hotkey-overlay-title="Open Editor: emacsclient"  { spawn "emacsclient" "--create-frame" "--no-wait"; }
-    Mod+Space  hotkey-overlay-title="Run an Application: rofi"  { spawn "rofi" "-show" "drun"; }
-    Mod+L      hotkey-overlay-title="Lock the Screen: swaylock" { spawn "$$bin/swaylock$$" "--clock" "--daemonize" "--ignore-empty-password" "--image" "115008128_p0.jpg"; }
-    Mod+T      hotkey-overlay-title="Open Terminal: foot"       { spawn "$$bin/foot$$"; }
+    Mod+E      hotkey-overlay-title="开启编辑器: emacsclient"  { spawn "emacsclient" "--create-frame" "--no-wait"; }
+    Mod+R      hotkey-overlay-title="打开程序: rofi"  { spawn "$$bin/rofi$$" "-show" "drun"; }
+    Mod+L      hotkey-overlay-title="锁屏: swaylock" { spawn "$$bin/swaylock$$" "--clock" "--daemonize" "--ignore-empty-password" "--image" "$$wp3283230-oneshot-wallpapers.jpg$$"; }
+    Mod+T      hotkey-overlay-title="开启终端: foot"       { spawn "$$bin/foot$$"; }
 
     Mod+Left                  { focus-column-left; }
     Mod+Down                  { focus-window-down; }
@@ -98,6 +98,15 @@ binds {
     Mod+Shift+Up              { move-window-up; }
     Mod+Shift+Right           { move-column-right; }
 
+    Mod+F                     { focus-column-left; }
+    Mod+B                     { focus-window-down; }
+    Mod+P                     { focus-window-up; }
+    Mod+N                     { focus-column-right; }
+    Mod+Shift+F               { move-column-left; }
+    Mod+Shift+B               { move-window-down; }
+    Mod+Shift+P               { move-window-up; }
+    Mod+Shift+N               { move-column-right; }
+
     Mod+WheelScrollDown       { focus-column-right; }
     Mod+WheelScrollUp         { focus-column-left; }
     Mod+Shift+WheelScrollDown { move-column-right; }
@@ -105,20 +114,19 @@ binds {
 
     Mod+Comma                 { consume-or-expel-window-left; }
     Mod+Period                { consume-or-expel-window-right; }
-    Mod+F                     { maximize-column; }
-    Mod+Shift+F               { fullscreen-window; }
+    Mod+M                     { maximize-column; }
+    Mod+Shift+M               { fullscreen-window; }
     Mod+C                     { center-column; }
     Mod+V                     { toggle-window-floating; }
     Mod+Shift+V               { switch-focus-between-floating-and-tiling; }
 
     Mod+Shift+Q               { close-window; }
 
-    Alt+Tab repeat=false      { toggle-overview; }
+    Mod+Tab repeat=false      { toggle-overview; }
 
     Print                     { screenshot; }
     Ctrl+Print                { screenshot-screen; }
     Alt+Print                 { screenshot-window; }
-
-    Mod+Shift+E               { quit; }
+    
     Ctrl+Alt+Delete           { quit; }
 }
