@@ -162,11 +162,11 @@
 
 #+begin_src scheme :noweb-ref filesystems
   (list
-    (file-system
-      (mount-point "/boot/efi")
-      (device (uuid "639A-B4E6"
-                'fat32))
-      (type "vfat")))
+   (file-system
+    (mount-point "/boot/efi")
+    (device (uuid "639A-B4E6"
+  		'fat32))
+    (type "vfat")))
 #+end_src
 
 #+begin_src scheme :noweb-ref transformation

@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: CC0-1.0
 
 prefer-no-csd
-screenshot-path "/mnt/Mentha/@Library/Pictures/Screenshots/%Y%m%d-%H%M%S.png"
+screenshot-path "/niko/picture/screenshots/%Y%m%d-%H%M%S.png"
 
 spawn-at-startup "sh" "-c" "pgrep --uid $USER shepherd > /dev/null || shepherd"
 spawn-at-startup "$$bin/xwayland-satellite$$" ":233"
@@ -98,13 +98,14 @@ binds {
     Mod+Shift+Right           { move-column-right; }
 
     Mod+F                     { focus-column-left; }
-    Mod+B                     { focus-window-down; }
+    Mod+B                     { focus-column-right; }    
     Mod+P                     { focus-window-up; }
-    Mod+N                     { focus-column-right; }
+    Mod+N                     { focus-window-down; }
+    
     Mod+Shift+F               { move-column-left; }
-    Mod+Shift+B               { move-window-down; }
+    Mod+Shift+B               { move-column-right; }
     Mod+Shift+P               { move-window-up; }
-    Mod+Shift+N               { move-column-right; }
+    Mod+Shift+N               { move-window-down; }
 
     Mod+WheelScrollDown       { focus-column-right; }
     Mod+WheelScrollUp         { focus-column-left; }
