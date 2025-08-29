@@ -640,8 +640,8 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 *** 权限
 #+begin_src scheme :noweb-ref privileged-program
   (privileged-program
-   (program (file-append (spec->pkg "sing-box") "/bin/sing-box"))
-   (capabilities "cap_net_admin,cap_net_bind_service,cap_net_raw+ep"))
+    (program (file-append (spec->pkg "sing-box") "/bin/sing-box"))
+    (capabilities "cap_net_admin,cap_net_bind_service,cap_net_raw+ep"))
 #+end_src
 
 *** 服务

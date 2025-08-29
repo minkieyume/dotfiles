@@ -14,9 +14,9 @@
 	  (branch "trunk")
 	  (introduction
 	   (make-channel-introduction
-	    "b57ca0d2a9d6d67c094cf839283401aeb5205e53"
+	    "7677db76330121a901604dfbad19077893865f35"
 	    (openpgp-fingerprint
-	     "F655 AB8D 8F94 0E9F 569C  E97D 5DBC D441 1818 2F31"))))
+	     "13E7 6CD6 E649 C28C 3385  4DF5 5E5A A665 6149 17F7"))))
 	 (channel
 	  (name 'nonguix)
 	  (url "https://github.com/nonguix/nonguix.git")
