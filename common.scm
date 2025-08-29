@@ -32,7 +32,7 @@
 	     "F655 AB8D 8F94 0E9F 569C  E97D 5DBC D441 1818 2F31"))))
 	 (channel
 	  (name 'nonguix)
-	  (url "https://gitlab.com/nonguix/nonguix")
+	  (url "https://github.com/nonguix/nonguix.git")
 	  ;; Enable signature verification:
 	  (introduction
 	   (make-channel-introduction
