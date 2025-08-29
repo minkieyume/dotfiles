@@ -120,8 +120,8 @@ binds {
     Mod+Shift+O               { switch-focus-between-floating-and-tiling; }
     Mod+V                     { focus-workspace-down; }
     Mod+Shift+V               { focus-workspace-up; }
-    Mod+C                     { move-workspace-down; }
-    Mod+Shift+C               { move-workspace-up; }
+    Mod+C                     { move-column-to-workspace-down; }
+    Mod+Shift+C               { move-column-to-workspace-up; }
 
     Mod+Shift+Q               { close-window; }
 
