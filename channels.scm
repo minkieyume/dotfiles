@@ -14,7 +14,7 @@
 	  (branch "trunk")
 	  (introduction
 	   (make-channel-introduction
-	    "2d5d1756a79ffd932c0f564e47af74051d9b7d0e"
+	    "b57ca0d2a9d6d67c094cf839283401aeb5205e53"
 	    (openpgp-fingerprint
 	     "F655 AB8D 8F94 0E9F 569C  E97D 5DBC D441 1818 2F31"))))
 	 (channel
@@ -35,4 +35,5 @@
             (openpgp-fingerprint
              "7EBE A494 60CE 5E2C 0875  7FDB 3B5A A993 E1A2 DFF0"))))
 	 %default-channels))
+
 %chiko-channels
