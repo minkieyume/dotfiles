@@ -421,7 +421,7 @@ fish，开箱即用的终端解释器。
   								    "rust-analyzer"
   								    "zig-zls")))
   		  ("emacs/.init-themes.el"
-  		   ,(local-file "../files/config/chikoniko/init-theme.el")))
+  		   ,(local-file "../files/config/chikoniko/init-theme.el"))))
 #+end_src
 
 #+begin_src scheme :noweb-ref home-service
