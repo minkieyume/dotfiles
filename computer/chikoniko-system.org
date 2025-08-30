@@ -157,6 +157,7 @@
         ("@Program"   . "/niko/program")
         ("@Games"     .   "/niko/games")
         ("@Download"  ."/niko/download")
+        ("@Sandbox"   . "/niko/sandbox")
         (#f           .     "/mnt/niko"))))
 #+end_src
 
@@ -754,7 +755,53 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   "chibi-scheme"
 #+end_src
 
+
+* 多媒体
+** mpv
+#+begin_src scheme :noweb-ref package
+  "mpv"
+#+end_src
+
+** obs
+#+begin_src scheme :noweb-ref package
+  "obs"
+#+end_src
+
+* 游戏开发
+
+* 游戏
+** steam
+#+begin_src scheme :noweb-ref package
+  "steam"
+  "steam-devices-udev-rules"
+#+end_src
+
+#+begin_src scheme :noweb-ref home-environment-variable
+  ("GUIX_SANDBOX_HOME" . "/niko/sandbox")
+  ("GUIX_SANDBOX_EXTRA_SHARES" . "$HOME/Downloads:/niko/picture/screenshots")
+#+end_src
+
+*** 驱动配置
+#+begin_src scheme :noweb yes :noweb-ref service
+  (udev-rules-service 'steam-devices (spec->pkg "steam-devices-udev-rules"))
+  (udev-rules-service 'controller <<controller-permission-udev-rule>>)
+#+end_src
+
+See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
+#+name: controller-permission-udev-rule
+#+begin_src scheme
+  (udev-rule "60-controller-permission.rules" "\
+  KERNEL==\"event*\", ATTRS{idVendor}==\"045e\", ATTRS{idProduct}==\"028e\", \
+  MODE=\"0660\", GROUP=\"users\"")
+#+end_src
+
+
 * 音乐创作
+** LMMS
+#+begin_src scheme :noweb-ref package
+  "lmms"
+#+end_src
+
 ** SingBox
 八音盒软件
 #+begin_src scheme :noweb-ref package

@@ -15,9 +15,10 @@
 
 ;;预编译包链接
 (define %chiko-substitute-urls
-  (cons* "https://substitutes.nonguix.org/"
-	 "https://mirrors.sjtug.sjtu.edu.cn/guix"
-	 %default-substitute-urls))
+  (list "https://mirrors.sjtug.sjtu.edu.cn/guix"
+	"https://bordeaux.guix.gnu.org"
+	"https://ci.guix.gnu.org"
+	"https://substitutes.nonguix.org"))
 
 (define %authorized-keys
   (cons* (local-file "./files/keys/non-guix.pub")
