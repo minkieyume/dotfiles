@@ -80,7 +80,7 @@
 ** 基础包
 一些基础包
 #+begin_src scheme :noweb-ref package
-  "htop" "curl"
+  "btop" "curl"
 #+end_src
 
 ** 密码导入
