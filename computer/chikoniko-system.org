@@ -220,7 +220,14 @@
 #+begin_src scheme :noweb-ref home-service
   (service home-files-service-type
   	 `((".ssh/id_rsa" ,(local-file "../secret/keys/niko_ssh_rsa"))
-  	   ("Downloads" ,(symlink-to "/niko/download"))))
+  	   ("Downloads" ,(symlink-to "/niko/download"))
+  	   ("Picture" ,(symlink-to "/niko/picture"))
+  	   ("Creator" ,(symlink-to "/niko/creator"))
+  	   ("Develop" ,(symlink-to "/niko/develop"))
+  	   ("Application" ,(symlink-to "/niko/program"))
+  	   ("Audio" ,(symlink-to "/niko/audio"))
+  	   ("Video" ,(symlink-to "/niko/video"))
+  	   ("Games" ,(symlink-to "/niko/games"))))
 #+end_src
 
 ** 环境变量
