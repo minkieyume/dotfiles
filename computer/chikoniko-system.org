@@ -335,15 +335,111 @@ fish，开箱即用的终端解释器。
 #+end_src
 
 ** Emacs
+#+begin_src scheme :noweb-ref home-environment-variable
+  ("EDITOR" . "emacsclient")
+  ("VISUAL" . "$EDITOR")
+  ("ESHELL" . ,(file-append (spec->pkg "fish") "/bin/fish"))
+#+end_src
+
+
 基础的包配置
 #+begin_src scheme :noweb-ref package
   "emacs-pgtk"
+
+  ;;包管理器
+  "emacs-straight-el"
+  "emacs-use-package"
+
+  ;;编辑模式
+  "emacs-beancount"
+  "emacs-nginx-mode"
+  "emacs-edit-indirect"
+  "emacs-fish-mode"
+  "emacs-json-mode"
+  "emacs-markdown-mode"
+  "emacs-nftables-mode"
+  "emacs-zig-mode"  
+  "emacs-cmake-mode"
+  "emacs-gdscript-mode"
+  "emacs-yaml-mode"
+  "emacs-rust-mode"
+  "emacs-racket-mode"
+  "emacs-geiser"
+  "emacs-geiser-guile"
+  "emacs-plantuml-mode"
+
+
+  ;;编辑器优化
+  "emacs-company"
+  "emacs-vertico"
+  "emacs-orderless"
+  "emacs-consult"
+  "emacs-marginalia"
+  "emacs-embark"
+  "emacs-rainbow-delimiters"
+  "emacs-paredit"
+  "emacs-smartparens"
+
+  ;;键位优化
+  "emacs-disable-mouse"
+  "emacs-hydra"
+  "emacs-restart-emacs"
+  "emacs-which-key"
+  "emacs-pdf-tools"
+  "emacs-ement"
+  "emacs-projectile"
+  "emacs-circe"
+  "emacs-emacsql"
+  "emacs-ox-hugo"
+  "emacs-org-download"
+
+  ;;版本控制
+  "emacs-magit"
+  "emacs-magit-todos"
+
+  ;;文件管理
+  "emacs-dirvish"
+  "emacs-dired-git-info"
+
+  ;;主题资源
+  "emacs-all-the-icons"
+  "emacs-spacemacs-theme"
+
+  ;;外部依赖
+  "tree-sitter"
+  "plantuml"
 #+end_src
 
-模块配置
-#+begin_src scheme :noweb-ref module
-  (gnu packages emacs)
+#+begin_src scheme :noweb-ref home-service
+  (simple-service 'emacs-configuration
+  		home-xdg-configuration-files-service-type
+  		`(("emacs/init.el"
+  		   ,(computed-substitution-with-inputs "init.el"
+  						       (local-file "../files/config/emacs/init.el")
+  						       (specs->pkgs "ccls"
+  								    "fish"
+  								    "python-lsp-server"
+  								    "rust-analyzer"
+  								    "zig-zls")))
+  		  ("emacs/.init-themes.el"
+  		   ,(local-file "../files/config/chikoniko/init-theme.el")))
 #+end_src
+
+#+begin_src scheme :noweb-ref home-service
+  (simple-service 'home-emacs
+  		home-shepherd-service-type
+  		(list (shepherd-service
+  		       (provision '(emacs-daemon))
+  		       (start
+  			#~(make-forkexec-constructor
+  			   '("emacs" "--fg-daemon")))
+  		       (stop
+  			#~(make-forkexec-constructor
+  			   '("emacsclient" "--eval" "(kill-emacs)"))))))
+#+end_src
+
+[[file:../files/config/emacs][emacs]]
+[[file:../files/config/chikoniko/emacs-theme.el][emacs-themes.el]]
 
 ** Doas
 Doas是比Sudo更简洁，也更为安全的提权工具。
