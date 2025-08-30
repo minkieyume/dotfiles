@@ -77,10 +77,10 @@
   (nonguix transformations)
 #+end_src
 
-** 基础包
-一些基础包
+** 系统管理
+负责管理系统的基础包
 #+begin_src scheme :noweb-ref package
-  "btop" "curl"
+  "btop" "curl" "neofetch"
 #+end_src
 
 ** 密码导入
