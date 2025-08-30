@@ -422,6 +422,18 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   "unzip"
 #+end_src
 
+* 备份
+** Syncthing
+#+begin_src scheme :noweb-ref module
+  (gnu services syncthing)
+#+end_src
+
+#+begin_src scheme :noweb-ref service
+  (service syncthing-service-type
+  	 (syncthing-configuration (user "minkieyume")))
+#+end_src
+
+
 * 代理
 ** Yggdrasil
 #+begin_src scheme :noweb-ref service
@@ -619,7 +631,6 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 * 音乐创作
 ** SingBox
 八音盒软件
-
 #+begin_src scheme :noweb-ref package
 "sing-box"
 #+end_src
@@ -689,4 +700,3 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
     (system? #t)
     (home-directory "/var/empty/"))
 #+end_src
-

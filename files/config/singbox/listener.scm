@@ -7,13 +7,13 @@
              `(("type" . "remote")
                ("tag" . ,(format #f "geosite-~a" rule-set))
                ("url" . ,(format #f "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/sing/geo/geosite/~a.srs" rule-set))
-               ("download_detour" . "out_direct"))))
+               ("download_detour" . "out_proxy"))))
           (geoip
            (lambda (rule-set)
              `(("type" . "remote")
                ("tag" . ,(format #f "geoip-~a" rule-set))
                ("url" . ,(format #f "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/sing/geo/geoip/~a.srs" rule-set))
-               ("download_detour" . "out_direct")))))
+               ("download_detour" . "out_proxy")))))
       (append
        (map geosite
             '("category-ads-all"

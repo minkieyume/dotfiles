@@ -348,6 +348,7 @@ fish，开箱即用的终端解释器。
   "fish"
 #+end_src
 
+* 备份
 ** Rsync
 Rsync是简单的备份工具，可以方便在不同设备之间同步和备份数据。
 #+begin_src scheme :noweb-ref module
@@ -377,6 +378,17 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 #+begin_src scheme :noweb-ref mcron-job
   (job "0 2 * * *" "rsync -a /resource /backup/nana")
 #+end_src
+
+** Syncthing
+#+begin_src scheme :noweb-ref module
+  (gnu services syncthing)
+#+end_src
+
+#+begin_src scheme :noweb-ref service
+  (service syncthing-service-type
+  	 (syncthing-configuration (user "minkieyume")))
+#+end_src
+
 
 * 工具
 ** Git
