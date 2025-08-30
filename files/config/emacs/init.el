@@ -97,11 +97,11 @@
   (projectile-mode +1)
   :config
   (setq projectile-project-root-files-bottom-up (cons "Cargo.toml" projectile-project-root-files-bottom-up))
-  (setq projectile-project-search-path '(("~/工作目录/程序开发/" . 3)
-					 ("~/工作目录/游戏开发/项目档案/" . 2)
-					 ("~/LocalWork/程序开发/" . 2)
-					 ("~/LocalWork/游戏创作/" . 2)
-					 ("~/LocalWork/造语/" . 2)))
+  (setq projectile-project-search-path '(("~/Creator/remote/程序开发/" . 3)
+					 ("~/Creator/remote/项目档案/" . 2)
+					 ("~/Develop/ProgramDevelop" . 2)
+					 ("~/Develop/GameDevelop" . 2)
+					 ("~/Develop/conlingue" . 2)))
   (projectile-discover-projects-in-search-path)
   :bind-keymap
   ("C-c p" . projectile-command-map))
@@ -193,12 +193,12 @@
     (setq ekg-llm-provider qwen3
           ekg-embedding-provider bge-m3))
   :config
-  (setq ekg-db-file "~/工作目录/YumiEko/yumieko.db")
+  (setq ekg-db-file "~/Creator/remote/YumiEko/yumieko.db")
   (setq warning-suppress-types '((org-element)))
   (setq ekg-truncation-method 'character)
   :custom
   (require 'ekg-logseq)
-  (setq ekg-logseq-dir "~/工作目录/YumiEko/logseq/")
+  (setq ekg-logseq-dir "~/Creator/remote/YumiEko/logseq/")
   (ekg-logseq-export))
 (use-package org)
 (use-package emacsql)
@@ -233,9 +233,9 @@
                                    ))
 (setq org-todo-keywords
       '((sequence "TODO(t)" "DOING(i)" "WAITING(w)" "DAILY(l)" "|" "DONE(d)" "CANCELED(c)")))
-(setq org-agenda-files '("~/工作目录/小梦之家/随便记录/"
-			 "~/工作目录/小梦之家/学习日常/学习计划.org"
-			 "~/工作目录/小梦之家/生活日常/日常计划.org"))
+(setq org-agenda-files '("~/Creator/remote/小梦之家/随便记录/"
+			 "~/Creator/remote/小梦之家/学习日常/学习计划.org"
+			 "~/Creator/remote/小梦之家/生活日常/日常计划.org"))
 (setq org-agenda-custom-commands
       '(("c" "日程安排界面"
 	 ((tags "PRIORITY=\"A\""
@@ -365,22 +365,19 @@
   :custom
   (dirvish-quick-access-entries ; 自定义快捷访问，setq没用。
    '(("h" "~/"                          "Home")
-     ("d" "~/下载"                      "下载")
+     ("d" "~/Downloads"                  "下载")
      ("m" "/mnt/"                       "Drives")
      ("t" "~/.local/share/Trash/files/" "TrashCan")
-     ("e" "~/.emacs.d/lisp/"            "Emacs Lisp")
-     ("E" "~/.emacs.d/"                 "Emacs")
-     ("w" "~/工作目录/"                 "工作目录")
-     ("Y" "~/工作目录/小梦之家/"        "小梦之家")
-     ("y" "~/yumieko/"                  "Yumieko")
-     ("G" "~/Games/"                    "游戏")
-     ("g" "~/LocalWork/游戏创作/"        "游戏项目")
-     ("c" "~/LocalWork/造语/香格里拉文/" "造语项目")
-     ("b" "~/yumieko/content-org/" "博文编写")
-     ("s" "~/工作目录/游戏开发/素材库/"        "素材库")
-     ("C" "~/工作目录/游戏开发/社团项目/" "社团项目")
-     ("M" "/mnt/nfs/music" "音乐")
-     ("l" "~/LocalWork/" "本地工作")))
+     ("D"  "~/Develop"                  "开发目录")
+     ("C"  "~/Creator"                  "创作目录")
+     ("P"  "~/Pictures"                 "图片目录")
+     ("g"  "~/Develop/GameDevelop"      "游戏开发")
+     ("p"  "~/Develop/ProgramDevelop"   "程序开发")
+     ("c"  "~/Creator/conlingue"        "造语")
+     ("s"  "~/Creator/conlingue/shangrira" "香格里拉语")
+     ("e"  "~/Creator/remote/绘画创作"  "绘画")
+     ("M"  "~/Creator/remote/音乐创作"  "音乐")
+     ("R"  "~/Creator/remote"           "远程创作")))
   :config
   (dirvish-peek-mode) ; Preview files in minibuffer
   ;; (dirvish-side-follow-mode) ; similar to `treemacs-follow-mode'
