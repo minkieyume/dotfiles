@@ -508,13 +508,14 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+end_src
 
 ** 解压
-模块配置
-#+begin_src scheme :noweb-ref module
-  (gnu packages compression)
-#+end_src
-
 #+begin_src scheme :noweb-ref package
   "unzip"
+#+end_src
+
+** KeepassXC
+密码管理软件
+#+begin_src scheme :noweb-ref package
+  "keepassxc"
 #+end_src
 
 * 备份
@@ -711,6 +712,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 *** librewolf
 #+begin_src scheme :noweb-ref package
   "librewolf"
+  "icecat-l10n"
   "adaptive-tab-bar-colour-icecat"
   "bitwarden-icecat"
   "livemarks-icecat"
@@ -756,6 +758,18 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+end_src
 
 
+* 包管理器
+** Flatpak
+#+begin_src scheme :noweb-ref package
+  "flatpak"
+#+end_src
+
+* 通讯
+** NHeko
+#+begin_src scheme :noweb-ref package
+  "nheko"
+#+end_src
+
 * 多媒体
 ** mpv
 #+begin_src scheme :noweb-ref package
@@ -767,7 +781,10 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   "obs"
 #+end_src
 
-* 游戏开发
+** Kodi
+#+begin_src scheme :noweb-ref package
+  "kodi-wayland"
+#+end_src
 
 * 游戏
 ** steam
@@ -779,6 +796,11 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+begin_src scheme :noweb-ref home-environment-variable
   ("GUIX_SANDBOX_HOME" . "/niko/sandbox")
   ("GUIX_SANDBOX_EXTRA_SHARES" . "$HOME/Downloads:/niko/picture/screenshots")
+#+end_src
+
+** Retroarch
+#+begin_src scheme :noweb-ref package
+  "retroarch"
 #+end_src
 
 *** 驱动配置
@@ -795,20 +817,31 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
   MODE=\"0660\", GROUP=\"users\"")
 #+end_src
 
+* 创作
+** 游戏开发
+*** Godot
+#+begin_src scheme :noweb-ref package
+  "godot"
+#+end_src
 
-* 音乐创作
-** LMMS
+** 绘画
+#+begin_src scheme :noweb-ref package
+  "krita"
+#+end_src
+
+** 音乐创作
+*** LMMS
 #+begin_src scheme :noweb-ref package
   "lmms"
 #+end_src
 
-** SingBox
+*** SingBox
 八音盒软件
 #+begin_src scheme :noweb-ref package
 "sing-box"
 #+end_src
 
-*** 配置导入
+**** 配置导入
 #+begin_src scheme :noweb-ref define
   (define %sing-box-listener
     (local-file "../files/config/singbox/listener.scm"))
@@ -821,14 +854,14 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
             (sing-box-listener #$output)))))
 #+end_src
 
-*** 权限
+**** 权限
 #+begin_src scheme :noweb-ref privileged-program
   (privileged-program
     (program (file-append (spec->pkg "sing-box") "/bin/sing-box"))
     (capabilities "cap_net_admin,cap_net_bind_service,cap_net_raw+ep"))
 #+end_src
 
-*** 服务
+**** 服务
 #+begin_src scheme :noweb-ref service
   (simple-service 'sing-box-service
   		shepherd-root-service-type
@@ -847,7 +880,7 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
   		    (stop #~(make-kill-destructor))))))
 #+end_src
 
-*** 透明唱片
+**** 透明唱片
 #+begin_src scheme :noweb-ref service
     (simple-service 'tcd
       shepherd-root-service-type
@@ -865,7 +898,7 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
     		               (= 0 (status:exit-val status))))))))
 #+end_src
 
-*** 用户态
+**** 用户态
 #+begin_src scheme :noweb-ref user
   (user-account
     (name "singbox")
