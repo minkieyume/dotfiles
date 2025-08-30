@@ -59,6 +59,14 @@
     (marginalia-mode t))
 #+end_src
 
+** 语言服务器
+#+begin_src emacs-lisp :noweb-ref :noweb yes :noweb-prefix no
+  (use-package eglot
+    :config    
+    (add-to-list 'eglot-server-programs
+  	       <<eglot-server-programs>>))
+#+end_src
+
 * 操作扩展
 ** Consult
 增强全文搜索功能。
@@ -392,6 +400,7 @@ Ekg是方便快速整理灵感和笔记的笔记插件。
 #+end_src
 
 ** Rust Mode
+*** Rust Mode
 #+begin_src emacs-lisp :noweb-ref config
   (use-package rust-mode
     :mode "\\.rs\\'"
@@ -400,6 +409,10 @@ Ekg是方便快速整理灵感和笔记的笔记插件。
     :hook((rust-mode . eglot-ensure)
   	(rust-mode . (lambda () (setq indent-tabs-mode nil)))
   	(rust-mode . (lambda () (prettify-symbols-mode)))))
+#+end_src
+
+#+begin_src emacs-lisp :noweb-ref eglot-server-programs
+  `(rust-mode . ("$$bin/rust-analyzer$$")
 #+end_src
 
 *** Cargo

@@ -341,7 +341,6 @@ fish，开箱即用的终端解释器。
   ("ESHELL" . ,(file-append (spec->pkg "fish") "/bin/fish"))
 #+end_src
 
-
 基础的包配置
 #+begin_src scheme :noweb-ref package
   "emacs-pgtk"
@@ -367,7 +366,7 @@ fish，开箱即用的终端解释器。
   "emacs-geiser"
   "emacs-geiser-guile"
   "emacs-plantuml-mode"
-
+  "emacs-scribble-mode"
 
   ;;编辑器优化
   "emacs-company"
@@ -437,8 +436,7 @@ fish，开箱即用的终端解释器。
   			#~(make-forkexec-constructor
   			   '("emacsclient" "--eval" "(kill-emacs)"))))))
 #+end_src
-
-[[file:../files/config/emacs][emacs]]
+[[file:../files/config/emacs/Emacs配置.org][Emacs配置]]
 [[file:../files/config/chikoniko/emacs-theme.el][emacs-themes.el]]
 
 ** Doas
@@ -529,7 +527,6 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   	 (syncthing-configuration (user "minkieyume")))
 #+end_src
 
-
 * 代理
 ** Yggdrasil
 #+begin_src scheme :noweb-ref service
@@ -553,7 +550,6 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+begin_src scheme :noweb-ref service
   (service tailscale-service-type)
 #+end_src
-
 
 * 容器
 #+begin_src scheme :noweb-ref module
@@ -723,6 +719,34 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   "ublock-origin-icecat"
 #+end_src
 
+* 程序开发
+** Rust
+#+begin_src scheme :noweb-ref package
+  "rust"
+  "rust-analyzer"
+#+end_src
+
+** Zig
+#+begin_src scheme :noweb-ref package
+  "zig"
+  "zig-zls"
+#+end_src
+
+** Python
+#+begin_src scheme :noweb-ref package
+  "python"
+  "python-lsp-server"
+#+end_src
+
+** Racket
+#+begin_src scheme :noweb-ref package
+  "racket"
+#+end_src
+
+** Scheme
+#+begin_src scheme :noweb-ref package
+  "chibi-scheme"
+#+end_src
 
 * 音乐创作
 ** SingBox
