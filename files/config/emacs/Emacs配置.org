@@ -388,6 +388,43 @@ Ekg是方便快速整理灵感和笔记的笔记插件。
 #+end_src
 
 * 开发环境
+** CPP
+*** Cmake
+#+begin_src emacs-lisp :noweb-ref config
+  (use-package cmake-mode)
+
+  (use-package cmake-ide
+    :straight t
+    :bind (:map c-mode-map
+  	      ("C-c C-r" . cmake-ide-compile))
+    :config
+    (cmake-ide-setup))
+#+end_src
+
+*** 布局
+#+begin_src emacs-lisp :noweb-ref config
+  ;; 基本语法高亮 & 缩进支持
+  (add-hook 'c++-mode-hook #'electric-pair-mode)
+  (add-hook 'c++-mode-hook #'show-paren-mode)
+  (add-hook 'c++-mode-hook #'display-line-numbers-mode)
+  (add-hook 'c++-mode-hook #'indent-tabs-mode)
+
+  ;; 设置基本缩进宽度
+  (setq-default c-basic-offset 4)
+
+  ;; 启动 GDB 时开启多窗口布局
+  (setq gdb-many-windows t
+        gdb-show-main t)
+
+  (add-hook 'c-mode-hook #'eglot-ensure)
+  (add-hook 'c++-mode-hook #'eglot-ensure)
+#+end_src
+
+*** LSP服务
+#+begin_src emacs-lisp :noweb-ref eglot-server-programs
+  `((c-mode c++-mode objc-mode) . ("$$bin/ccls$$"))
+#+end_src
+
 ** Gdscript
 #+begin_src emacs-lisp :noweb-ref config
   (use-package gdscript-mode
@@ -412,7 +449,7 @@ Ekg是方便快速整理灵感和笔记的笔记插件。
 #+end_src
 
 #+begin_src emacs-lisp :noweb-ref eglot-server-programs
-  `(rust-mode . ("$$bin/rust-analyzer$$")
+  `(rust-mode . ("$$bin/rust-analyzer$$"))
 #+end_src
 
 *** Cargo
