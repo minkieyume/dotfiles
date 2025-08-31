@@ -17,7 +17,9 @@
 
 (setq ring-bell-function 'ignore)
 (setq backup-directory-alist
-      `((".*" . "~/.emacs.d/backups/"))) ;更改自动保存目录
+      `((".*" . ,(expand-file-name "emacs/backups/"
+				   (or (getenv "XDG_CACHE_HOME")
+                                       "~/.cache"))))) ;更改自动保存目录
 (use-package company
   :bind (:map company-active-map
               ("C-n" . 'company-select-next)
@@ -50,8 +52,8 @@
 	:map minibuffer-mode-map
 	("C-c e" . embark-export)))
 
-(use-package embark-consult
-  :straight t)
+;; (use-package embark-consult
+;;   :straight t)
 (use-package all-the-icons
   :bind("C-c i" . all-the-icons-insert))
 (use-package disable-mouse
@@ -77,21 +79,21 @@
 (global-set-key (kbd "C-c d") 'delete-current-file)
 (use-package yaml-mode)
 
-(use-package sqlite-mode
-  :straight t)
-(use-package ink-mode
-  :straight t
-  :mode "\\.ink\\'"
-  :config
-  ;; Path to the Inklecate binary, used to playtest
-  ;; and to check for errors
-  (setq ink-inklecate-path "/usr/bin/inklecate")
+;; (use-package sqlite-mode
+;;   :straight t)
+;; (use-package ink-mode
+;;   :straight t
+;;   :mode "\\.ink\\'"
+;;   :config
+;;   ;; Path to the Inklecate binary, used to playtest
+;;   ;; and to check for errors
+;;   (setq ink-inklecate-path "/usr/bin/inklecate")
 
-  ;; Enable flymake (error reporting)
-  (add-hook 'ink-mode-hook 'flymake-mode)
+;;   ;; Enable flymake (error reporting)
+;;   (add-hook 'ink-mode-hook 'flymake-mode)
 
-  ;; Set indentation level
-  (add-hook 'ink-mode-hook (lambda () (setq tab-width 2))))
+;;   ;; Set indentation level
+;;   (add-hook 'ink-mode-hook (lambda () (setq tab-width 2))))
 (use-package projectile
   :init
   (projectile-mode +1)
@@ -105,101 +107,101 @@
   (projectile-discover-projects-in-search-path)
   :bind-keymap
   ("C-c p" . projectile-command-map))
-(use-package llm
-  :straight (:host github :repo "ahyatt/llm" :branch "main"))
-(use-package ellama
-  :straight t
-  :bind ("C-c e" . ellama)
-  ;; send last message in chat buffer with C-c C-c
-  :hook (org-ctrl-c-ctrl-c-final . ellama-chat-send-last-message)
-  :init
-  (require 'llm-ollama)
-  (setopt ellama-language "Chinese")
-  (setopt ellama-provider
-  	  (make-llm-ollama
-  	   ;; this model should be pulled to use it
-  	   ;; value should be the same as you print in terminal during pull
-  	   :chat-model "deepseek-r1:8b"
-  	   :embedding-model "bge-m3:latest"
-  	   :default-chat-non-standard-params '(("num_ctx" . 8192))))
-  (setopt ellama-summarization-provider ellama-provider)
-  (setopt ellama-coding-provider ellama-provider)
+;; (use-package llm
+;;   :straight (:host github :repo "ahyatt/llm" :branch "main"))
+;; (use-package ellama
+;;   :straight t
+;;   :bind ("C-c e" . ellama)
+;;   ;; send last message in chat buffer with C-c C-c
+;;   :hook (org-ctrl-c-ctrl-c-final . ellama-chat-send-last-message)
+;;   :init
+;;   (require 'llm-ollama)
+;;   (setopt ellama-language "Chinese")
+;;   (setopt ellama-provider
+;;   	  (make-llm-ollama
+;;   	   ;; this model should be pulled to use it
+;;   	   ;; value should be the same as you print in terminal during pull
+;;   	   :chat-model "deepseek-r1:8b"
+;;   	   :embedding-model "bge-m3:latest"
+;;   	   :default-chat-non-standard-params '(("num_ctx" . 8192))))
+;;   (setopt ellama-summarization-provider ellama-provider)
+;;   (setopt ellama-coding-provider ellama-provider)
   
-  (setopt ellama-extraction-provider ellama-provider)
-  ;; Naming Provider
-  (setopt ellama-naming-provider ellama-provider)
-  (setopt ellama-naming-scheme 'ellama-generate-name-by-llm)
-  ;; Translater Provider
-  (setopt ellama-translation-provider ellama-provider)
-  (setopt ellama-extraction-provider ellama-provider)
-  (setopt ellama-providers
-  	  '(("deepseek-r1" . (make-llm-ollama
-  			      :chat-model "deepseek-r1:8b"
-  			      :embedding-model "bge-m3:latest"
-			      :default-chat-non-standard-params '(("num_ctx" . 8192))))))
-  :config
-  (setopt ellama-auto-scroll t)
-  ;; show ellama context in header line in all buffers
-  (ellama-context-header-line-global-mode +1)
-  ;; show ellama session id in header line in all buffers
-  (ellama-session-header-line-global-mode +1)
-  (advice-add 'pixel-scroll-precision :before #'ellama-disable-scroll)
-  (advice-add 'end-of-buffer :after #'ellama-enable-scroll))
-(use-package aider
-  :straight (:host github :repo "tninja/aider.el")
-  :bind (("C-c C-a" . aider-transient-menu))
-  :custom
-  (aider-popular-models '("ollama_chat/starcoder2:instruct" "ollama_chat/deepseek-coder-v2:16b-lite-instruct-q4_K_M"))
-  :config
-  (setenv "OLLAMA_API_BASE" "http://127.0.0.1:11434"))
-(use-package triples
-  :straight t)
-(use-package ekg
-  :straight (:host github :repo "MinkieYume/ekg" :branch "develop")
-  :bind (("C-c n c" . ekg-capture)
-	 ("C-c n u" . ekg-capture-url)
-	 ("C-c n f" . ekg-capture-file)
-	 ("C-c n s" . ekg-search)
-	 ("C-c n S" . ekg-embedding-search)
-	 ("C-c n q" . ekg-llm-query-with-notes)
-	 ("C-c n D" . ekg-show-notes-in-drafts)
-	 ("C-c n T" . ekg-show-notes-for-trash)
-	 ("C-c n o" . ekg-browse-url)
-	 ("C-c n d" . ekg-show-notes-for-today)
-	 ("C-c n t" . ekg-show-notes-with-tag)
-	 ("C-c n w" . ekg-llm-send-and-append-note)
-	 ("C-c n r" . ekg-llm-send-and-replace-note)
-	 ("C-c n L" . ekg-show-notes-latest-captured)
-	 ("C-c n l" . ekg-show-notes-latest-modified))
-  :init
-  (require 'ekg-embedding)
-  (ekg-embedding-generate-on-save)
-  (require 'ekg-llm)
-  (require 'llm-ollama)  ;; The specific provider you are using must be loaded.
-  (let ((deepseek-r1 (make-llm-ollama
-		      :chat-model "deepseek-r1:8b"
-		      :embedding-model "bge-m3:latest"
-		      :default-chat-non-standard-params '(("num_ctx" . 8192))))
-	(phi4 (make-llm-ollama
-	       :chat-model "phi4-mini:latest"
-	       :embedding-model "bge-m3:latest"
-	       :default-chat-non-standard-params '(("num_ctx" . 8192))))
-	(qwen3 (make-llm-ollama
-		:chat-model "qwen3:4b"
-		:embedding-model "bge-m3:latest"
-		:default-chat-non-standard-params '(("num_ctx" . 8192))))
-	(bge-m3 (make-llm-ollama
-		 :embedding-model "bge-m3:latest")))
-    (setq ekg-llm-provider qwen3
-          ekg-embedding-provider bge-m3))
-  :config
-  (setq ekg-db-file "~/Creator/remote/YumiEko/yumieko.db")
-  (setq warning-suppress-types '((org-element)))
-  (setq ekg-truncation-method 'character)
-  :custom
-  (require 'ekg-logseq)
-  (setq ekg-logseq-dir "~/Creator/remote/YumiEko/logseq/")
-  (ekg-logseq-export))
+;;   (setopt ellama-extraction-provider ellama-provider)
+;;   ;; Naming Provider
+;;   (setopt ellama-naming-provider ellama-provider)
+;;   (setopt ellama-naming-scheme 'ellama-generate-name-by-llm)
+;;   ;; Translater Provider
+;;   (setopt ellama-translation-provider ellama-provider)
+;;   (setopt ellama-extraction-provider ellama-provider)
+;;   (setopt ellama-providers
+;;   	  '(("deepseek-r1" . (make-llm-ollama
+;;   			      :chat-model "deepseek-r1:8b"
+;;   			      :embedding-model "bge-m3:latest"
+;; 			      :default-chat-non-standard-params '(("num_ctx" . 8192))))))
+;;   :config
+;;   (setopt ellama-auto-scroll t)
+;;   ;; show ellama context in header line in all buffers
+;;   (ellama-context-header-line-global-mode +1)
+;;   ;; show ellama session id in header line in all buffers
+;;   (ellama-session-header-line-global-mode +1)
+;;   (advice-add 'pixel-scroll-precision :before #'ellama-disable-scroll)
+;;   (advice-add 'end-of-buffer :after #'ellama-enable-scroll))
+;; (use-package aider
+;;   :straight (:host github :repo "tninja/aider.el")
+;;   :bind (("C-c C-a" . aider-transient-menu))
+;;   :custom
+;;   (aider-popular-models '("ollama_chat/starcoder2:instruct" "ollama_chat/deepseek-coder-v2:16b-lite-instruct-q4_K_M"))
+;;   :config
+;;   (setenv "OLLAMA_API_BASE" "http://127.0.0.1:11434"))
+;; (use-package triples
+;;   :straight t)
+;; (use-package ekg
+;;   :straight (:host github :repo "MinkieYume/ekg" :branch "develop")
+;;   :bind (("C-c n c" . ekg-capture)
+;; 	 ("C-c n u" . ekg-capture-url)
+;; 	 ("C-c n f" . ekg-capture-file)
+;; 	 ("C-c n s" . ekg-search)
+;; 	 ("C-c n S" . ekg-embedding-search)
+;; 	 ("C-c n q" . ekg-llm-query-with-notes)
+;; 	 ("C-c n D" . ekg-show-notes-in-drafts)
+;; 	 ("C-c n T" . ekg-show-notes-for-trash)
+;; 	 ("C-c n o" . ekg-browse-url)
+;; 	 ("C-c n d" . ekg-show-notes-for-today)
+;; 	 ("C-c n t" . ekg-show-notes-with-tag)
+;; 	 ("C-c n w" . ekg-llm-send-and-append-note)
+;; 	 ("C-c n r" . ekg-llm-send-and-replace-note)
+;; 	 ("C-c n L" . ekg-show-notes-latest-captured)
+;; 	 ("C-c n l" . ekg-show-notes-latest-modified))
+;;   :init
+;;   (require 'ekg-embedding)
+;;   (ekg-embedding-generate-on-save)
+;;   (require 'ekg-llm)
+;;   (require 'llm-ollama)  ;; The specific provider you are using must be loaded.
+;;   (let ((deepseek-r1 (make-llm-ollama
+;; 		      :chat-model "deepseek-r1:8b"
+;; 		      :embedding-model "bge-m3:latest"
+;; 		      :default-chat-non-standard-params '(("num_ctx" . 8192))))
+;; 	(phi4 (make-llm-ollama
+;; 	       :chat-model "phi4-mini:latest"
+;; 	       :embedding-model "bge-m3:latest"
+;; 	       :default-chat-non-standard-params '(("num_ctx" . 8192))))
+;; 	(qwen3 (make-llm-ollama
+;; 		:chat-model "qwen3:4b"
+;; 		:embedding-model "bge-m3:latest"
+;; 		:default-chat-non-standard-params '(("num_ctx" . 8192))))
+;; 	(bge-m3 (make-llm-ollama
+;; 		 :embedding-model "bge-m3:latest")))
+;;     (setq ekg-llm-provider qwen3
+;;           ekg-embedding-provider bge-m3))
+;;   :config
+;;   (setq ekg-db-file "~/Creator/remote/YumiEko/yumieko.db")
+;;   (setq warning-suppress-types '((org-element)))
+;;   (setq ekg-truncation-method 'character)
+;;   :custom
+;;   (require 'ekg-logseq)
+;;   (setq ekg-logseq-dir "~/Creator/remote/YumiEko/logseq/")
+;;   (ekg-logseq-export))
 (use-package org)
 (use-package emacsql)
 (use-package ox-hugo
@@ -263,12 +265,12 @@
 	 (org-agenda-use-tag-inheritance t))))
 (use-package cmake-mode)
 
-(use-package cmake-ide
-  :straight t
-  :bind (:map c-mode-map
-	      ("C-c C-r" . cmake-ide-compile))
-  :config
-  (cmake-ide-setup))
+;; (use-package cmake-ide
+;;   :straight t
+;;   :bind (:map c-mode-map
+;; 	      ("C-c C-r" . cmake-ide-compile))
+;;   :config
+;;   (cmake-ide-setup))
 ;; 基本语法高亮 & 缩进支持
 (add-hook 'c++-mode-hook #'electric-pair-mode)
 (add-hook 'c++-mode-hook #'show-paren-mode)
@@ -298,11 +300,11 @@
   :hook((rust-mode . eglot-ensure)
 	(rust-mode . (lambda () (setq indent-tabs-mode nil)))
 	(rust-mode . (lambda () (prettify-symbols-mode)))))
-(use-package cargo
-  :straight t
-  :hook(rust-mode . cargo-minor-mode)
-  :config
-  (define-key cargo-minor-mode-command-map (kbd "C-r") #'cargo-run-eshell))
+;; (use-package cargo
+;;   :straight t
+;;   :hook(rust-mode . cargo-minor-mode)
+;;   :config
+;;   (define-key cargo-minor-mode-command-map (kbd "C-r") #'cargo-run-eshell))
 (defun cargo-run-eshell ()
   "在另一个窗口智能打开 *cargo-eshell*，并运行 cargo run。"
   (interactive)
@@ -335,15 +337,13 @@
 
 (use-package geiser-guile)
 
-(use-package geiser-chibi
-  :straight t)
+;; (use-package geiser-chibi
+;;   :straight t)
 (use-package rainbow-delimiters
-  :straight t
   :hook ((prog-mode conf-mode yaml-mode) . rainbow-delimiters-mode)
   :config
   (setq rainbow-delimiters-max-face-count 5))
 (use-package paredit
-  :straight t
   :hook((emacs-lisp-mode lisp-mode scheme-mode racket-mode racket-repl-mode) . enable-paredit-mode))
 (use-package smartparens
   :hook (prog-mode . smartparens-mode)
