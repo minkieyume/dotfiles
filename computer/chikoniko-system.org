@@ -773,7 +773,6 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   ("SDL_IM_MODULE" . "fcitx")
   ("GLFW_IM_MODULE" . "ibus")
   ("QT_IM_MODULES" . "wayland;fcitx;ibus")
-  ("GTK_IM_MODULE_FILE" . "$GUIX_GTK3_IM_MODULE_FILE")
 #+end_src
 
 **** GTK兼容
