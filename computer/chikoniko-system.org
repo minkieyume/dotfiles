@@ -793,7 +793,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   				       (let* ((port (open-pipe*
   						     OPEN_READ
   						     #$(file-append
-  							(spec->pkg "gtk+@3:bin")
+  							(spec->pkg "gtk+")
   							"bin/gtk-query-immodules-3.0")
   						     #$(file-append
   							(spec->pkg "fcitx5-gtk")
