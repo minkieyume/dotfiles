@@ -1,5 +1,6 @@
-(disable-theme 'default)
-(load-theme 'spacemacs-dark t)
+(use-package spacemacs-theme
+  :config
+  (load-theme 'spacemacs-dark t))
 
 (set-face-attribute 'default nil
 		    :family "Sarasa Term SC"
