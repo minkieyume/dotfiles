@@ -796,7 +796,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   							(spec->pkg "gtk+@3:bin")
   							"bin/gtk-query-immodules-3.0")
   						     #$(file-append
-  							(spec->pkg "fcitx5-gtk:gtk3")
+  							(spec->pkg "fcitx5-gtk")
   							"lib/gtk-3.0/3.0.0/immodules/im-fcitx5.so")))
   					      (out (open-output-file #$output)))
   					 (display (read-string port) out)
