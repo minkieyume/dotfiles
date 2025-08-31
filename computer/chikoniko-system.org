@@ -781,6 +781,10 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
     "fcitx5-gtk4"
 #+end_src
 
+#+begin_src scheme :noweb-ref home-environment-variable
+  ("GTK_IM_MODULE_FILE" . "$GUIX_GTK3_IM_MODULE_FILE")
+#+end_src
+
 *** librewolf
 #+begin_src scheme :noweb-ref package
   "librewolf"
