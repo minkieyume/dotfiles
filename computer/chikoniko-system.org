@@ -766,7 +766,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+end_src
 
 #+begin_src scheme :noweb-ref package
-  "fcitx5-gtk4"
+  "fcitx5-gtk"
 #+end_src
 
 #+begin_src scheme :noweb-ref home-service
