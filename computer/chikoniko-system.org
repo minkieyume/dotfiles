@@ -733,6 +733,18 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+end_src
 
 *** fcitx5
+#+begin_src scheme :noweb-ref home-environment-variable
+  ("GTK_IM_MODULE" . "fcitx")
+  ("QT_IM_MODULE" . "fcitx")
+  ("XMODIFIERS" . "@im=fcitx")
+#+end_src
+
+#+begin_src scheme :noweb-ref package
+  "fcitx5"
+  "fcitx5-gtk"
+  "fcitx5-qt"
+#+end_src
+
 #+begin_src scheme :noweb-ref home-service
   (service home-fcitx5-service-type
     (home-fcitx5-configuration
@@ -753,6 +765,12 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   "ublock-origin-icecat"
 #+end_src
 
+#+begin_src scheme :noweb-ref home-environment-variable
+  ("MOZ_ENABLE_WAYLAND" . "1")
+  ("QT_IM_MODULE" . "fcitx")
+  ("XMODIFIERS" . "@im=fcitx")
+#+end_src
+  
 * 程序开发
 ** C/Cpp
 #+begin_src scheme :noweb-ref package
