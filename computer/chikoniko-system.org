@@ -625,9 +625,9 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   (simple-service 'gtk-settings-new
   		home-xdg-configuration-files-service-type
   		`(("gtk-3.0/settings.ini"
-  		   ,(local-file "../files/config/chikoniko/gtk.conf"))
+  		   ,(local-file "../files/config/chikoniko/gtk3.conf"))
   		  ("gtk-4.0/settings.ini"
-  		   ,(local-file "../files/config/chikoniko/gtk.conf"))))
+  		   ,(local-file "../files/config/chikoniko/gtk4.conf"))))
 #+end_src
 
 ** Wayland
@@ -759,17 +759,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+end_src
 
 *** fcitx5
-#+begin_src scheme :noweb-ref home-environment-variable
-  ("SDL_IM_MODULE" . "fcitx")
-  ("GLFW_IM_MODULE" . "ibus")
-  ("QT_IM_MODULES" . "wayland;fcitx;ibus")
-#+end_src
-
-#+begin_src scheme :noweb-ref package
-  "fcitx5-gtk"
-  "fcitx5-gtk4"
-#+end_src
-
+**** 服务配置
 #+begin_src scheme :noweb-ref home-service
   (service home-fcitx5-service-type
   	 (home-fcitx5-configuration
@@ -777,6 +767,43 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   	   (input-method-editors (specs->pkgs "fcitx5-rime" "fcitx5-anthy"))
   	   (qt-im-module? #t)))
 #+end_src
+
+**** 环境配置
+#+begin_src scheme :noweb-ref home-environment-variable
+  ("SDL_IM_MODULE" . "fcitx")
+  ("GLFW_IM_MODULE" . "ibus")
+  ("QT_IM_MODULES" . "wayland;fcitx;ibus")
+  ("GTK_IM_MODULE_FILE" . "$GUIX_GTK3_IM_MODULE_FILE")
+#+end_src
+
+**** GTK兼容
+#+begin_src scheme :noweb-ref package
+    "fcitx5-gtk"
+    "fcitx5-gtk4"
+#+end_src
+
+下面的配置暂时是不需要的：
+#+begin_src scheme :noweb-ref home-service
+  (simple-service 'fcitx5-gtk-immodules-cache
+  		home-xdg-configuration-files-service-type
+  		`(("gtk-3.0/immodules.cache"
+  		   ,(computed-file "immodules.cache"
+  				   #~(begin
+  				       (use-modules (ice-9 popen) (ice-9 rdelim))
+  				       (let* ((port (open-pipe*
+  						     OPEN_READ
+  						     #$(file-append
+  							(spec->pkg "gtk+@3:bin")
+  							"bin/gtk-query-immodules-3.0")
+  						     #$(file-append
+  							(spec->pkg "fcitx5-gtk:gtk3")
+  							"lib/gtk-3.0/3.0.0/immodules/im-fcitx5.so")))
+  					      (out (open-output-file #$output)))
+  					 (display (read-string port) out)
+  					 (close-port out)
+  					 (close-pipe port)))))))
+#+end_src
+
 
 *** librewolf
 #+begin_src scheme :noweb-ref package
