@@ -735,25 +735,21 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 
 *** fcitx5
 #+begin_src scheme :noweb-ref home-environment-variable
-  ("GTK_IM_MODULE" . "fcitx")
-  ("QT_IM_MODULE" . "fcitx")
-  ("XMODIFIERS" . "@im=fcitx")
   ("SDL_IM_MODULE" . "fcitx")
   ("GLFW_IM_MODULE" . "ibus")
 #+end_src
 
 #+begin_src scheme :noweb-ref package
-  "fcitx5"
-  "fcitx5-gtk"
   "fcitx5-gtk4"
-  "fcitx5-qt"
 #+end_src
 
 #+begin_src scheme :noweb-ref home-service
   (service home-fcitx5-service-type
-    (home-fcitx5-configuration
-      (themes (specs->pkgs "fcitx5-material-color-theme"))
-      (input-method-editors (specs->pkgs "fcitx5-rime"))))
+  	 (home-fcitx5-configuration
+  	   (themes (specs->pkgs "fcitx5-material-color-theme"))
+  	   (input-method-editors (specs->pkgs "fcitx5-rime" "fcitx5-anthy"))
+  	   (gtk-im-module? #t)
+  	   (qt-im-module? #t)))
 #+end_src
 
 *** librewolf
