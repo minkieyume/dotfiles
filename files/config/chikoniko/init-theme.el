@@ -1,4 +1,4 @@
-(load-theme 'spacemacs-dark t)
+;(load-theme 'spacemacs-dark t)
 
 (set-face-attribute 'default nil
 		    :family "Sarasa Term SC"
