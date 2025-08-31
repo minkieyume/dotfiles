@@ -15,7 +15,7 @@
       (privileged-programs (cons* <<privileged-program>> %default-privileged-programs))
       (users (cons* <<user>> %base-user-accounts))
       (groups (cons* <<group>> %base-groups))
-      (services (cons* <<service>> %rosenthal-desktop-services))
+      (services (cons* <<service>> (compose <<rosenthal-desktop-transformation>> %rosenthal-desktop-services)))
       (mapped-devices (list <<mapped-device>>))
       (file-systems (append <<filesystems>> %base-file-systems))
       (packages (append (map spec->pkg '(<<package>>)) %base-packages))))
@@ -578,6 +578,30 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 * 桌面环境
 #+begin_src scheme :noweb-ref module
   (gnu home services fontutils)
+#+end_src
+
+** Greetd
+#+begin_src scheme :noweb-ref rosenthal-desktop-transformation
+  (lambda (rosenthal-desktop-services)
+    (modify-services rosenthal-desktop-services
+  		   (greetd-service-type
+  		    config => (greetd-configuration
+  			       (inherit config)
+  			       (terminals
+  				(map (lambda (x)
+  				       (greetd-terminal-configuration
+  					(terminal-vt (number->string x))
+  					(terminal-switch (eqv? 1 x))
+  					(default-session-command
+  					  (cond
+  					   ((eqv? 1 x)
+  					    (greetd-tuigreet-session))
+  					   (else
+  					    (greetd-agreety-session
+  					     (command
+  					      (greetd-user-session
+  					       (command #~(getenv "SHELL"))))))))))
+  				     (iota 6 1)))))))
 #+end_src
 
 ** Wayland
