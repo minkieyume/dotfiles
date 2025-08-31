@@ -15,13 +15,14 @@
       (privileged-programs (cons* <<privileged-program>> %default-privileged-programs))
       (users (cons* <<user>> %base-user-accounts))
       (groups (cons* <<group>> %base-groups))
-      (services (cons* <<service>> (compose <<rosenthal-desktop-transformation>> %rosenthal-desktop-services)))
+      (services (cons* <<service>>
+  		     ((compose <<rosenthal-desktop-transformation>>) %rosenthal-desktop-services)))
       (mapped-devices (list <<mapped-device>>))
       (file-systems (append <<filesystems>> %base-file-systems))
       (packages (append (map spec->pkg '(<<package>>)) %base-packages))))
 
   ((compose <<transformation>>)
-    %os)
+   %os)
 #+end_src
 
 ** 基础信息
