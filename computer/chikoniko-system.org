@@ -12,6 +12,7 @@
       <<env>>
       (bootloader <<bootloader>>)
       (initrd-modules (cons* <<initrd-module>> %base-initrd-modules))
+      (kernel-arguments (cons* <<kernel-argument>> %default-kernel-arguments))
       (privileged-programs (cons* <<privileged-program>> %default-privileged-programs))
       (users (cons* <<user>> %base-user-accounts))
       (groups (cons* <<group>> %base-groups))
@@ -34,7 +35,13 @@
   (host-name "chikoniko")
 #+end_src
 
-** 系统模块
+** 系统配置
+*** 内核参数
+#+begin_src scheme :noweb-ref kernel-argument
+  "i8042.reset" "i8042.nomux" "i8042.nopnp" "i8042.dumbkbd"
+#+end_src
+
+*** 内核模块
 #+begin_src scheme :noweb-ref initrd-module
   "dummy"
 #+end_src
