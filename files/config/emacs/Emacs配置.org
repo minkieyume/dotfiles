@@ -10,6 +10,7 @@
 #+end_src
 
 * 编辑器优化
+** 更好的默认配置
 #+begin_src emacs-lisp :noweb-ref config
   ;;更好的默认配置
   (global-display-line-numbers-mode 1)
@@ -29,6 +30,15 @@
         `((".*" . ,(expand-file-name "emacs/backups/"
   				   (or (getenv "XDG_CACHE_HOME")
                                          "~/.cache"))))) ;更改自动保存目录
+#+end_src
+
+** 更改自动写入路径
+更改自动写入路径，避免直接写入init.el
+#+begin_src emacs-lisp :noweb-ref config
+  (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+  
+  (when (file-exists-p custom-file)
+    (load custom-file))
 #+end_src
 
 * 补全工具

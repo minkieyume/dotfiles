@@ -20,6 +20,10 @@
       `((".*" . ,(expand-file-name "emacs/backups/"
 				   (or (getenv "XDG_CACHE_HOME")
                                        "~/.cache"))))) ;更改自动保存目录
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+
+(when (file-exists-p custom-file)
+  (load custom-file))
 (use-package company
   :bind (:map company-active-map
               ("C-n" . 'company-select-next)
