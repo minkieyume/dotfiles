@@ -768,8 +768,6 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 
 #+begin_src scheme :noweb-ref home-environment-variable
   ("MOZ_ENABLE_WAYLAND" . "1")
-  ("QT_IM_MODULE" . "fcitx")
-  ("XMODIFIERS" . "@im=fcitx")
 #+end_src
   
 * 程序开发
