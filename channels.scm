@@ -10,7 +10,7 @@
              "F655 AB8D 8F94 0E9F 569C E97D 5DBC D441 1818 2F31"))))
 	 (channel
 	  (name 'rosenthal)
-	  (url "https://codeberg.org/minkieyume/Rosenthal.git")
+	  (url "https://codeberg.org/hako/Rosenthal.git")
 	  (branch "trunk")
 	  (introduction
 	   (make-channel-introduction

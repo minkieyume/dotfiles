@@ -227,8 +227,9 @@
 
 #+begin_src scheme :noweb-ref home-service
   (service home-files-service-type
-  	 `((".ssh/id_rsa" ,(local-file "../secret/keys/niko_ssh_rsa"))
+  	 `((".ssh/id_rsa" ,(local-file "../secret/keys/niko_ssh_rsa"))  	   
   	   (".dash_rsa" ,(local-file "../secret/keys/dash_rsa"))
+  	   (".gitconfig" ,(local-file "../files/config/gitconfig"))
   	   ("Downloads" ,(symlink-to "/niko/download"))
   	   ("Picture" ,(symlink-to "/niko/picture"))
   	   ("Creator" ,(symlink-to "/niko/creator"))
