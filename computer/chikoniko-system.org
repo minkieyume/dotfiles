@@ -395,13 +395,16 @@ fish，开箱即用的终端解释器。
   "emacs-embark"
   "emacs-rainbow-delimiters"
   "emacs-paredit"
-  "emacs-smartparens"
+  "emacs-smartparens"  
 
   ;;键位优化
   "emacs-disable-mouse"
   "emacs-hydra"
   "emacs-restart-emacs"
   "emacs-which-key"
+
+  ;;万能工具
+  "emacs-pinentry"
   "emacs-pdf-tools"
   "emacs-ement"
   "emacs-projectile"
@@ -508,20 +511,21 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 ** GPG
 #+begin_src scheme :noweb-ref package
   "gnupg"
+  "pinentry-emacs"
 #+end_src
 
 #+begin_src scheme :noweb-ref module
-  (gnu packages gnupg)
   (gnu home services gnupg)
 #+end_src
 
 #+begin_src scheme :noweb-ref home-service
-  (service home-gpg-agent-service-type
-    (home-gpg-agent-configuration
-      (pinentry-program
-        (file-append (spec->pkg "pinentry-emacs") "/bin/pinentry-emacs"))
-      (ssh-support? #t)
-      (extra-content "allow-loopback-pinentry")))
+    (service home-gpg-agent-service-type
+      (home-gpg-agent-configuration
+        (pinentry-program
+          (file-append (spec->pkg "pinentry-emacs") "/bin/pinentry-emacs"))
+        (ssh-support? #t)
+        (extra-content (string-join '("allow-emacs-pinentry"
+  				    "allow-loopback-pinentry") "\n"))))
 #+end_src
 
 ** 解压

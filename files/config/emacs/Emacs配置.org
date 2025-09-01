@@ -41,6 +41,7 @@
     (load custom-file))
 #+end_src
 
+
 * 补全工具
 ** 代码补全
 *** Company
@@ -558,6 +559,16 @@ Ekg是方便快速整理灵感和笔记的笔记插件。
     :config
     (with-eval-after-load 'git-commit
       (setq git-commit-cd-to-toplevel t)))
+#+end_src
+
+** Pinentry
+配置Pinentry，允许emacs作为GPG验证前端。
+#+begin_src emacs-lisp :noweb-ref config
+  (use-package pinentry
+    :config
+    (pinentry-start)
+    :custom
+    (epa-pinentry-mode 'loopback))
 #+end_src
 
 * 文档

@@ -361,6 +361,11 @@
   :config
   (with-eval-after-load 'git-commit
     (setq git-commit-cd-to-toplevel t)))
+(use-package pinentry
+  :config
+  (pinentry-start)
+  :custom
+  (epa-pinentry-mode 'loopback))
 (use-package pdf-tools)
 (use-package ement)
 (use-package dirvish
