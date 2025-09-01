@@ -9,18 +9,18 @@
   <<define>>
   (define %os
     (operating-system
-      <<env>>
-      (bootloader <<bootloader>>)
-      (initrd-modules (cons* <<initrd-module>> %base-initrd-modules))
-      (kernel-arguments (cons* <<kernel-argument>> %default-kernel-arguments))
-      (privileged-programs (cons* <<privileged-program>> %default-privileged-programs))
-      (users (cons* <<user>> %base-user-accounts))
-      (groups (cons* <<group>> %base-groups))
-      (services (cons* <<service>>
-  		     ((compose <<rosenthal-desktop-transformation>>) %rosenthal-desktop-services)))
-      (mapped-devices (list <<mapped-device>>))
-      (file-systems (append <<filesystems>> %base-file-systems))
-      (packages (append (map spec->pkg '(<<package>>)) %base-packages))))
+     <<env>>
+     (bootloader <<bootloader>>)
+     (initrd-modules (cons* <<initrd-module>> %base-initrd-modules))
+     (kernel-arguments (cons* <<kernel-argument>> %default-kernel-arguments))
+     (privileged-programs (cons* <<privileged-program>> %default-privileged-programs))
+     (users (cons* <<user>> %base-user-accounts))
+     (groups (cons* <<group>> %base-groups))
+     (services (cons* <<service>>
+  		    ((compose <<rosenthal-desktop-transformation>>) %rosenthal-desktop-services)))
+     (mapped-devices (list <<mapped-device>>))
+     (file-systems (append <<filesystems>> %base-file-systems))
+     (packages (append (specifications->packages '(<<package>>)) %base-packages))))
 
   ((compose <<transformation>>)
    %os)
@@ -790,7 +790,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 *** librewolf
 #+begin_src scheme :noweb-ref package
   "librewolf"
-  "icecat-l10n:zh_CN"
+  "icecat-l10n:zh-CN"
   "adaptive-tab-bar-colour-icecat"
   "bitwarden-icecat"
   "livemarks-icecat"
