@@ -41,7 +41,6 @@
     (load custom-file))
 #+end_src
 
-
 * 补全工具
 ** 代码补全
 *** Company
@@ -147,13 +146,15 @@
   (global-set-key (kbd "C-c d") 'delete-current-file)
 #+end_src
 
-* 模式扩展
-*** 常用模式
+* 模式配置
+*** 配置文档
 #+begin_src emacs-lisp :noweb-ref config
-  (use-package yaml-mode)
+    (use-package yaml-mode)
 
-  ;; (use-package sqlite-mode
-  ;;   :straight t)
+    (use-package conf-mode
+      :mode "\\.kdl\\'")
+    ;; (use-package sqlite-mode
+    ;;   :straight t)
 #+end_src
 
 *** InkMode

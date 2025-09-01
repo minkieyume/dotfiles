@@ -418,7 +418,7 @@ fish，开箱即用的终端解释器。
   "emacs-magit-todos"
 
   ;;文件管理
-  "emacs-dirvish"
+  "emacs-dirvish@d877433f957a363ad78b228e13a8e5215f2d6593"
   "emacs-dired-git-info"
 
   ;;主题资源
@@ -537,6 +537,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 密码管理软件
 #+begin_src scheme :noweb-ref package
   "keepassxc"
+  "keepassxc-browser-icecat"
 #+end_src
 
 * 备份
@@ -672,6 +673,8 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   }
   @theme \"" (spec->pkg "rofi-wayland") "/share/rofi/themes/fullscreen-preview.rasi\"\n"))))
 #+end_src
+
+[[file:../files/config/chikoniko/niri.kdl][Niri配置]]
 
 *** xdg-desktop-portal
 #+begin_src scheme :noweb-ref package

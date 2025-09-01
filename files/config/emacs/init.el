@@ -83,6 +83,8 @@
 (global-set-key (kbd "C-c d") 'delete-current-file)
 (use-package yaml-mode)
 
+(use-package conf-mode
+  :mode "\\.kdl\\'")
 ;; (use-package sqlite-mode
 ;;   :straight t)
 ;; (use-package ink-mode
