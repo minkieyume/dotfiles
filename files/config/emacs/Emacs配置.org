@@ -634,7 +634,7 @@ Ekg是方便快速整理灵感和笔记的笔记插件。
      (dirvish-vipsthumbnail-program "$$bin/vipsthumbnail$$")
      (dirvish-ffmpegthumbnailer-program "$$bin/ffmpegthumbnailer$$")
      (dirvish-mediainfo-program "$$bin/mediainfo$$")
-    ;;(dirvish-magick-program "$$bin/magick$$")     
+    ;;(dirvish-magick-program "bin/magick")
 
     ;; Dirvish功能配置
     (dirvish-large-directory-threshold 100)

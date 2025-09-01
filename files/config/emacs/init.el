@@ -412,7 +412,7 @@
    (dirvish-vipsthumbnail-program "$$bin/vipsthumbnail$$")
    (dirvish-ffmpegthumbnailer-program "$$bin/ffmpegthumbnailer$$")
    (dirvish-mediainfo-program "$$bin/mediainfo$$")
-  ;;(dirvish-magick-program "$$bin/magick$$")     
+  ;;(dirvish-magick-program "bin/magick")
 
   ;; Dirvish功能配置
   (dirvish-large-directory-threshold 100)
