@@ -377,8 +377,8 @@
 (use-package dirvish
   :init
   (dirvish-override-dired-mode)
-  :hook
-  (dirvish-setup . dirvish-emerge-mode)
+  ;:hook
+  ;(dirvish-setup . dirvish-emerge-mode)
   :custom
   ;快速访问
   (dirvish-quick-access-entries
@@ -405,6 +405,14 @@
   ;;    ("音频" (extensions "mp3" "flac" "wav" "ape" "aac"
   ;; 			   "tak" "midi"))
   ;;    ("压缩包" (extensions "gz" "rar" "zip"))))
+
+  ;; Dirvish程序绑定
+   (dirvish-fd-program "$$bin/fd")
+   (dirvish-7z-program "$$bin/7z$$")
+   (dirvish-vipsthumbnail-program "$$bin/vipsthumbnail$$")
+   (dirvish-ffmpegthumbnailer-program "$$bin/ffmpegthumbnailer$$")
+   (dirvish-mediainfo-program "$$bin/mediainfo$$")
+  ;;(dirvish-magick-program "$$bin/magick$$")     
 
   ;; Dirvish功能配置
   (dirvish-large-directory-threshold 100)
@@ -462,3 +470,14 @@
             (dired parent-dir)
           (message "当前目录没有上一级目录！")))
     (message "当前缓冲区不是 Dirvish 或 Dired 模式。")))
+(use-package eat
+  :hook
+  (eshell-load . eat-eshell-mode)
+  (eshell-load . eat-eshell-visual-command-mode))
+(use-package eshell-syncthing-highlighting
+  :after eshell-mode
+  :config
+  (eshell-syntax-highlighting-global-mode +1))
+(when (and (executable-find "$$bin/fish$$")
+                 (require 'fish-completion nil t))
+        (global-fish-completion-mode))

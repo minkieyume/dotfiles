@@ -413,6 +413,11 @@ fish，开箱即用的终端解释器。
   "emacs-ox-hugo"
   "emacs-org-download"
 
+  ;;终端优化
+  "emacs-eat-hako"
+  "emacs-eshell-syntax-highlighting"
+  "emacs-fish-completion"
+
   ;;版本控制
   "emacs-magit"
   "emacs-magit-todos"

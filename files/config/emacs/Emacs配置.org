@@ -599,8 +599,8 @@ Ekg是方便快速整理灵感和笔记的笔记插件。
   (use-package dirvish
     :init
     (dirvish-override-dired-mode)
-    :hook
-    (dirvish-setup . dirvish-emerge-mode)
+    ;:hook
+    ;(dirvish-setup . dirvish-emerge-mode)
     :custom
     ;快速访问
     (dirvish-quick-access-entries
@@ -634,7 +634,7 @@ Ekg是方便快速整理灵感和笔记的笔记插件。
      (dirvish-vipsthumbnail-program "$$bin/vipsthumbnail$$")
      (dirvish-ffmpegthumbnailer-program "$$bin/ffmpegthumbnailer$$")
      (dirvish-mediainfo-program "$$bin/mediainfo$$")
-     (dirvish-magick-program "$$bin/magick$$")     
+    ;;(dirvish-magick-program "$$bin/magick$$")     
 
     ;; Dirvish功能配置
     (dirvish-large-directory-threshold 100)
@@ -701,3 +701,29 @@ Ekg是方便快速整理灵感和笔记的笔记插件。
               (message "当前目录没有上一级目录！")))
         (message "当前缓冲区不是 Dirvish 或 Dired 模式。")))
 #+end_src
+
+* 终端优化
+** Eat
+Emacs的终端模拟器。
+#+begin_src emacs-lisp :noweb-ref config
+  (use-package eat
+    :hook
+    (eshell-load . eat-eshell-mode)
+    (eshell-load . eat-eshell-visual-command-mode))
+#+END_SRC
+
+** Eshell
+*** 语法高亮
+#+begin_src emacs-lisp :noweb-ref config
+  (use-package eshell-syncthing-highlighting
+    :after eshell-mode
+    :config
+    (eshell-syntax-highlighting-global-mode +1))
+#+END_SRC
+
+*** Fish补全
+#+begin_src emacs-lisp :noweb-ref config
+(when (and (executable-find "$$bin/fish$$")
+                 (require 'fish-completion nil t))
+        (global-fish-completion-mode))
+#+END_SRC
