@@ -28,17 +28,18 @@ window-rule {
 
 window-rule {
     match app-id="steam" title=r#"^notificationtoasts_\d+_desktop$"#
+    open-focused false
     default-floating-position x=10 y=10 relative-to="bottom-right"
+}
+
+window-rule {
+    match app-id="steam"
+    open-maximized true
 }
 
 window-rule {
     match app-id="thunar" title="^File Operation Progress$"
     open-floating true
-}
-
-window-rule {
-    geometry-corner-radius 12
-    clip-to-geometry true
 }
 
 overview {
@@ -47,7 +48,9 @@ overview {
 
 layout {
     focus-ring {
-        off
+        width 8
+	active-color "#9666ff"
+        inactive-color "#000000"
     }
     border {
         off

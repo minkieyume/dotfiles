@@ -1,66 +1,68 @@
 * {
-	border: none;
-	border-radius: 10px;
-	font-family: "JetbrainsMono Nerd Font" ;
-	font-size: 17px;
-	min-height: 10px;
+    border: none;
+    border-radius: 10px;
+    font-family: "JetbrainsMono Nerd Font" ;
+    font-size: 17px;
+    min-height: 10px;
 }
 
 window#waybar {
-	background: transparent;
+    background: transparent;
 }
 
 window#waybar.hidden {
-	opacity: 0.2;
+    opacity: 0.2;
 }
 
 #window {
-	margin-top: 6px;
-	padding-left: 10px;
-	padding-right: 10px;
-	border-radius: 0px;
-	transition: none;
-        color: transparent;
-	background: transparent;
+    border: 2px solid #9666ff;
+    margin-top: 0px;
+    margin-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 0px;
+    transition: none;
+    color: transparent;
+    background: transparent;
 }
 #workspaces {
-	margin-top: 6px;
-	margin-left: 12px;
-	font-size: 4px;
-	margin-bottom: 0px;
-	border-radius: 0px;
-	background: #000000;
-	transition: none;
+    margin-top: 0px;
+    margin-left: 12px;
+    font-size: 4px;
+    margin-bottom: 5px;
+    border-radius: 0px;
+    background: #000000;
+    transition: none;
 }
 
 #workspaces button {
-	transition: none;
-	color: #9666ff;
-	background: transparent;
-	font-size: 16px;
-	border-radius: 0px;
+    transition: none;
+    color: #9666ff;
+    background: transparent;
+    font-size: 16px;
+    border-radius: 0px;
 }
 
 #workspaces button.occupied {
-	transition: none;
-	color: #1e90ff;
-	background: transparent;
-	font-size: 4px;
+    transition: none;
+    color: #1e90ff;
+    background: transparent;
+    font-size: 4px;
 }
 
 #workspaces button.active {
-	color: #9666ff;
-        border-top: 2px solid #9666ff;
-        border-bottom: 2px solid #9666ff;
+    color: #9666ff;
+    border-top: 2px solid #9666ff;
+    border-bottom: 2px solid #9666ff;
 }
 
 #workspaces button:hover {
-	transition: none;
-	box-shadow: inherit;
-	text-shadow: inherit;
-	color: #1e90ff;
-	border-color: #1e90ff;
-	color: #1e90ff;
+    transition: none;
+    box-shadow: inherit;
+    text-shadow: inherit;
+    color: #1e90ff;
+    border-color: #1e90ff;
+    color: #1e90ff;
 }
 
 #workspaces button.active:hover {
@@ -68,47 +70,52 @@ window#waybar.hidden {
 }
 
 #network {
-	margin-top: 6px;
-	margin-left: 8px;
-	padding-left: 10px;
-	padding-right: 18px;
-	margin-bottom: 0px;
-	border-radius: 0px;
-	transition: none;
-	color: #9666ff;
-	background: #000000;
+    border: 2px solid #9666ff;
+    margin-top: 0px;
+    margin-left: 8px;
+    padding-left: 10px;
+    padding-right: 18px;
+    margin-bottom: 5px;
+    border-radius: 0px;
+    transition: none;
+    color: #9666ff;
+    background: #000000;
 }
 
 #wireplumber {
-	margin-top: 6px;
-	margin-left: 8px;
-	padding-left: 10px;
-	padding-right: 10px;
-	margin-bottom: 0px;
-	border-radius: 0px;
-	transition: none;
-	color: #9666ff;
-	background: #000000;
+    border: 2px solid #9666ff;
+    margin-top: 0px;
+    margin-left: 8px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-bottom: 5px;
+    border-radius: 0px;
+    transition: none;
+    color: #9666ff;
+    background: #000000;
 }
 
 #battery {
-	margin-top: 6px;
-	margin-left: 8px;
-	padding-left: 10px;
-	padding-right: 10px;
-	margin-bottom: 0px;
-	border-radius: 0px;
-	transition: none;
-	color: #9666ff;
-	background: #000000;
+    border: 2px solid #9666ff;
+    margin-top: 0px;
+    margin-left: 8px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-bottom: 5px;
+    border-radius: 0px;
+    transition: none;
+    color: #9666ff;
+    background: #000000;
 }
 
 #battery.charging, #battery.plugged {
-	color: #9666ff;
+    border: 2px solid #9666ff;
+    color: #9666ff;
     background-color: #000000;
 }
 
 #battery.critical:not(.charging) {
+    border: 2px solid #9666ff;
     background-color: #000000;
     color: #9666ff;
     animation-name: blink;
@@ -126,124 +133,134 @@ window#waybar.hidden {
 }
 
 #backlight {
-	margin-top: 6px;
-	margin-left: 8px;
-	padding-left: 10px;
-	padding-right: 10px;
-	margin-bottom: 0px;
-	border-radius: 0px;
-	transition: none;
-	color: #9666ff;
-	background: #000000;
+    border: 2px solid #9666ff;
+    margin-top: 0px;
+    margin-left: 8px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-bottom: 5px;
+    border-radius: 0px;
+    transition: none;
+    color: #9666ff;
+    background: #000000;
 }
 
 #bluetooth {
-	margin-top: 6px;
-	margin-left: 8px;
-	padding-left: 10px;
-	padding-right: 10px;
-	margin-bottom: 0px;
-	border-radius: 0px;
-	transition: none;
-	color: #9666ff;
-	background: #000000;
+    border: 2px solid #9666ff;
+    margin-top: 0px;
+    margin-left: 8px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-bottom: 5px;
+    border-radius: 0px;
+    transition: none;
+    color: #9666ff;
+    background: #000000;
 }
 
 #clock {
-	margin-top: 6px;
-	margin-left: 8px;
-	padding-left: 10px;
-	padding-right: 10px;
-	margin-bottom: 0px;
-	border-radius: 0px;
-	transition: none;
-	color: #9666ff;
-	background: #000000;
-	/*background: #1A1826;*/
+    border: 2px solid #9666ff;
+    margin-top: 0px;
+    margin-left: 8px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-bottom: 5px;
+    border-radius: 0px;
+    transition: none;
+    color: #9666ff;
+    background: #000000;
+    /*background: #1A1826;*/
 }
 
 #memory {
-	margin-top: 6px;
-	margin-left: 8px;
-	padding-left: 10px;
-	margin-bottom: 0px;
-	padding-right: 10px;
-	border-radius: 0px;
-	transition: none;
-	color: #9666ff;
-	background: #000000;
+    border: 2px solid #9666ff;
+    margin-top: 0px;
+    margin-left: 8px;
+    padding-left: 10px;
+    margin-bottom: 5px;
+    padding-right: 10px;
+    border-radius: 0px;
+    transition: none;
+    color: #9666ff;
+    background: #000000;
 }
 
 #cpu {
-	margin-top: 6px;
-	margin-left: 8px;
-	padding-left: 10px;
-	margin-bottom: 0px;
-	padding-right: 10px;
-	border-radius: 0px;
-	transition: none;
-	color: #9666ff;
-	background: #000000;
+    border: 2px solid #9666ff;
+    margin-top: 0px;
+    margin-left: 8px;
+    padding-left: 10px;
+    margin-bottom: 5px;
+    padding-right: 10px;
+    border-radius: 0px;
+    transition: none;
+    color: #9666ff;
+    background: #000000;
 }
 
 #tray {
-	margin-top: 6px;
-	margin-left: 8px;
-	padding-left: 10px;
-	margin-bottom: 0px;
-	padding-right: 10px;
-	border-radius: 0px;
-	transition: none;
-	color: #9666ff;
-	background: #000000;
+    border: 2px solid #9666ff;
+    margin-top: 0px;
+    margin-left: 8px;
+    padding-left: 10px;
+    margin-bottom: 5px;
+    padding-right: 10px;
+    border-radius: 0px;
+    transition: none;
+    color: #9666ff;
+    background: #000000;
 }
 
 #custom-launcher {
-	font-size: 24px;
-	margin-top: 6px;
-	margin-left: 8px;
-	padding-left: 10px;
-	padding-right: 5px;
-	border-radius: 0px;
-	transition: none;
+    border: 2px solid #9666ff;
+    font-size: 24px;
+    margin-top: 0px;
+    margin-left: 8px;
+    padding-left: 10px;
+    padding-right: 5px;
+    border-radius: 0px;
+    transition: none;
     color: #9666ff;
     background: #000000;
 }
 
 #custom-power {
-	font-size: 20px;
-	margin-top: 6px;
-	margin-left: 8px;
-	margin-right: 8px;
-	padding-left: 10px;
-	padding-right: 5px;
-	margin-bottom: 0px;
-	border-radius: 0px;
-	transition: none;
-	color: #9666ff;
-	background: #000000;
+    border: 2px solid #9666ff;
+    font-size: 20px;
+    margin-top: 0px;
+    margin-left: 8px;
+    margin-right: 8px;
+    padding-left: 10px;
+    padding-right: 5px;
+    margin-bottom: 5px;
+    border-radius: 0px;
+    transition: none;
+    color: #9666ff;
+    background: #000000;
 }
 
 #custom-wallpaper {
-	margin-top: 6px;
-	margin-left: 8px;
-	padding-left: 10px;
-	padding-right: 10px;
-	margin-bottom: 0px;
-	border-radius: 0px;
-	transition: none;
-	color: #9666ff;
-	background: #000000;
+    border: 2px solid #9666ff;
+    margin-top: 0px;
+    margin-left: 8px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-bottom: 5px;
+    border-radius: 0px;
+    transition: none;
+    color: #9666ff;
+    background: #000000;
 }
 
 #custom-spotify {
-	margin-top: 6px;
-	margin-left: 8px;
-	padding-left: 10px;
-	padding-right: 10px;
-	margin-bottom: 0px;
-	border-radius: 0px;
-	transition: none;
-	color: #9666ff;
-	background: #000000;
+    border: 2px solid #9666ff;
+    margin-top: 0px;
+    margin-left: 8px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-bottom: 5px;
+    border-radius: 0px;
+    transition: none;
+    color: #9666ff;
+    background: #000000;
 }

@@ -81,6 +81,10 @@
       (message "No file is associated with this buffer."))))
 
 (global-set-key (kbd "C-c d") 'delete-current-file)
+(use-package edit-indirect
+  :bind
+  (:map org-mode-map
+	("C-c e" . edit-indirect-region)))
 (use-package yaml-mode)
 
 (use-package conf-mode
@@ -373,8 +377,11 @@
 (use-package dirvish
   :init
   (dirvish-override-dired-mode)
+  :hook
+  (dirvish-setup . dirvish-emerge-mode)
   :custom
-  (dirvish-quick-access-entries ; 自定义快捷访问，setq没用。
+  ;快速访问
+  (dirvish-quick-access-entries
    '(("h" "~/"                          "Home")
      ("d" "~/Downloads"                  "下载")
      ("m" "/mnt/"                       "Drives")
@@ -389,19 +396,30 @@
      ("e"  "~/Creator/remote/绘画创作"  "绘画")
      ("M"  "~/Creator/remote/音乐创作"  "音乐")
      ("R"  "~/Creator/remote"           "远程创作")))
+  ;分类组
+  ;; (dirvish-emerge-groups
+  ;;  '(("最近文件" (predicate . recent-files-2h))
+  ;;    ("文档" (extensions "pdf" "tex" "bib" "equb"
+  ;; 			   "org" "txt" "md"))
+  ;;    ("视频" (extensions "mp4" "mkv" "webm"))
+  ;;    ("音频" (extensions "mp3" "flac" "wav" "ape" "aac"
+  ;; 			   "tak" "midi"))
+  ;;    ("压缩包" (extensions "gz" "rar" "zip"))))
+
+  ;; Dirvish功能配置
+  (dirvish-large-directory-threshold 100)
+  (dirvish-mode-line-format
+   '(:left (sort symlink) :right (omit yank index)))
+  (dirvish-attributes
+   '(all-the-icons file-time file-size collapse subtree-state vc-state git-msg))
+  (delete-by-moving-to-trash t)
+  (dired-listing-switches
+   "-lhv --group-directories-first")
+  (dirvish-default-layout '(0 0.11 0.55))    
   :config
   (dirvish-peek-mode) ; Preview files in minibuffer
-  ;; (dirvish-side-follow-mode) ; similar to `treemacs-follow-mode'
-  (setq dirvish-mode-line-format
-  	'(:left (sort symlink) :right (omit yank index)))
-  (setq dirvish-attributes
-  	'(all-the-icons file-time file-size collapse subtree-state vc-state git-msg))
-  (setq delete-by-moving-to-trash t)
-  (setq dired-listing-switches
-  	"--human-readable --group-directories-first --no-group")
-  (setq dirvish-default-layout '(0 0.11 0.55))
-
-  :bind ; Bind `dirvish|dirvish-side|dirvish-dwim' as you see fit
+  (dirvish-side-follow-mode) ; similar to `treemacs-follow-mode'
+  :bind
   (("C-c f" . dirvish-fd)
    :map dirvish-mode-map ; Dirvish inherits `dired-mode-map'
    ("a"   . dirvish-quick-access) ;快速访问
@@ -420,7 +438,7 @@
    ("M-m" . dirvish-mark-menu) ;标记操作菜单
    ("M-t" . dirvish-layout-toggle) ;布局切换
    ("M-s" . dirvish-setup-menu) ;设置菜单
-   ("M-e" . dirvish-emerge-menu) ;合并菜单
+   ("M-e" . dirvish-emerge-menu) ;文件归类菜单
    ("M-j" . dirvish-fd-jump) ;搜索跳转
    ("M-u" . dirvish-jump-up)))
 (use-package dired-git-info)

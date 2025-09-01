@@ -231,7 +231,7 @@
   	   (".dash_rsa" ,(local-file "../secret/keys/dash_rsa"))
   	   (".gitconfig" ,(local-file "../files/config/gitconfig"))
   	   ("Downloads" ,(symlink-to "/niko/download"))
-  	   ("Picture" ,(symlink-to "/niko/picture"))
+  	   ("Pictures" ,(symlink-to "/niko/picture"))
   	   ("Creator" ,(symlink-to "/niko/creator"))
   	   ("Develop" ,(symlink-to "/niko/develop"))
   	   ("Application" ,(symlink-to "/niko/program"))
@@ -431,18 +431,25 @@ fish，开箱即用的终端解释器。
 #+end_src
 
 #+begin_src scheme :noweb-ref home-service
-  (simple-service 'emacs-configuration
-  		home-xdg-configuration-files-service-type
-  		`(("emacs/init.el"
-  		   ,(computed-substitution-with-inputs "init.el"
-  						       (local-file "../files/config/emacs/init.el")
-  						       (specs->pkgs "ccls"
-  								    "fish"
-  								    "python-lsp-server"
-  								    "rust-analyzer"
-  								    "zig-zls")))
-  		  ("emacs/.init-themes.el"
-  		   ,(local-file "../files/config/chikoniko/init-theme.el"))))
+(simple-service 'emacs-configuration
+      		home-xdg-configuration-files-service-type
+      		`(("emacs/init.el"
+      		   ,(computed-substitution-with-inputs "init.el"
+      						       (local-file "../files/config/emacs/init.el")
+      						       (specs->pkgs "ccls"
+      								    "fish"
+      								    "python-lsp-server"
+      								    "rust-analyzer"
+      								    "zig-zls"
+    								    "fd"
+								    "mpv"
+								    "ffmpegthumbnailer"
+								    "p7zip"
+								    "imagemagick"
+								    "mediainfo"
+								    "vips")))
+      		  ("emacs/.init-themes.el"
+      		   ,(local-file "../files/config/chikoniko/init-theme.el"))))
 #+end_src
 
 #+begin_src scheme :noweb-ref home-service
@@ -673,8 +680,16 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   }
   @theme \"" (spec->pkg "rofi-wayland") "/share/rofi/themes/fullscreen-preview.rasi\"\n"))))
 #+end_src
-
 [[file:../files/config/chikoniko/niri.kdl][Niri配置]]
+
+*** Foot
+轻量级的终端模拟器
+#+begin_src scheme :noweb-ref home-service
+  (simple-service 'emacs-configuration
+  		home-xdg-configuration-files-service-type
+  		`(("foot/foot.ini"
+  		   ,(local-file "../files/config/chikoniko/foot.ini"))))
+#+end_src
 
 *** xdg-desktop-portal
 #+begin_src scheme :noweb-ref package
