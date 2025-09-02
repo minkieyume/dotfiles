@@ -53,6 +53,8 @@
   :bind(("C-." . embark-act)
 	("C-;" . embark-dwim)
 	("C-h B" . embark-bindings)
+	:map org-mode-map
+	("C-c b" . embark-export)
 	:map minibuffer-mode-map
 	("C-c e" . embark-export)))
 
@@ -68,7 +70,7 @@
 (use-package which-key
   :config
   (which-key-mode))
-(global-set-key (kbd "C-c h") 'eshell)
+(global-set-key (kbd "C-c r") 'eshell)
 (defun delete-current-file ()
   "Delete the file visited by the current buffer and close the buffer."
   (interactive)
@@ -407,7 +409,7 @@
   ;;    ("压缩包" (extensions "gz" "rar" "zip"))))
 
   ;; Dirvish程序绑定
-   (dirvish-fd-program "$$bin/fd")
+   (dirvish-fd-program "$$bin/fd$$")
    (dirvish-7z-program "$$bin/7z$$")
    (dirvish-vipsthumbnail-program "$$bin/vipsthumbnail$$")
    (dirvish-ffmpegthumbnailer-program "$$bin/ffmpegthumbnailer$$")
@@ -473,7 +475,9 @@
 (use-package eat
   :hook
   (eshell-load . eat-eshell-mode)
-  (eshell-load . eat-eshell-visual-command-mode))
+  (eshell-load . eat-eshell-visual-command-mode)
+  :bind
+  ("C-c t" . eat))
 (use-package eshell-syncthing-highlighting
   :after eshell-mode
   :config

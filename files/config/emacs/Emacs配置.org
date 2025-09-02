@@ -98,6 +98,8 @@
     :bind(("C-." . embark-act)
   	("C-;" . embark-dwim)
   	("C-h B" . embark-bindings)
+  	:map org-mode-map
+  	("C-c b" . embark-export)
   	:map minibuffer-mode-map
   	("C-c e" . embark-export)))
 
@@ -126,7 +128,7 @@
 
 ** 自定义键位
 #+begin_src emacs-lisp :noweb-ref config
-  (global-set-key (kbd "C-c h") 'eshell)
+  (global-set-key (kbd "C-c r") 'eshell)
 #+end_src
 
 ** 自定义操作
@@ -154,6 +156,7 @@
   (:map org-mode-map
 	("C-c e" . edit-indirect-region)))
 #+end_src
+
 * 模式配置
 *** 配置文档
 #+begin_src emacs-lisp :noweb-ref config
@@ -629,7 +632,7 @@ Ekg是方便快速整理灵感和笔记的笔记插件。
     ;;    ("压缩包" (extensions "gz" "rar" "zip"))))
 
     ;; Dirvish程序绑定
-     (dirvish-fd-program "$$bin/fd")
+     (dirvish-fd-program "$$bin/fd$$")
      (dirvish-7z-program "$$bin/7z$$")
      (dirvish-vipsthumbnail-program "$$bin/vipsthumbnail$$")
      (dirvish-ffmpegthumbnailer-program "$$bin/ffmpegthumbnailer$$")
@@ -709,7 +712,9 @@ Emacs的终端模拟器。
   (use-package eat
     :hook
     (eshell-load . eat-eshell-mode)
-    (eshell-load . eat-eshell-visual-command-mode))
+    (eshell-load . eat-eshell-visual-command-mode)
+    :bind
+    ("C-c t" . eat))
 #+END_SRC
 
 ** Eshell
