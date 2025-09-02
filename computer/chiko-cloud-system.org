@@ -48,6 +48,7 @@
     (name "minkieyume")
     (comment "Minkieyume")
     (group "users")
+    (password "$6$4QkvhBIch2jaueTp$h7P.Q.JlV3iT7xnoUyXoo0obiOsnSxmP8Rscv2PpF1YhP7I6Sp3/CN5VddDSxGqOWfzo0D.2yeP/Km4oCsOvm1")
     (shell (file-append (spec->pkg "fish") "/bin/fish"))
     (home-directory "/home/minkieyume")
     (supplementary-groups '("wheel" "netdev" "audio" "video")))

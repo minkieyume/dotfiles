@@ -59,6 +59,7 @@
   (user-account
    (name "minkieyume")
    (comment "Minkieyume")
+   (password "$6$4QkvhBIch2jaueTp$h7P.Q.JlV3iT7xnoUyXoo0obiOsnSxmP8Rscv2PpF1YhP7I6Sp3/CN5VddDSxGqOWfzo0D.2yeP/Km4oCsOvm1")
    (group "users")
    (shell (file-append (spec->pkg "fish") "/bin/fish"))
    (home-directory "/home/minkieyume")
@@ -343,6 +344,11 @@ fish，开箱即用的终端解释器。
 #+end_src
 
 * 工具
+** 通用工具
+#+begin_src scheme :noweb-ref package
+  "openssl"
+#+end_src
+
 ** Git
 #+begin_src scheme :noweb-ref module
   (gnu packages version-control)

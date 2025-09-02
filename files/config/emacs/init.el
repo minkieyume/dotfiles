@@ -2,28 +2,6 @@
 (load-file (expand-file-name ".init-themes.el" user-emacs-directory))
 (require 'init-theme)
 
-;;更好的默认配置
-(global-display-line-numbers-mode 1)
-(icomplete-mode 1)
-(global-auto-revert-mode 1)
-(tool-bar-mode -1)
-(menu-bar-mode -1)
-(scroll-bar-mode -1)
-(toggle-truncate-lines 1)
-
-(setq inhibit-startup-screen t)  ; 禁用启动画面
-(setq inhibit-startup-message t) ; 禁用启动消息
-(setq initial-scratch-message "") ; 可选：清空 *scratch* 缓冲区的初始内容
-
-(setq ring-bell-function 'ignore)
-(setq backup-directory-alist
-      `((".*" . ,(expand-file-name "emacs/backups/"
-				   (or (getenv "XDG_CACHE_HOME")
-                                       "~/.cache"))))) ;更改自动保存目录
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-
-(when (file-exists-p custom-file)
-  (load custom-file))
 (use-package company
   :bind (:map company-active-map
               ("C-n" . 'company-select-next)
@@ -247,9 +225,7 @@
                                    ))
 (setq org-todo-keywords
       '((sequence "TODO(t)" "DOING(i)" "WAITING(w)" "DAILY(l)" "|" "DONE(d)" "CANCELED(c)")))
-(setq org-agenda-files '("~/Creator/remote/小梦之家/随便记录/"
-			 "~/Creator/remote/小梦之家/学习日常/学习计划.org"
-			 "~/Creator/remote/小梦之家/生活日常/日常计划.org"))
+(setq org-agenda-files '("~/Creator/remote/琪可计划/琪可日程.org"))
 (setq org-agenda-custom-commands
       '(("c" "日程安排界面"
 	 ((tags "PRIORITY=\"A\""
@@ -267,13 +243,13 @@
                     (org-agenda-overriding-header "未计划事项")))))  	
 	("x" "项目进度"
 	 alltodo ""
-	 ((org-agenda-files '("~/LocalWork/游戏创作/夜之城传说：怪盗莺猫传/游戏档案/项目进度.org"
-			      "~/LocalWork/游戏创作/夜之城传说：怪盗莺猫传/程序档案/todo.org")))
+	 ((org-agenda-files '("~/Develop/GameDevelop/夜之城传说/游戏档案/项目进度.org"
+			      "~/Develop/GameDevelop/夜之城传说/程序档案/todo.org")))
 	 (org-agenda-use-tag-inheritance t))
 	
 	("p" "程序进度"
 	 alltodo ""
-         ((org-agenda-files '("~/LocalWork/程序开发/LiquidNeko/features.org")))
+         ((org-agenda-files '("~/Develop/ProgramDevelop/LiquidNeko/features.org")))
 	 (org-agenda-use-tag-inheritance t))))
 (use-package cmake-mode)
 
@@ -485,3 +461,25 @@
 (when (and (executable-find "$$bin/fish$$")
                  (require 'fish-completion nil t))
         (global-fish-completion-mode))
+;;更好的默认配置
+(global-display-line-numbers-mode 1)
+(icomplete-mode 1)
+(global-auto-revert-mode 1)
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+(scroll-bar-mode -1)
+(toggle-truncate-lines 1)
+
+(setq inhibit-startup-screen t)  ; 禁用启动画面
+(setq inhibit-startup-message t) ; 禁用启动消息
+(setq initial-scratch-message "") ; 可选：清空 *scratch* 缓冲区的初始内容
+
+(setq ring-bell-function 'ignore)
+(setq backup-directory-alist
+      `((".*" . ,(expand-file-name "emacs/backups/"
+				   (or (getenv "XDG_CACHE_HOME")
+                                       "~/.cache"))))) ;更改自动保存目录
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+
+(when (file-exists-p custom-file)
+  (load custom-file))
