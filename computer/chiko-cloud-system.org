@@ -3,21 +3,21 @@
 * Chiko Cloud System
 琪可云的系统配置，使用 `guix system reconfigure 文件名.scm` 即可应用更改
 #+begin_src scheme :tangle ../reconfigure/chiko_cloud_system.scm :noweb yes :noweb-prefix no
-  (load "../common.scm")
-  (use-modules <<module>>)
+    (load "../common.scm")
+    (use-modules <<module>>)
 
-  <<define>>
+    <<define>>
 
-  (operating-system
-    <<env>>
-    (bootloader <<bootloader>>)
-    (initrd-modules (cons* <<initrd-module>> %base-initrd-modules))
-    (privileged-programs (cons* <<privileged-program>> %default-privileged-programs))
-    (users (cons* <<user>> %base-user-accounts))
-    (services (cons* <<service>> %base-services))
-    (mapped-devices (list <<mapped-device>>))
-    (file-systems (cons* <<filesystem>> %base-file-systems))
-    (packages (cons* <<package>> %base-packages)))
+    (operating-system
+      <<env>>
+      (bootloader <<bootloader>>)
+      (initrd-modules (cons* <<initrd-module>> %base-initrd-modules))
+      (privileged-programs (cons* <<privileged-program>> %default-privileged-programs))
+      (users (cons* <<user>> %base-user-accounts))
+      (services (cons* <<service>> %base-services))
+      (mapped-devices (list <<mapped-device>>))
+      (file-systems (cons* <<filesystem>> %base-file-systems))
+      (packages (append (specifications->packages '(<<package>>)) %base-packages)))
 #+end_src
 
 ** 基础信息
@@ -86,7 +86,7 @@
 #+end_src
 
 #+begin_src scheme :noweb-ref package
-  htop curl
+  "htop" "curl"
 #+end_src
 
 ** 性能监视
@@ -95,7 +95,7 @@
 #+end_src
 
 #+begin_src scheme :noweb-ref package
-  glances
+  "glances"
 #+end_src
 
 ** Bootloader配置
@@ -224,7 +224,7 @@
 Doas是比Sudo更简洁，也更为安全的提权工具。
 之所以用Doas而不用Sudo，是因为Sudo通常会有一定的安全漏洞，结构也比较复杂，而Doas结构相对简单，攻击面也更少，适合不需要复杂提权配置的服务器或个人。
 #+begin_src scheme :noweb-ref package
-  opendoas
+  "opendoas"
 #+end_src
 
 由于自定义的doas服务默认不会更改程序掩码，Doas需要手动设置系统程序掩码。
@@ -310,7 +310,7 @@ fish，开箱即用的终端解释器。
 
 ** GPG
 #+begin_src scheme :noweb-ref package
-  gnupg
+  "gnupg"
 #+end_src
 
 #+begin_src scheme :noweb-ref module
@@ -325,7 +325,7 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 #+end_src
 
 #+begin_src scheme :noweb-ref package
-  rsync
+  "rsync"
 #+end_src
 
 ** Syncthing
@@ -344,7 +344,7 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 ** Emacs
 基础的包配置
 #+begin_src scheme :noweb-ref package
-  emacs-no-x
+  "emacs-no-x"
 #+end_src
 
 模块配置
@@ -359,7 +359,7 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 #+end_src
 
 #+begin_src scheme :noweb-ref package
-  unzip
+  "unzip"
 #+end_src
 
 ** Git
@@ -368,7 +368,7 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 #+end_src
 
 #+begin_src scheme :noweb-ref package
-  git
+  "git"
 #+end_src
 
 * 数据库
@@ -540,7 +540,7 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 #+end_src
 
 #+begin_src scheme :noweb-ref package
-sing-box
+"sing-box"
 #+end_src
 
 
