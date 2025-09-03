@@ -320,6 +320,7 @@
   	  (permit-root-login #f)
   	  (authorized-keys
   	   `(("minkieyume"
+  	      ,(plain-file "chiko-ssh.pub" "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAOh6siUz1z6TpA5ykI5ftCYLBqV3QHTtECL+ulYLQ+D openpgp:0x1DFD0AED")
                 ,(local-file "../files/keys/yumemi_ssh_rsa.pub")
   	      ,(local-file "../files/keys/niko_ssh_rsa.pub"))))))
 #+end_src
@@ -919,14 +920,13 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+end_src
 
 *** 驱动配置
-#+begin_src scheme :noweb yes :noweb-ref service
+#+begin_src scheme :noweb yes :noweb-ref service :noweb-prefix no
   (udev-rules-service 'steam-devices (spec->pkg "steam-devices-udev-rules"))
   (udev-rules-service 'controller <<controller-permission-udev-rule>>)
 #+end_src
 
 See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
-#+name: controller-permission-udev-rule
-#+begin_src scheme
+#+begin_src scheme :noweb-ref controller-permission-udev-rule
   (udev-rule "60-controller-permission.rules" "\
   KERNEL==\"event*\", ATTRS{idVendor}==\"045e\", ATTRS{idProduct}==\"028e\", \
   MODE=\"0660\", GROUP=\"users\"")

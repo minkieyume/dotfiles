@@ -326,6 +326,7 @@
   	  (permit-root-login #f)
   	  (authorized-keys
   	   `(("minkieyume"
+  	      ,(plain-file "chiko-ssh.pub" "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAOh6siUz1z6TpA5ykI5ftCYLBqV3QHTtECL+ulYLQ+D openpgp:0x1DFD0AED")
                 ,(local-file "../files/keys/yumemi_rsa.pub")
   	      ,(local-file "../files/keys/niko_ssh_rsa.pub"))))))
 #+end_src
