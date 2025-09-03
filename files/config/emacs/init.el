@@ -463,6 +463,7 @@
         (global-fish-completion-mode))
 ;;更好的默认配置
 (global-display-line-numbers-mode 1)
+(global-visual-line-mode 1)
 (icomplete-mode 1)
 (global-auto-revert-mode 1)
 (tool-bar-mode -1)
