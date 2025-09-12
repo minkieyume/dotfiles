@@ -24,6 +24,7 @@
               "stripe"))
        (map geoip
             '("cn"
+	      "private"
               "telegram")))))
   (define %direct-process
     '("rclone"
@@ -72,12 +73,7 @@
 	     ("domain" . #("chikocloud" "chikopara" "dreamtwi" "yumemios"))
 	     ("server" . "tailscale_dns")))))
       ("inbounds"
-       . #((("type" . "direct")
-	    ("tag" . "dns_in")
-	    ("listen" . "::")
-            ("listen_port" . 53)
-            ("network" . "udp"))
-	   (("type". "mixed")
+       . #((("type". "mixed")
             ("tag" . "proxy_in")
             ("listen" . "::")
             ("listen_port" . 7890))
@@ -111,7 +107,10 @@
                      `(,@rule
                        ("outbound" . "out_block")))
                    %block-rules)
-
+	    
+	    (("process_name" . #(,@%direct-process))
+             ("outbound" . "out_direct"))
+	    
             ,@(map (lambda (rule)
                      `(,@rule
 		       ("outbound" . "out_direct")))
@@ -120,9 +119,7 @@
 	    ,@(map (lambda (rule)
                      `(,@rule
 		       ("outbound" . "out_proxy")))
-                   %proxy-rules)
-            (("process_name" . #(,@%direct-process))
-             ("outbound" . "out_direct"))))
+                   %proxy-rules)))
        ("rule_set"
         . #(,@%rule-sets))
        ("final" . "out_direct")

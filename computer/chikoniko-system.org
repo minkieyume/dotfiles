@@ -1025,22 +1025,29 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
 #+end_src
 
 **** 透明唱片
-用于设置唱片机和音频路由表的规则的，已失效。
-#+begin_src scheme
-    (simple-service 'tcd
-      shepherd-root-service-type
-      (list
-        (shepherd-service
-          (documentation "运行一个TCD，透明唱片播放程序")
-          (provision '(tcd-init))
-          (requirement '(networking))
-          (one-shot? #t)
-          (start #~(lambda _
-                     (let* ((ip-route #$(file-append (spec->pkg "iproute2") "/sbin/ip"))
-                            (cmd (string-append ip-route " route add local default dev lo table 100\n"
-                                  ip-route " rule add fwmark 1 table 100"))
-                            (status (system cmd)))
-    		               (= 0 (status:exit-val status))))))))
+#+begin_src scheme :noweb-ref service
+(simple-service 'singbox-tcd
+		shepherd-root-service-type
+		(list
+		 (shepherd-service
+		  (documentation "运行一个SingBox TCD，透明唱片播放程序")
+		  (provision '(singbox-tcd))
+		  (requirement '(sing-box))
+		  (respawn? #f)
+		  (start #~(lambda _
+			     (let* ((ip #$(file-append (spec->pkg "iproute2") "/sbin/ip"))
+				    (st1 (system* ip "route" "add" "local" "default" "dev" "lo" "table" "100"))
+				    (st2 (system* ip "rule" "add" "fwmark" "1" "table" "100")))
+			       (and (map (lambda (st)
+					   (= 0 (status:exit-val st)))
+					 (list st1 st2))))))
+		  (stop #~(lambda _
+			    (let* ((ip #$(file-append (spec->pkg "iproute2") "/sbin/ip"))
+				   (st1 (system* ip "rule" "del" "fwmark" "1" "table" "100"))
+				   (st2 (system* ip "route" "del" "local" "default" "dev" "lo" "table" "100")))
+			      (and (map (lambda (st)
+					  (= 0 (status:exit-val st)))
+					(list st1 st2)))))))))
 #+end_src
 
 **** 用户态
