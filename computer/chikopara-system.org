@@ -301,8 +301,7 @@
 #+begin_src scheme :noweb-ref service
   (service dhcpcd-service-type
   	 (dhcpcd-configuration
-  	  (no-hook '("hostname" "resolv.conf"))
-  	  (static '("domain_name_servers=192.168.8.1 fdf9:dc80:2c9::1"))))
+  	  (no-hook '("hostname" "resolv.conf"))))
   (service ntp-service-type)
 #+end_src
 
@@ -393,6 +392,11 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 
 
 * 工具
+** 网络调试
+#+begin_src scheme :noweb-ref package
+  "bind:utils"
+#+end_src
+
 ** Git
 #+begin_src scheme :noweb-ref module
   (gnu packages version-control)

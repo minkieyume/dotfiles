@@ -41,9 +41,11 @@
 
   (define %direct-rules
     '((("protocol" . "bittorrent"))
+      (("protocol" . "stun"))
       (("rule_set" . "geosite-private"))
       (("rule_set" . "geosite-cn"))
       (("rule_set" . "geoip-cn"))
+      (("rule_set" . "geoip-private"))
       (("domain_suffix" . "yumieko.com"))
       (("domain_suffix" . #("frp-add.com" "frp-pet.com" "frp-fit.com")))))
 
