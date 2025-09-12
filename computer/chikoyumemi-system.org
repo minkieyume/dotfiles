@@ -1,8 +1,8 @@
-#+TITLE: ChikoNiko
+#+TITLE: ChikoYumemi
 
-* Chiko Niko System
+* Chiko Yumemi System
 琪可的笔记本配置。
-#+begin_src scheme :tangle ../reconfigure/chikoniko-system.scm :noweb yes :noweb-prefix no
+#+begin_src scheme :tangle ../reconfigure/chikoyumemi-system.scm :noweb yes :noweb-prefix no
   (load "../common.scm")
   (use-modules <<module>>)
 
@@ -32,13 +32,13 @@
   (locale "zh_CN.utf8")
   (timezone "Asia/Singapore")
   (keyboard-layout (keyboard-layout "us"))
-  (host-name "chikoniko")
+  (host-name "chikoyumemi")
 #+end_src
 
 ** 系统配置
 *** 内核参数
 #+begin_src scheme :noweb-ref kernel-argument
-  "i8042.reset" "i8042.nomux" "i8042.nopnp"
+  "i8042.reset" "i8042.nomux" "i8042.nopnp" "i8042.dumbkbd"
 #+end_src
 
 *** 内核模块
@@ -63,12 +63,12 @@
    (group "users")
    (shell (file-append (spec->pkg "fish") "/bin/fish"))
    (home-directory "/home/minkieyume")
-   (supplementary-groups '("wheel" "netdev" "audio" "video" "niko")))
+   (supplementary-groups '("wheel" "netdev" "audio" "video" "yumemi")))
 #+end_src
 
 #+begin_src scheme :noweb-ref group
   (user-group
-   (name "niko"))
+   (name "yumemi"))
 #+end_src
 
 ** 基础模块
@@ -135,38 +135,38 @@
 这是被“挂载”的文件系统列表。
 *** 系统盘
 #+begin_src scheme :noweb-ref filesystems
-  (let ((options-for-subvolume
-          (lambda (subvolume)
-            (string-join
-              (list "compress=zstd"
+(let ((options-for-subvolume
+       (lambda (subvolume)
+         (string-join
+          (list "compress=zstd"
                 (or (and=> subvolume (cut string-append "subvol=" <>))
-                  "subvolid=5"))
-              ","))))
-    (map (match-lambda
-           ((subvolume . mount-point)
-             (file-system
-               (device (file-system-label "niko"))
-               (mount-point mount-point)
-               (type "btrfs")
-               (options (options-for-subvolume subvolume))
-               (create-mount-point? #t)
-               (check? (string=? mount-point "/")))))
-      '(("@System" . "/")
-        ("@Data"      .      "/var/lib")
-        ("@Log"      .       "/var/log")
-        ("@GNU"       .          "/gnu")
-        ("@Home"      .         "/home")
-        ("@Tmp"       .         "/tmp")
-        ("@Creator"   . "/niko/creator")
-        ("@Develop"   . "/niko/develop")
-        ("@Picture"   . "/niko/picture")
-        ("@Video"     . "/niko/video")
-        ("@Audio"     .   "/niko/audio")
-        ("@Program"   . "/niko/program")
-        ("@Games"     .   "/niko/games")
-        ("@Download"  ."/niko/download")
-        ("@Sandbox"   . "/niko/sandbox")
-        (#f           .     "/mnt/niko"))))
+                    "subvolid=5"))
+          ","))))
+  (map (match-lambda
+         ((subvolume . mount-point)
+          (file-system
+           (device (file-system-label "yumemi"))
+           (mount-point mount-point)
+           (type "btrfs")
+           (options (options-for-subvolume subvolume))
+           (create-mount-point? #t)
+           (check? (string=? mount-point "/")))))
+       '(("@System" . "/")
+         ("@Data"      .      "/var/lib")
+         ("@Log"      .       "/var/log")
+         ("@GNU"       .          "/gnu")
+         ("@Home"      .         "/home")
+         ("@Tmp"       .         "/tmp")
+         ("@Creator"   . "/yumemi/creator")
+         ("@Develop"   . "/yumemi/develop")
+         ("@Picture"   . "/yumemi/picture")
+         ("@Video"     . "/yumemi/video")
+         ("@Audio"     .   "/yumemi/audio")
+         ("@Program"   . "/yumemi/program")
+         ("@Games"     .   "/yumemi/games")
+         ("@Download"  ."/yumemi/download")
+         ("@Sandbox"   . "/yumemi/sandbox")
+         (#f           .     "/mnt/yumemi"))))
 #+end_src
 
 #+begin_src scheme :noweb-ref filesystems
@@ -188,20 +188,37 @@
              (discard? #t))))))
 #+end_src
 
-*** 自动挂载
-自动挂载，规则由AutoFS配置。
-#+begin_src scheme :noweb-ref package
-"autofs"
+*** 星空盘
+负责存较大的数据和资料的星空盘哦。
+#+begin_src scheme :noweb-ref filesystems
+(let ((options-for-subvolume
+       (lambda (subvolume)
+         (string-join
+          (list "compress=zstd"
+                (or (and=> subvolume (cut string-append "subvol=" <>))
+                    "subvolid=5"))
+          ","))))
+  (map (match-lambda
+         ((subvolume . mount-point)
+          (file-system
+           (device (file-system-label "galaxy"))
+           (mount-point mount-point)
+           (type "btrfs")
+           (options (options-for-subvolume subvolume))
+           (create-mount-point? #t)
+           (check? (string=? mount-point "/")))))
+       '(("@System" . "/")
+         ("@Data"      .      "/var/lib")
+         ("@Log"      .       "/var/log")
+         ("@GNU"       .          "/gnu")
+         ("@Home"      .         "/home")
+         ("@Tmp"       .         "/tmp")
+         ("@Games"     .   "/galaxy/games")
+         ("@AI"  ."/galaxy/ai")
+         (#f           .     "/mnt/galaxy"))))
 #+end_src
 
-#+begin_src scheme :noweb-ref service
-(simple-service 'autofs-service
-		etc-service-type
-		(list
-		 `("autofs/autofs.conf" ,(local-file "../files/config/autofs/autofs.conf"))
-		 `("autofs/auto.master" ,(local-file "../files/config/autofs/auto.master"))
-		 `("autofs/auto.nfs" ,(local-file "../files/config/autofs/auto.nfs"))))
-#+end_src
+
 ** Guix配置
 #+begin_src scheme :noweb-ref transformation
   (lambda (os)
@@ -216,10 +233,10 @@
   				 (channels %chiko-channels)  				 
   				 (discover? #t)
   				 (extra-options '("--cores=0"))
-  				 (tmpdir "/mnt/niko/@Build")))))))
+  				 (tmpdir "/mnt/yumemi/@Build")))))))
 #+end_src
 
-* Chiko Niko Home
+* Chiko Yumemi Home
 #+begin_src scheme :noweb yes :noweb-ref module
   (gnu home services)
   (gnu home services dotfiles)
@@ -241,18 +258,17 @@
 
 #+begin_src scheme :noweb-ref home-service
   (service home-files-service-type
-  	 `((".ssh/id_rsa" ,(local-file "../secret/keys/niko_ssh_rsa"))  	   
-  	   (".dash_rsa" ,(local-file "../secret/keys/dash_rsa"))
+  	 `((".dash_rsa" ,(local-file "../secret/keys/dash_rsa"))
   	   (".gitconfig" ,(local-file "../files/config/gitconfig"))
   	   (".ssh/config" ,(local-file "../files/config/ssh-config"))
-  	   ("Downloads" ,(symlink-to "/niko/download"))
-  	   ("Pictures" ,(symlink-to "/niko/picture"))
-  	   ("Creator" ,(symlink-to "/niko/creator"))
-  	   ("Develop" ,(symlink-to "/niko/develop"))
-  	   ("Application" ,(symlink-to "/niko/program"))
-  	   ("Audio" ,(symlink-to "/niko/audio"))
-  	   ("Video" ,(symlink-to "/niko/video"))
-  	   ("Games" ,(symlink-to "/niko/games"))))
+  	   ("Downloads" ,(symlink-to "/yumemi/download"))
+  	   ("Pictures" ,(symlink-to "/yumemi/picture"))
+  	   ("Creator" ,(symlink-to "/yumemi/creator"))
+  	   ("Develop" ,(symlink-to "/yumemi/develop"))
+  	   ("Application" ,(symlink-to "/yumemi/program"))
+  	   ("Audio" ,(symlink-to "/yumemi/audio"))
+  	   ("Video" ,(symlink-to "/yumemi/video"))
+  	   ("Games" ,(symlink-to "/yumemi/games"))))
 #+end_src
 
 ** 环境变量
@@ -318,7 +334,7 @@
 #+begin_src scheme :noweb-ref service
   (service nftables-service-type
     (nftables-configuration
-      (ruleset (local-file "../files/config/chikoniko/nftables.conf"))))
+      (ruleset (local-file "../files/config/chikoyumemi/nftables.conf"))))
 #+end_src
 
 ** OpenSSH
@@ -364,12 +380,6 @@ fish，开箱即用的终端解释器。
   "openssl"
   "rsync"
   "bind:utils"
-#+end_src
-
-** 加密工具
-#+begin_src scheme :noweb-ref package
-  "openssl"
-  "cryptsetup"
 #+end_src
 
 ** Git
@@ -489,7 +499,7 @@ fish，开箱即用的终端解释器。
 								    "mediainfo"
 								    "vips")))
       		  ("emacs/.init-themes.el"
-      		   ,(local-file "../files/config/chikoniko/init-theme.el"))))
+      		   ,(local-file "../files/config/chikoyumemi/init-theme.el"))))
 #+end_src
 
 #+begin_src scheme :noweb-ref home-service
@@ -638,8 +648,9 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+end_src
 
 * 桌面环境
-#+begin_src scheme :noweb-ref module
-  (gnu home services fontutils)
+** 显卡配置
+#+begin_src scheme :noweb-ref transformation
+  (nonguix-transformation-nvidia)  
 #+end_src
 
 ** Greetd
@@ -672,16 +683,16 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   (simple-service 'gtk-settings-new
   		home-files-service-type 
   		`((".gtkrc-2.0"
-  		   ,(local-file "../files/config/chikoniko/gtk2.conf"))))
+  		   ,(local-file "../files/config/chikoyumemi/gtk2.conf"))))
 #+end_src
 
 #+begin_src scheme :noweb-ref home-service
   (simple-service 'gtk-settings-new
   		home-xdg-configuration-files-service-type
   		`(("gtk-3.0/settings.ini"
-  		   ,(local-file "../files/config/chikoniko/gtk.conf"))
+  		   ,(local-file "../files/config/chikoyumemi/gtk.conf"))
   		  ("gtk-4.0/settings.ini"
-  		   ,(local-file "../files/config/chikoniko/gtk.conf"))))
+  		   ,(local-file "../files/config/chikoyumemi/gtk.conf"))))
 #+end_src
 
 ** Wayland
@@ -703,7 +714,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   	 (home-niri-configuration
   	  (config
   	   (computed-substitution-with-inputs "niri.kdl"
-  					      (local-file "../files/config/chikoniko/niri.kdl")
+  					      (local-file "../files/config/chikoyumemi/niri.kdl")
   					      (cons* (local-file "../secret/wallpapers" #:recursive? #t)
   					       (specs->pkgs "foot"
   							    "light"
@@ -728,7 +739,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   (simple-service 'emacs-configuration
   		home-xdg-configuration-files-service-type
   		`(("foot/foot.ini"
-  		   ,(local-file "../files/config/chikoniko/foot.ini"))))
+  		   ,(local-file "../files/config/chikoyumemi/foot.ini"))))
 #+end_src
 
 *** xdg-desktop-portal
@@ -744,10 +755,10 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
     (home-waybar-configuration
       (config
         (computed-substitution-with-inputs "config.json"
-          (local-file "../files/config/chikoniko/waybar.json")
+          (local-file "../files/config/chikoyumemi/waybar.json")
           (specs->pkgs "light" "wireplumber")))
       (style
-        (local-file "../files/config/chikoniko/waybar.css"))))
+        (local-file "../files/config/chikoyumemi/waybar.css"))))
 #+end_src
 
 *** swaybg
@@ -761,10 +772,14 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+begin_src scheme :noweb-ref home-service
   (service home-mako-service-type
     (home-mako-configuration
-      (config (local-file "../files/config/chikoniko/mako.conf"))))
+      (config (local-file "../files/config/chikoyumemi/mako.conf"))))
 #+end_src
 
 *** fontconfig
+#+begin_src scheme :noweb-ref module
+  (gnu home services fontutils)
+#+end_src
+
 #+begin_src scheme :noweb-ref package
   "font-awesome"
   "font-adobe-source-serif"
@@ -917,12 +932,12 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 * 多媒体
 ** mpv
 #+begin_src scheme :noweb-ref package
-  "mpv"
+  "mpv-nvidia"
 #+end_src
 
 ** obs
 #+begin_src scheme :noweb-ref package
-  "obs"
+  "obs-nvidia"
 #+end_src
 
 ** Kodi
@@ -933,7 +948,8 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 * 游戏
 ** steam
 #+begin_src scheme :noweb-ref package
-  "steam"
+  "steam-nvidia"
+  "nvidia-vaapi-driver"
   "steam-devices-udev-rules"
 #+end_src
 
@@ -1024,8 +1040,7 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
   		    (stop #~(make-kill-destructor))))))
 #+end_src
 
-**** 透明唱片
-用于设置唱片机和音频路由表的规则的，已失效。
+**** 透明唱片(已归档)
 #+begin_src scheme
     (simple-service 'tcd
       shepherd-root-service-type

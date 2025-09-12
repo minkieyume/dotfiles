@@ -2,7 +2,7 @@
 
 * Chiko Para System
 琪可的NAS配置，存储各种东西同时运行奇怪的服务。
-#+begin_src scheme :tangle ../reconfigure/chikopara_system.scm :noweb yes :noweb-prefix no
+#+begin_src scheme :tangle ../reconfigure/chikopara-system.scm :noweb yes :noweb-prefix no
 (load "../common.scm")
 (use-modules <<module>>)
 
@@ -606,22 +606,22 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   		    (stop #~(make-kill-destructor))))))
 #+end_src
 
-*** 透明唱片
-#+begin_src scheme :noweb-ref service
-    (simple-service 'tcd
-      shepherd-root-service-type
-      (list
-        (shepherd-service
-          (documentation "运行一个TCD，透明唱片播放程序")
-          (provision '(tcd-init))
-          (requirement '(networking))
-          (one-shot? #t)
-          (start #~(lambda _
-                     (let* ((ip-route #$(file-append (spec->pkg "iproute2") "/sbin/ip"))
-                            (cmd (string-append ip-route " route add local default dev lo table 100\n"
-                                  ip-route " rule add fwmark 1 table 100"))
-                            (status (system cmd)))
-    		               (= 0 (status:exit-val status))))))))
+*** 透明唱片(已废弃)
+#+begin_src scheme
+  (simple-service 'tcd
+  		shepherd-root-service-type
+  		(list
+  		 (shepherd-service
+  		   (documentation "运行一个TCD，透明唱片播放程序")
+  		   (provision '(tcd-init))
+  		   (requirement '(networking))
+  		   (one-shot? #t)
+  		   (start #~(lambda _
+  			      (let* ((ip-route #$(file-append (spec->pkg "iproute2") "/sbin/ip"))
+  				     (cmd (string-append ip-route " route add local default dev lo table 100\n"
+  							 ip-route " rule add fwmark 1 table 100"))
+  				     (status (system cmd)))
+  				(= 0 (status:exit-val status))))))))
 #+end_src
 
 *** 用户态

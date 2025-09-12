@@ -20,6 +20,7 @@ overview {
     backdrop-color "#E8E3E9"
 }
 
+
 layout {
     focus-ring {
 	width 8
@@ -48,6 +49,72 @@ output "eDP-1" {
     mode "1920x1080@60.001"
     scale 1.5
 }
+
+binds {
+      XF86ScreenSaver   { spawn "$$bin/swaylock$$" "--clock" "--daemonize" "--ignore-empty-password" "--image" "$$wp3283230-oneshot-wallpapers.jpg$$" "--ring-color" "9666ff" "--text-color" "9666ff" "--key-hl-color" "9666ff"; }      
+      <<binds>>
+}
+#+end_src
+
+** ChikoYumemi
+#+begin_src json :tangle ./chikoyumemi/niri.kdl :noweb yes :noweb-prefix yes
+prefer-no-csd
+screenshot-path "/niko/picture/screenshots/%Y%m%d-%H%M%S.png"
+
+spawn-at-startup 
+spawn-at-startup <<startup>>
+
+<<config>>
+
+environment {
+    DISPLAY ":233"
+    <<env>>
+}
+
+overview {
+    backdrop-color "#E8E3E9"
+}
+
+layout {
+    focus-ring {
+	width 8
+	active-color "#1A3E60"
+	inactive-color "#000000"
+    }
+    border {
+	off
+    }
+}
+
+window-rule {
+    geometry-corner-radius 12
+    clip-to-geometry true
+}
+
+input {
+    keyboard {
+	repeat-delay 300
+	repeat-rate 30
+    }
+    touchpad {
+	tap
+	natural-scroll
+    }
+    warp-mouse-to-focus
+}
+
+output "DP-1" {
+    focus-at-startup
+    mode "1920x1080@60.001"
+    scale 1.5
+}
+
+output "HDMI-A-1" {
+    focus-at-startup
+    mode "3840x2160@60.001"
+    scale 2.0
+}
+
 
 binds {
     <<binds>>
@@ -163,7 +230,6 @@ window-rule {
   XF86AudioMicMute      allow-when-locked=true { spawn "$$bin/wpctl$$" "set-mute"   "@DEFAULT_AUDIO_SOURCE@" "toggle"; }
   XF86MonBrightnessDown allow-when-locked=true { spawn "$$bin/light$$" "-U" "5"; }
   XF86MonBrightnessUp   allow-when-locked=true { spawn "$$bin/light$$" "-A" "5"; }
-  XF86ScreenSaver   	  		       { spawn "$$bin/swaylock$$" "--clock" "--daemonize" "--ignore-empty-password" "--image" "$$wp3283230-oneshot-wallpapers.jpg$$" "--ring-color" "9666ff" "--text-color" "9666ff" "--key-hl-color" "9666ff"; }
   #+end_src
 
 * 开机自启

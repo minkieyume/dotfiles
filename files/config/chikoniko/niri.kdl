@@ -51,6 +51,7 @@ overview {
     backdrop-color "#E8E3E9"
 }
 
+
 layout {
     focus-ring {
 	width 8
@@ -81,62 +82,62 @@ output "eDP-1" {
 }
 
 binds {
-    Mod+Shift+Slash { show-hotkey-overlay; }
-    
-    Mod+E      hotkey-overlay-title="开启编辑器: emacsclient"  { spawn "emacsclient" "--create-frame" "--no-wait"; }
-    Mod+R      hotkey-overlay-title="打开程序: rofi"  { spawn "$$bin/rofi$$" "-show" "drun"; }
-    Mod+T      hotkey-overlay-title="开启终端: foot"       { spawn "$$bin/foot$$"; }
-    
-    Mod+Left                  { focus-column-left; }
-    Mod+Down                  { focus-window-down; }
-    Mod+Up                    { focus-window-up; }
-    Mod+Right                 { focus-column-right; }
-    Mod+Shift+Left            { move-column-left; }
-    Mod+Shift+Down            { move-window-down; }
-    Mod+Shift+Up              { move-window-up; }
-    Mod+Shift+Right           { move-column-right; }
-    
-    Mod+F                     { focus-column-left; }
-    Mod+B                     { focus-column-right; }    
-    Mod+P                     { focus-window-up; }
-    Mod+N                     { focus-window-down; }
-    
-    Mod+Shift+F               { move-column-left; }
-    Mod+Shift+B               { move-column-right; }
-    Mod+Shift+P               { move-window-up; }
-    Mod+Shift+N               { move-window-down; }
-    
-    Mod+WheelScrollDown       { focus-column-right; }
-    Mod+WheelScrollUp         { focus-column-left; }
-    Mod+Shift+WheelScrollDown { move-column-right; }
-    Mod+Shift+WheelScrollUp   { move-column-left; }
-    
-    Mod+Comma                 { consume-or-expel-window-left; }
-    Mod+Period                { consume-or-expel-window-right; }
-    Mod+M                     { maximize-column; }
-    Mod+Shift+M               { fullscreen-window; }
-    Mod+L                     { center-column; }
-    Mod+O                     { toggle-window-floating; }
-    Mod+Shift+O               { switch-focus-between-floating-and-tiling; }
-    Mod+V                     { focus-workspace-down; }
-    Mod+Shift+V               { focus-workspace-up; }
-    Mod+C                     { move-column-to-workspace-down; }
-    Mod+Shift+C               { move-column-to-workspace-up; }
-    
-    Mod+Shift+Q               { close-window; }
-    
-    Mod+Tab repeat=false      { toggle-overview; }
-    
-    Print                     { screenshot; }
-    Ctrl+Print                { screenshot-screen; }
-    Alt+Print                 { screenshot-window; }
-    
-    Ctrl+Alt+Delete           { quit; }
-    XF86AudioRaiseVolume  allow-when-locked=true { spawn "$$bin/wpctl$$" "set-volume" "@DEFAULT_AUDIO_SINK@"   "0.1+" "--limit" "1.0"; }
-    XF86AudioLowerVolume  allow-when-locked=true { spawn "$$bin/wpctl$$" "set-volume" "@DEFAULT_AUDIO_SINK@"   "0.1-"; }
-    XF86AudioMute         allow-when-locked=true { spawn "$$bin/wpctl$$" "set-mute"   "@DEFAULT_AUDIO_SINK@"   "toggle"; }
-    XF86AudioMicMute      allow-when-locked=true { spawn "$$bin/wpctl$$" "set-mute"   "@DEFAULT_AUDIO_SOURCE@" "toggle"; }
-    XF86MonBrightnessDown allow-when-locked=true { spawn "$$bin/light$$" "-U" "5"; }
-    XF86MonBrightnessUp   allow-when-locked=true { spawn "$$bin/light$$" "-A" "5"; }
-    XF86ScreenSaver   	  		       { spawn "$$bin/swaylock$$" "--clock" "--daemonize" "--ignore-empty-password" "--image" "$$wp3283230-oneshot-wallpapers.jpg$$" "--ring-color" "9666ff" "--text-color" "9666ff" "--key-hl-color" "9666ff"; }
+      XF86ScreenSaver   { spawn "$$bin/swaylock$$" "--clock" "--daemonize" "--ignore-empty-password" "--image" "$$wp3283230-oneshot-wallpapers.jpg$$" "--ring-color" "9666ff" "--text-color" "9666ff" "--key-hl-color" "9666ff"; }      
+      Mod+Shift+Slash { show-hotkey-overlay; }
+      
+      Mod+E      hotkey-overlay-title="开启编辑器: emacsclient"  { spawn "emacsclient" "--create-frame" "--no-wait"; }
+      Mod+R      hotkey-overlay-title="打开程序: rofi"  { spawn "$$bin/rofi$$" "-show" "drun"; }
+      Mod+T      hotkey-overlay-title="开启终端: foot"       { spawn "$$bin/foot$$"; }
+      
+      Mod+Left                  { focus-column-left; }
+      Mod+Down                  { focus-window-down; }
+      Mod+Up                    { focus-window-up; }
+      Mod+Right                 { focus-column-right; }
+      Mod+Shift+Left            { move-column-left; }
+      Mod+Shift+Down            { move-window-down; }
+      Mod+Shift+Up              { move-window-up; }
+      Mod+Shift+Right           { move-column-right; }
+      
+      Mod+F                     { focus-column-left; }
+      Mod+B                     { focus-column-right; }    
+      Mod+P                     { focus-window-up; }
+      Mod+N                     { focus-window-down; }
+      
+      Mod+Shift+F               { move-column-left; }
+      Mod+Shift+B               { move-column-right; }
+      Mod+Shift+P               { move-window-up; }
+      Mod+Shift+N               { move-window-down; }
+      
+      Mod+WheelScrollDown       { focus-column-right; }
+      Mod+WheelScrollUp         { focus-column-left; }
+      Mod+Shift+WheelScrollDown { move-column-right; }
+      Mod+Shift+WheelScrollUp   { move-column-left; }
+      
+      Mod+Comma                 { consume-or-expel-window-left; }
+      Mod+Period                { consume-or-expel-window-right; }
+      Mod+M                     { maximize-column; }
+      Mod+Shift+M               { fullscreen-window; }
+      Mod+L                     { center-column; }
+      Mod+O                     { toggle-window-floating; }
+      Mod+Shift+O               { switch-focus-between-floating-and-tiling; }
+      Mod+V                     { focus-workspace-down; }
+      Mod+Shift+V               { focus-workspace-up; }
+      Mod+C                     { move-column-to-workspace-down; }
+      Mod+Shift+C               { move-column-to-workspace-up; }
+      
+      Mod+Shift+Q               { close-window; }
+      
+      Mod+Tab repeat=false      { toggle-overview; }
+      
+      Print                     { screenshot; }
+      Ctrl+Print                { screenshot-screen; }
+      Alt+Print                 { screenshot-window; }
+      
+      Ctrl+Alt+Delete           { quit; }
+      XF86AudioRaiseVolume  allow-when-locked=true { spawn "$$bin/wpctl$$" "set-volume" "@DEFAULT_AUDIO_SINK@"   "0.1+" "--limit" "1.0"; }
+      XF86AudioLowerVolume  allow-when-locked=true { spawn "$$bin/wpctl$$" "set-volume" "@DEFAULT_AUDIO_SINK@"   "0.1-"; }
+      XF86AudioMute         allow-when-locked=true { spawn "$$bin/wpctl$$" "set-mute"   "@DEFAULT_AUDIO_SINK@"   "toggle"; }
+      XF86AudioMicMute      allow-when-locked=true { spawn "$$bin/wpctl$$" "set-mute"   "@DEFAULT_AUDIO_SOURCE@" "toggle"; }
+      XF86MonBrightnessDown allow-when-locked=true { spawn "$$bin/light$$" "-U" "5"; }
+      XF86MonBrightnessUp   allow-when-locked=true { spawn "$$bin/light$$" "-A" "5"; }
 }

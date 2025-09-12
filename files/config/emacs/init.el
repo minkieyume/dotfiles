@@ -2,6 +2,29 @@
 (load-file (expand-file-name ".init-themes.el" user-emacs-directory))
 (require 'init-theme)
 
+;;更好的默认配置
+(global-display-line-numbers-mode 1)
+(global-visual-line-mode 1)
+(icomplete-mode 1)
+(global-auto-revert-mode 1)
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+(scroll-bar-mode -1)
+(toggle-truncate-lines 1)
+
+(setq inhibit-startup-screen t)  ; 禁用启动画面
+(setq inhibit-startup-message t) ; 禁用启动消息
+(setq initial-scratch-message "") ; 可选：清空 *scratch* 缓冲区的初始内容
+
+(setq ring-bell-function 'ignore)
+(setq backup-directory-alist
+      `((".*" . ,(expand-file-name "emacs/backups/"
+				   (or (getenv "XDG_CACHE_HOME")
+                                       "~/.cache"))))) ;更改自动保存目录
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+
+(when (file-exists-p custom-file)
+  (load custom-file))
 (use-package company
   :bind (:map company-active-map
               ("C-n" . 'company-select-next)
@@ -62,13 +85,16 @@
 
 (global-set-key (kbd "C-c d") 'delete-current-file)
 (use-package edit-indirect
+  :after org
   :bind
   (:map org-mode-map
-	("C-c e" . edit-indirect-region)))
+	("C-c M-e" . edit-indirect-region)))
 (use-package yaml-mode)
-
 (use-package conf-mode
   :mode "\\.kdl\\'")
+(use-package nftables-mode
+  :mode "nftables\\.conf\\'")
+
 ;; (use-package sqlite-mode
 ;;   :straight t)
 ;; (use-package ink-mode
@@ -97,8 +123,7 @@
   (projectile-discover-projects-in-search-path)
   :bind-keymap
   ("C-c p" . projectile-command-map))
-;; (use-package llm
-;;   :straight (:host github :repo "ahyatt/llm" :branch "main"))
+(use-package llm)
 ;; (use-package ellama
 ;;   :straight t
 ;;   :bind ("C-c e" . ellama)
@@ -144,54 +169,51 @@
 ;;   (aider-popular-models '("ollama_chat/starcoder2:instruct" "ollama_chat/deepseek-coder-v2:16b-lite-instruct-q4_K_M"))
 ;;   :config
 ;;   (setenv "OLLAMA_API_BASE" "http://127.0.0.1:11434"))
-;; (use-package triples
-;;   :straight t)
-;; (use-package ekg
-;;   :straight (:host github :repo "MinkieYume/ekg" :branch "develop")
-;;   :bind (("C-c n c" . ekg-capture)
-;; 	 ("C-c n u" . ekg-capture-url)
-;; 	 ("C-c n f" . ekg-capture-file)
-;; 	 ("C-c n s" . ekg-search)
-;; 	 ("C-c n S" . ekg-embedding-search)
-;; 	 ("C-c n q" . ekg-llm-query-with-notes)
-;; 	 ("C-c n D" . ekg-show-notes-in-drafts)
-;; 	 ("C-c n T" . ekg-show-notes-for-trash)
-;; 	 ("C-c n o" . ekg-browse-url)
-;; 	 ("C-c n d" . ekg-show-notes-for-today)
-;; 	 ("C-c n t" . ekg-show-notes-with-tag)
-;; 	 ("C-c n w" . ekg-llm-send-and-append-note)
-;; 	 ("C-c n r" . ekg-llm-send-and-replace-note)
-;; 	 ("C-c n L" . ekg-show-notes-latest-captured)
-;; 	 ("C-c n l" . ekg-show-notes-latest-modified))
-;;   :init
-;;   (require 'ekg-embedding)
-;;   (ekg-embedding-generate-on-save)
-;;   (require 'ekg-llm)
-;;   (require 'llm-ollama)  ;; The specific provider you are using must be loaded.
-;;   (let ((deepseek-r1 (make-llm-ollama
-;; 		      :chat-model "deepseek-r1:8b"
-;; 		      :embedding-model "bge-m3:latest"
-;; 		      :default-chat-non-standard-params '(("num_ctx" . 8192))))
-;; 	(phi4 (make-llm-ollama
-;; 	       :chat-model "phi4-mini:latest"
-;; 	       :embedding-model "bge-m3:latest"
-;; 	       :default-chat-non-standard-params '(("num_ctx" . 8192))))
-;; 	(qwen3 (make-llm-ollama
-;; 		:chat-model "qwen3:4b"
-;; 		:embedding-model "bge-m3:latest"
-;; 		:default-chat-non-standard-params '(("num_ctx" . 8192))))
-;; 	(bge-m3 (make-llm-ollama
-;; 		 :embedding-model "bge-m3:latest")))
-;;     (setq ekg-llm-provider qwen3
-;;           ekg-embedding-provider bge-m3))
-;;   :config
-;;   (setq ekg-db-file "~/Creator/remote/YumiEko/yumieko.db")
-;;   (setq warning-suppress-types '((org-element)))
-;;   (setq ekg-truncation-method 'character)
-;;   :custom
-;;   (require 'ekg-logseq)
-;;   (setq ekg-logseq-dir "~/Creator/remote/YumiEko/logseq/")
-;;   (ekg-logseq-export))
+(use-package triples)
+(use-package ekg
+  :bind (("C-c n c" . ekg-capture)
+	 ("C-c n u" . ekg-capture-url)
+	 ("C-c n f" . ekg-capture-file)
+	 ("C-c n s" . ekg-search)
+	 ("C-c n S" . ekg-embedding-search)
+	 ("C-c n q" . ekg-llm-query-with-notes)
+	 ("C-c n D" . ekg-show-notes-in-drafts)
+	 ("C-c n T" . ekg-show-notes-for-trash)
+	 ("C-c n o" . ekg-browse-url)
+	 ("C-c n d" . ekg-show-notes-for-today)
+	 ("C-c n t" . ekg-show-notes-with-tag)
+	 ("C-c n w" . ekg-llm-send-and-append-note)
+	 ("C-c n r" . ekg-llm-send-and-replace-note)
+	 ("C-c n L" . ekg-show-notes-latest-captured)
+	 ("C-c n l" . ekg-show-notes-latest-modified))
+  :init
+  (require 'ekg-embedding)
+  (ekg-embedding-generate-on-save)
+  (require 'ekg-llm)
+  (require 'llm-ollama)  ;; The specific provider you are using must be loaded.
+  (let ((deepseek-r1 (make-llm-ollama
+		      :chat-model "deepseek-r1:8b"
+		      :embedding-model "bge-m3:latest"
+		      :default-chat-non-standard-params '(("num_ctx" . 8192))))
+	(phi4 (make-llm-ollama
+	       :chat-model "phi4-mini:latest"
+	       :embedding-model "bge-m3:latest"
+	       :default-chat-non-standard-params '(("num_ctx" . 8192))))
+	(qwen3 (make-llm-ollama
+		:chat-model "qwen3:4b"
+		:embedding-model "bge-m3:latest"
+		:default-chat-non-standard-params '(("num_ctx" . 8192))))
+	(bge-m3 (make-llm-ollama
+		 :embedding-model "bge-m3:latest")))
+    (setq ekg-llm-provider qwen3
+          ekg-embedding-provider bge-m3))
+  :config
+  (setq ekg-db-file "~/Creator/remote/YumiEko/yumieko.db")
+  (setq warning-suppress-types '((org-element)))
+  (setq ekg-truncation-method 'character)
+  (require 'ekg-logseq)
+  (setq ekg-logseq-dir "~/Creator/remote/YumiEko/logseq/")
+  (ekg-logseq-export))
 (use-package org)
 (use-package emacsql)
 (use-package ox-hugo
@@ -243,13 +265,17 @@
                     (org-agenda-overriding-header "未计划事项")))))  	
 	("x" "项目进度"
 	 alltodo ""
-	 ((org-agenda-files '("~/Develop/GameDevelop/夜之城传说/游戏档案/项目进度.org"
-			      "~/Develop/GameDevelop/夜之城传说/程序档案/todo.org")))
+	 ((org-agenda-files '("~/Develop/GameDevelop/夜之城传说/游戏档案/项目进度.org")))
 	 (org-agenda-use-tag-inheritance t))
 	
 	("p" "程序进度"
 	 alltodo ""
-         ((org-agenda-files '("~/Develop/ProgramDevelop/LiquidNeko/features.org")))
+         ((org-agenda-files '()))
+	 (org-agenda-use-tag-inheritance t))
+	
+	("h" "折腾进度"
+	 alltodo ""
+	 ((org-agenda-files '("~/Creator/remote/琪可计划/琪可折腾.org")))
 	 (org-agenda-use-tag-inheritance t))))
 (use-package cmake-mode)
 
@@ -276,8 +302,8 @@
 (add-hook 'c++-mode-hook #'eglot-ensure)
 (use-package gdscript-mode
   :hook (gdscript-mode . eglot-ensure)
-  :init
-  (add-to-list 'major-mode-remap-alist '(gdscript-mode . gdscript-ts-mode))
+  ;; :init
+  ;; (add-to-list 'major-mode-remap-alist '(gdscript-mode . gdscript-ts-mode))
   :config
   (setq gdscript-godot-executable "~/Applications/godot.x86_64")
   (setq gdscript-eglot-version 4.4))
@@ -461,26 +487,3 @@
 (when (and (executable-find "$$bin/fish$$")
                  (require 'fish-completion nil t))
         (global-fish-completion-mode))
-;;更好的默认配置
-(global-display-line-numbers-mode 1)
-(global-visual-line-mode 1)
-(icomplete-mode 1)
-(global-auto-revert-mode 1)
-(tool-bar-mode -1)
-(menu-bar-mode -1)
-(scroll-bar-mode -1)
-(toggle-truncate-lines 1)
-
-(setq inhibit-startup-screen t)  ; 禁用启动画面
-(setq inhibit-startup-message t) ; 禁用启动消息
-(setq initial-scratch-message "") ; 可选：清空 *scratch* 缓冲区的初始内容
-
-(setq ring-bell-function 'ignore)
-(setq backup-directory-alist
-      `((".*" . ,(expand-file-name "emacs/backups/"
-				   (or (getenv "XDG_CACHE_HOME")
-                                       "~/.cache"))))) ;更改自动保存目录
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-
-(when (file-exists-p custom-file)
-  (load custom-file))

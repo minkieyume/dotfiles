@@ -2,22 +2,26 @@
 
 * Chiko Cloud System
 琪可云的系统配置，使用 `guix system reconfigure 文件名.scm` 即可应用更改
-#+begin_src scheme :tangle ../reconfigure/chiko_cloud_system.scm :noweb yes :noweb-prefix no
-    (load "../common.scm")
-    (use-modules <<module>>)
+#+begin_src scheme :tangle ../reconfigure/chikocloud-system.scm :noweb yes :noweb-prefix no
+(load "../common.scm")
+(use-modules <<module>>)
 
-    <<define>>
+<<define>>
 
-    (operating-system
-      <<env>>
-      (bootloader <<bootloader>>)
-      (initrd-modules (cons* <<initrd-module>> %base-initrd-modules))
-      (privileged-programs (cons* <<privileged-program>> %default-privileged-programs))
-      (users (cons* <<user>> %base-user-accounts))
-      (services (cons* <<service>> %base-services))
-      (mapped-devices (list <<mapped-device>>))
-      (file-systems (cons* <<filesystem>> %base-file-systems))
-      (packages (append (specifications->packages '(<<package>>)) %base-packages)))
+(define %os
+  (operating-system
+   <<env>>
+   (bootloader <<bootloader>>)
+   (initrd-modules (cons* <<initrd-module>> %base-initrd-modules))
+   (privileged-programs (cons* <<privileged-program>> %default-privileged-programs))
+   (users (cons* <<user>> %base-user-accounts))
+   (services (cons* <<service>> %base-services))
+   (mapped-devices (list <<mapped-device>>))
+   (file-systems (append <<filesystems>> %base-file-systems))
+   (packages (append (specifications->packages '(<<package>>)) %base-packages))))
+
+((compose <<transformation>>)
+ %os)
 #+end_src
 
 ** 基础信息
@@ -31,7 +35,7 @@
 
 ** VPS支持
 #+begin_src scheme :noweb-ref initrd-module
-  "virtio_scsi"
+  "virtio_scsi" "virtio_pci"
 #+end_src
 
 ** 用户配置
@@ -99,7 +103,16 @@
 #+end_src
 
 ** Bootloader配置
+*** BIOS模式
 #+begin_src scheme :noweb-ref bootloader
+  (bootloader-configuration
+    (bootloader grub-bootloader)
+    (targets (list "/dev/sda"))
+    (keyboard-layout keyboard-layout))
+#+end_src
+
+*** EFI模式
+#+begin_src scheme
   (bootloader-configuration
     (bootloader grub-efi-bootloader)
     (targets (list "/boot/efi"))
@@ -108,26 +121,25 @@
 
 ** 驱动映射
 #+begin_src scheme :noweb-ref mapped-device
-  (mapped-device
-    (source (uuid
-              "31481dcb-adb6-4939-9e3e-00816e884e0c"))
-    (target "cryptroot")
-    (type luks-device-mapping))
 #+end_src
 
 ** 文件系统
 这是被“挂载”的文件系统列表。唯一的文件系统标识符（“UUID”）可以通过在终端运行 'blkid' 获得。
-#+begin_src scheme :noweb-ref filesystem
-  (file-system
-    (mount-point "/boot/efi")
-    (device (uuid "DD36-2C2F"
-              'fat32))
-    (type "vfat"))
-  (file-system
-    (mount-point "/")
-    (device "/dev/mapper/cryptroot")
-    (type "ext4")
-    (dependencies mapped-devices))
+#+begin_src scheme :noweb-ref filesystems
+(list (file-system
+       (mount-point "/")
+       (device (uuid "5e270b1a-b415-4956-9aff-ae400e2ff3f4"))
+       (type "ext4")))
+#+end_src
+
+#+begin_src scheme :noweb-ref transformation
+(lambda (os)
+  (operating-system
+   (inherit os)
+   (swap-devices
+    (list (swap-space
+           (target (uuid "c702c3a3-d8a4-456a-8e71-5134031222be"))
+           (discard? #t))))))
 #+end_src
 
 ** Guix配置
@@ -338,8 +350,6 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
   	 (syncthing-configuration (user "minkieyume")))
 #+end_src
 
-
-
 * 工具
 ** Emacs
 基础的包配置
@@ -542,7 +552,6 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 #+begin_src scheme :noweb-ref package
 "sing-box"
 #+end_src
-
 
 *** 配置导入
 #+begin_src scheme :noweb-ref define
