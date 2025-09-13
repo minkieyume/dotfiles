@@ -312,6 +312,14 @@
       (ruleset (local-file "../files/config/chikopara/nftables.conf"))))
 #+end_src
 
+*** Resolv配置
+#+begin_src scheme :noweb-ref service
+(simple-service 'resolv-service
+        	etc-service-type
+        	`(("resolv.conf" ,(plain-file "resolv.conf" "search tailb8a678.ts.net lan\nnameserver 192.168.8.1\nnameserver 8.8.8.8\nnameserver 1.1.1.1"))))
+#+end_src
+
+
 ** OpenSSH
 #+begin_src scheme :noweb-ref module
   (gnu services ssh)

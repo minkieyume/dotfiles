@@ -304,15 +304,16 @@
 
 *** NetworkManager
 #+begin_src scheme :noweb-ref transformation
-  (lambda (os)
-    (operating-system
-     (inherit os)
-     (services
-      (modify-services (operating-system-user-services os)
+(lambda (os)
+  (operating-system
+   (inherit os)
+   (services
+    (modify-services (operating-system-user-services os)
   		     (network-manager-service-type
   		      config => (network-manager-configuration
   				 (inherit config)
-  				 (extra-configuration-files
+				 (dns "none")
+				 (extra-configuration-files
   				  `(("wifi_rand_mac.conf"
   				     ,(plain-file "wifi_rand_mac.conf" "\
   # Generate a random MAC for each network connection and associate the two
@@ -333,6 +334,14 @@
     (nftables-configuration
       (ruleset (local-file "../files/config/chikoyumemi/nftables.conf"))))
 #+end_src
+
+*** Resolv配置
+#+begin_src scheme :noweb-ref service
+(simple-service 'resolv-service
+        	etc-service-type
+        	`(("resolv.conf" ,(plain-file "resolv.conf" "search tailb8a678.ts.net lan\nnameserver 192.168.8.1\nnameserver 8.8.8.8\nnameserver 1.1.1.1"))))
+#+end_src
+
 
 ** OpenSSH
 #+begin_src scheme :noweb-ref module

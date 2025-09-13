@@ -46,6 +46,9 @@
       (("rule_set" . "geosite-cn"))
       (("rule_set" . "geoip-cn"))
       (("rule_set" . "geoip-private"))
+      (("port" . #(3478)))
+      (("domain_suffix" . #("syncthing.net" "discovery-announce-v4.syncthing.net")))
+      (("domain_suffix" . #("lan" "local" "localhost")))
       (("domain_suffix" . "yumieko.com"))
       (("domain_suffix" . #("frp-add.com" "frp-pet.com" "frp-fit.com")))))
 
@@ -68,20 +71,24 @@
         . #((("type" . "https")
 	     ("tag" . "cloudflare")
 	     ("server" . "cloudflare-dns.com")
-	     ("domain_resolver" . "dns_direct"))
-            (("type" . "local")
-             ("tag" . "dns_direct"))))
+	     ("detour" . "out_proxy"))
+	    (("type" . "udp")
+	     ("server" . "100.100.100.100")
+             ("tag" . "dns_tailscale"))
+	    (("type" . "udp")
+	     ("server" . "223.5.5.5")
+	     ("tag" . "dns_cn"))))
        ("rules"
-	. #((("domain_suffix" . #(".tailb8a678.ts.net"))
+	. #((("domain_suffix" . #("ts.net"))
 	     ("domain" . #("chikocloud" "chikopara" "dreamtwi" "yumemios"))
-	     ("server" . "dns_direct"))
+	     ("server" . "dns_tailscale"))
 	    
 	    (("process_name" . #(,@%direct-process))
-             ("server" . "dns_direct"))
+             ("server" . "dns_cn"))
 	    
             ,@(map (lambda (rule)
                      `(,@rule
-		       ("server" . "dns_direct")))
+		       ("server" . "dns_cn")))
                    %direct-rules)
 	    
 	    ,@(map (lambda (rule)
@@ -89,11 +96,7 @@
 		       ("server" . "cloudflare")))
                    %proxy-rules))))
       ("inbounds"
-       . #((("type" . "direct")
-	    ("tag" . "dns_in")
-	    ("listen" . "::")
-	    ("listen_port" . 53))
-	   (("type". "mixed")
+       . #((("type". "mixed")
             ("tag" . "proxy_in")
             ("listen" . "::")
             ("listen_port" . 7890))
@@ -143,7 +146,7 @@
        ("rule_set"
         . #(,@%rule-sets))
        ("final" . "out_direct")
-       ("default_domain_resolver" . "dns_direct"))))
+       ("default_domain_resolver" . "dns_cn"))))
   
   (call-with-output-file file-name
     (lambda (port)
