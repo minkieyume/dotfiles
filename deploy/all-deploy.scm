@@ -8,7 +8,7 @@
     (configuration (machine-ssh-configuration
 		     (host-name "chikocloud")
 		     (system "x86_64-linux")
-		     (user "minkieyume")
+		     (user "deploy")
 		     (port 22)))))
 
 (define %chikopara
@@ -18,7 +18,7 @@
     (configuration (machine-ssh-configuration
 		     (host-name "chikopara")
 		     (system "x86_64-linux")
-		     (user "minkieyume")
+		     (user "deploy")
 		     (host-key "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAsA8jBgb45qWfTGX/zOmQY+zaIxq6we8tBOpe6wVkUu")
 		     (port 22)))))
 
