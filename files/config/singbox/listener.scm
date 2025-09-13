@@ -114,7 +114,9 @@
 	     ("enabled" . #t))
 	    ("transport"
 	     ("type" . "ws")
-	     ("path" . ,(nyapasu-ref 'ws-transport-path))))
+	     ("path" . ,(nyapasu-ref 'ws-transport-path))
+	     ("max_early_data" . 512)
+	     ("early_data_header_name" . "Sec-WebSocket-Protocol")))
            (("type" . "direct")
             ("tag" . "out_direct"))
            (("type" . "block")

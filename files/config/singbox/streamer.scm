@@ -29,7 +29,9 @@
                   ("uuid" . ,(nyapasu-ref 'sing-box-chiko-uuid)))))
 	    ("transport"
 	     ("type" . "ws")
-	     ("path" . ,(nyapasu-ref 'ws-transport-path))))))
+	     ("path" . ,(nyapasu-ref 'ws-transport-path))
+	     ("max_early_data" . 512)
+	     ("early_data_header_name" . "Sec-WebSocket-Protocol")))))
       ("outbounds"
        . #((("type" . "direct")
 	    ("tag" . "direct_out")
