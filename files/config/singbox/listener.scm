@@ -65,17 +65,35 @@
        ("timestamp" . #t))
       ("dns"
        ("servers"
-        . #((("type" . "udp")
-	     ("tag" . "tailscale_dns")
-	     ("server" . "100.100.100.100"))
+        . #((("type" . "https")
+	     ("tag" . "cloudflare")
+	     ("server" . "cloudflare-dns.com")
+	     ("domain_resolver" . "dns_direct"))
             (("type" . "local")
              ("tag" . "dns_direct"))))
        ("rules"
 	. #((("domain_suffix" . #(".tailb8a678.ts.net"))
 	     ("domain" . #("chikocloud" "chikopara" "dreamtwi" "yumemios"))
-	     ("server" . "tailscale_dns")))))
+	     ("server" . "dns_direct"))
+	    
+	    (("process_name" . #(,@%direct-process))
+             ("server" . "dns_direct"))
+	    
+            ,@(map (lambda (rule)
+                     `(,@rule
+		       ("server" . "dns_direct")))
+                   %direct-rules)
+	    
+	    ,@(map (lambda (rule)
+                     `(,@rule
+		       ("server" . "cloudflare")))
+                   %proxy-rules))))
       ("inbounds"
-       . #((("type". "mixed")
+       . #((("type" . "direct")
+	    ("tag" . "dns_in")
+	    ("listen" . "::")
+	    ("port" . "53"))
+	   (("type". "mixed")
             ("tag" . "proxy_in")
             ("listen" . "::")
             ("listen_port" . 7890))

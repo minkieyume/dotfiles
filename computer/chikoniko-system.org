@@ -156,16 +156,17 @@
         ("@Log"      .       "/var/log")
         ("@GNU"       .          "/gnu")
         ("@Home"      .         "/home")
-        ("@Tmp"       .         "/tmp")
+        ("@Tmp"       .          "/tmp")
         ("@Creator"   . "/niko/creator")
         ("@Develop"   . "/niko/develop")
         ("@Picture"   . "/niko/picture")
-        ("@Video"     . "/niko/video")
+        ("@Video"     .   "/niko/video")
         ("@Audio"     .   "/niko/audio")
         ("@Program"   . "/niko/program")
         ("@Games"     .   "/niko/games")
         ("@Download"  ."/niko/download")
         ("@Sandbox"   . "/niko/sandbox")
+        ("@Build"     .   "/niko/build")
         (#f           .     "/mnt/niko"))))
 #+end_src
 
@@ -363,7 +364,13 @@ fish，开箱即用的终端解释器。
 #+begin_src scheme :noweb-ref package
   "openssl"
   "rsync"
+  "cryptsetup"
+#+end_src
+
+** 网络调试
+#+begin_src scheme :noweb-ref package
   "bind:utils"
+  "tcpdump"
 #+end_src
 
 ** 加密工具

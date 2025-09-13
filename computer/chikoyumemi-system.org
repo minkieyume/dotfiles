@@ -38,7 +38,7 @@
 ** 系统配置
 *** 内核参数
 #+begin_src scheme :noweb-ref kernel-argument
-  "i8042.reset" "i8042.nomux" "i8042.nopnp" "i8042.dumbkbd"
+  "i8042.reset"
 #+end_src
 
 *** 内核模块
@@ -164,8 +164,10 @@
          ("@Audio"     .   "/yumemi/audio")
          ("@Program"   . "/yumemi/program")
          ("@Games"     .   "/yumemi/games")
+	 ("@AI"  ."/yumemi/ai")
          ("@Download"  ."/yumemi/download")
          ("@Sandbox"   . "/yumemi/sandbox")
+	 ("@Build"   . "/yumemi/build")
          (#f           .     "/mnt/yumemi"))))
 #+end_src
 
@@ -173,7 +175,7 @@
   (list
    (file-system
     (mount-point "/boot/efi")
-    (device (uuid "639A-B4E6"
+    (device (uuid "F13D-2F91"
   		'fat32))
     (type "vfat")))
 #+end_src
@@ -184,12 +186,12 @@
      (inherit os)
      (swap-devices
       (list (swap-space
-             (target (uuid "204fc3c3-89b6-449b-9b32-9df5ed18d024"))
+             (target (uuid "052d416e-a016-4a62-936e-f8b317f1a546"))
              (discard? #t))))))
 #+end_src
 
 *** 星空盘
-负责存较大的数据和资料的星空盘哦。
+负责存储多余数据的星空盘。
 #+begin_src scheme :noweb-ref filesystems
 (let ((options-for-subvolume
        (lambda (subvolume)
@@ -207,14 +209,9 @@
            (options (options-for-subvolume subvolume))
            (create-mount-point? #t)
            (check? (string=? mount-point "/")))))
-       '(("@System" . "/")
-         ("@Data"      .      "/var/lib")
-         ("@Log"      .       "/var/log")
-         ("@GNU"       .          "/gnu")
-         ("@Home"      .         "/home")
-         ("@Tmp"       .         "/tmp")
-         ("@Games"     .   "/galaxy/games")
+       '(("@Games"     .   "/galaxy/games")
          ("@AI"  ."/galaxy/ai")
+	 ("@Data" . "/galaxy/data")
          (#f           .     "/mnt/galaxy"))))
 #+end_src
 
@@ -379,7 +376,13 @@ fish，开箱即用的终端解释器。
 #+begin_src scheme :noweb-ref package
   "openssl"
   "rsync"
+  "cryptsetup"
+#+end_src
+
+** 网络调试
+#+begin_src scheme :noweb-ref package
   "bind:utils"
+  "tcpdump"
 #+end_src
 
 ** Git
