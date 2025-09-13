@@ -29,7 +29,7 @@
    (configuration (machine-ssh-configuration
 		   (host-name "chikoniko")
 		   (system "x86_64-linux")
-		   (user "minkieyume")
+		   (user "deploy")
 		   (port 22)))))
 
 (define %chikoyumemi
@@ -39,7 +39,7 @@
     (configuration (machine-ssh-configuration
 		     (host-name "chikoyumemi")
 		     (system "x86_64-linux")
-		     (user "minkieyume")
+		     (user "deploy")
 		     (port 22)))))
 
 (list %chikocloud %chikoniko %chikopara %chikoyumemi)
