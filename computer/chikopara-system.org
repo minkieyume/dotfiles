@@ -57,6 +57,16 @@
     (supplementary-groups '("wheel" "netdev" "audio" "video")))
 #+end_src
 
+*** Deploy
+#+begin_src scheme :noweb-ref user
+  (user-account
+   (name "deploy")
+   (comment "部署专用用户")
+   (group "users")
+   (home-directory "/home/deploy")
+   (supplementary-groups '("wheel")))
+#+end_src
+
 ** 基础模块
 #+begin_src scheme :noweb-ref module
   (gnu)
@@ -470,7 +480,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 为了安全，最好禁用sudo，避免sudo的漏洞影响安全性。
 #+begin_src scheme :noweb-ref env
   (sudoers-file
-    (plain-file "sudoers" "# empty sudoers file\n"))
+    (plain-file "sudoers" "Defaults env_reset\ndeploy ALL=(ALL) NOPASSWD: ALL"))
 #+end_src
 
 ** GPG

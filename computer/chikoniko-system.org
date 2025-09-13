@@ -567,8 +567,9 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 为了安全，最好禁用sudo，避免sudo的漏洞影响安全性。
 #+begin_src scheme :noweb-ref env
   (sudoers-file
-    (plain-file "sudoers" "# empty sudoers file\n"))
+    (plain-file "sudoers" "Defaults env_reset\ndeploy ALL=(ALL) NOPASSWD: ALL"))
 #+end_src
+
 
 ** GPG
 #+begin_src scheme :noweb-ref package

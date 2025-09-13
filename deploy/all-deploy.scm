@@ -1,15 +1,16 @@
 (use-service-modules networking ssh)
 (use-package-modules bootloaders)
 
-(define %chikoniko
+(define %chikocloud
   (machine
-    (operating-system (load "reconfigure/chikoniko-system.scm"))
+    (operating-system (load "reconfigure/chikocloud-system.scm"))
     (environment managed-host-environment-type)
     (configuration (machine-ssh-configuration
-		     (host-name "chikoniko")
+		     (host-name "chikocloud")
 		     (system "x86_64-linux")
 		     (user "minkieyume")
 		     (port 22)))))
+
 (define %chikopara
   (machine
     (operating-system (load "reconfigure/chikopara-system.scm"))
@@ -20,15 +21,16 @@
 		     (user "minkieyume")
 		     (host-key "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAsA8jBgb45qWfTGX/zOmQY+zaIxq6we8tBOpe6wVkUu")
 		     (port 22)))))
-(define %chikocloud
+
+(define %chikoniko
   (machine
-    (operating-system (load "reconfigure/chikocloud-system.scm"))
-    (environment managed-host-environment-type)
-    (configuration (machine-ssh-configuration
-		     (host-name "chikocloud")
-		     (system "x86_64-linux")
-		     (user "minkieyume")
-		     (port 22)))))
+   (operating-system (load "reconfigure/chikoniko-system.scm"))
+   (environment managed-host-environment-type)
+   (configuration (machine-ssh-configuration
+		   (host-name "chikoniko")
+		   (system "x86_64-linux")
+		   (user "minkieyume")
+		   (port 22)))))
 
 (define %chikoyumemi
   (machine
@@ -40,4 +42,4 @@
 		     (user "minkieyume")
 		     (port 22)))))
 
-(list %chikopara)
+(list %chikocloud %chikoniko %chikopara %chikoyumemi)
