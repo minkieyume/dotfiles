@@ -92,7 +92,7 @@
        . #((("type" . "direct")
 	    ("tag" . "dns_in")
 	    ("listen" . "::")
-	    ("port" . "53"))
+	    ("listen_port" . 53))
 	   (("type". "mixed")
             ("tag" . "proxy_in")
             ("listen" . "::")

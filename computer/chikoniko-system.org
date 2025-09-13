@@ -216,7 +216,7 @@
   				 (substitute-urls %chiko-substitute-urls)
   				 (channels %chiko-channels)  				 
   				 (discover? #t)
-  				 (extra-options '("--cores=0"))
+  				 (extra-options '("--cores=4"))
   				 (tmpdir "/mnt/niko/@Build")))))))
 #+end_src
 
