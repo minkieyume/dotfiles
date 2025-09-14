@@ -48,6 +48,7 @@
       (("rule_set" . "geoip-cn"))
       (("rule_set" . "geoip-private"))
       (("port" . #(3478)))
+      (("domain_suffix" . "neboer.site"))
       (("domain_suffix" . #("syncthing.net" "discovery-announce-v4.syncthing.net")))
       (("domain_suffix" . #("lan" "local" "localhost")))
       (("domain_suffix" . "yumieko.com"))
@@ -70,9 +71,19 @@
       ("dns"
        ("servers"
         . #((("type" . "https")
-	     ("tag" . "cloudflare")
+	     ("tag" . "cloudflare-doh")
 	     ("server" . "cloudflare-dns.com")
 	     ("detour" . "out_proxy"))
+	    (("type" . "https")
+	     ("tag" . "google-doh")
+	     ("server" . "dns.google")
+	     ("detour" . "out_proxy"))
+	    (("type" . "tls")
+	     ("tag" . "cloudflare-tls")
+	     ("server" . "1.1.1.1"))
+	    (("type" . "tls")
+	     ("tag" . "google-tls")
+	     ("server" . "8.8.8.8"))
 	    (("type" . "udp")
 	     ("server" . "100.100.100.100")
              ("tag" . "dns_tailscale"))
@@ -94,7 +105,7 @@
 	    
 	    ,@(map (lambda (rule)
                      `(,@rule
-		       ("server" . "cloudflare")
+		       ("server" . "cloudflare-doh")
 		       ("strategy" . "ipv4_only")))
                    %proxy-rules))))
       ("inbounds"

@@ -579,7 +579,6 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
     (plain-file "sudoers" "# empty sudoers file\n"))
 #+end_src
 
-
 ** GPG
 #+begin_src scheme :noweb-ref package
   "gnupg"
@@ -591,14 +590,17 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+end_src
 
 #+begin_src scheme :noweb-ref home-service
-    (service home-gpg-agent-service-type
-      (home-gpg-agent-configuration
-        (pinentry-program
-          (file-append (spec->pkg "pinentry-emacs") "/bin/pinentry-emacs"))
-        (ssh-support? #t)
-        (extra-content (string-join '("allow-emacs-pinentry"
-  				    "allow-loopback-pinentry") "\n"))))
+(service home-gpg-agent-service-type
+	 (home-gpg-agent-configuration
+	  (pinentry-program
+	   (file-append (spec->pkg "pinentry-emacs") "/bin/pinentry-emacs"))
+	  (ssh-support? #t)
+	  (extra-content (string-join '("enable-ssh-support"
+					"disable-scdaemon"
+					"allow-emacs-pinentry"
+					"allow-loopback-pinentry") "\n"))))
 #+end_src
+
 
 ** 解压
 #+begin_src scheme :noweb-ref package
