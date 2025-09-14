@@ -200,6 +200,7 @@
                (type "btrfs")
                (options (string-append (options-for-subvolume subvolume)))
                (create-mount-point? #t)
+  	     (mount-may-fail? #t)
                (check? (string=? mount-point "/")))))
       '(("@Picture" . "/resource/picture")
         ("@Music"   . "/resource/music")
@@ -218,24 +219,25 @@
 
 *** Riri备份盘
 #+begin_src scheme :noweb-ref filesystems
-    (let ((options-for-subvolume
-            (lambda (subvolume)
-              (string-join
-                (list "compress=zstd"
-                  (or (and=> subvolume (cut string-append "subvol=" <>))
+(let ((options-for-subvolume
+       (lambda (subvolume)
+         (string-join
+          (list "compress=zstd"
+                (or (and=> subvolume (cut string-append "subvol=" <>))
                     "subvolid=5"))
-                ","))))
-      (map (match-lambda
-             ((subvolume . mount-point)
-               (file-system
-                 (device (file-system-label "riri"))
-                 (mount-point mount-point)
-                 (type "btrfs")
-                 (options (string-append (options-for-subvolume subvolume)))
-                 (create-mount-point? #t)
-                 (check? (string=? mount-point "/")))))
-        '(("@NanaBackup" . "/backup/nana")
-          (#f        . "/mnt/riri"))))
+          ","))))
+  (map (match-lambda
+         ((subvolume . mount-point)
+          (file-system
+           (device (file-system-label "riri"))
+           (mount-point mount-point)
+           (type "btrfs")
+           (options (string-append (options-for-subvolume subvolume)))
+           (create-mount-point? #t)
+  	   (mount-may-fail? #t)
+           (check? (string=? mount-point "/")))))
+       '(("@NanaBackup" . "/backup/nana")
+         (#f        . "/mnt/riri"))))
 #+end_src
 
 ** Guix配置
