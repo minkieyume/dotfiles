@@ -1044,14 +1044,6 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
     (capabilities "cap_net_admin,cap_net_bind_service,cap_net_raw+ep"))
 #+end_src
 
-**** 日志滚动
-#+begin_src scheme :noweb-ref service
-  (simple-service 'sing-box-log-roation-service
-  		log-rotation-service-type
-  		(compose list "/var/log/sing-box.log"))
-#+end_src
-
-
 **** 服务
 #+begin_src scheme :noweb-ref service
   (simple-service 'sing-box-service
