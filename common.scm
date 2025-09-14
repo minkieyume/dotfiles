@@ -23,3 +23,6 @@
 (define %authorized-keys
   (cons* (local-file "./files/keys/non-guix.pub")
 	 %default-authorized-guix-keys))
+
+(define %chiko-ssh-key
+  (plain-file "chiko-ssh.pub" "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAOh6siUz1z6TpA5ykI5ftCYLBqV3QHTtECL+ulYLQ+D openpgp:0x1DFD0AED"))

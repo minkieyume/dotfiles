@@ -3,7 +3,7 @@
 
 (define %chikocloud
   (machine
-    (operating-system (load "reconfigure/chikocloud-system.scm"))
+    (operating-system (load "../reconfigure/chikocloud-system.scm"))
     (environment managed-host-environment-type)
     (configuration (machine-ssh-configuration
 		     (host-name "chikocloud")
@@ -13,7 +13,7 @@
 
 (define %chikopara
   (machine
-    (operating-system (load "reconfigure/chikopara-system.scm"))
+    (operating-system (load "../reconfigure/chikopara-system.scm"))
     (environment managed-host-environment-type)
     (configuration (machine-ssh-configuration
 		     (host-name "chikopara")
@@ -24,7 +24,7 @@
 
 (define %chikoniko
   (machine
-   (operating-system (load "reconfigure/chikoniko-system.scm"))
+   (operating-system (load "../reconfigure/chikoniko-system.scm"))
    (environment managed-host-environment-type)
    (configuration (machine-ssh-configuration
 		   (host-name "chikoniko")
@@ -34,7 +34,7 @@
 
 (define %chikoyumemi
   (machine
-    (operating-system (load "reconfigure/chikoyumemi-system.scm"))
+    (operating-system (load "../reconfigure/chikoyumemi-system.scm"))
     (environment managed-host-environment-type)
     (configuration (machine-ssh-configuration
 		     (host-name "chikoyumemi")

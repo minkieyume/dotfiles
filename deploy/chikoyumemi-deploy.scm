@@ -1,3 +1,3 @@
-(load "./deploy.scm")
+(load "./all-deploy.scm")
 
 (list %chikoyumemi)

@@ -338,16 +338,16 @@
 配置SSH配置的服务：
 #+begin_src scheme :noweb-ref service
 (service openssh-service-type
-  	 (openssh-configuration
-  	  (password-authentication? #f)
-  	  (permit-root-login #f)
-  	  (authorized-keys
-  	   `(("minkieyume"
-  	      ,(plain-file "chiko-ssh.pub" "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAOh6siUz1z6TpA5ykI5ftCYLBqV3QHTtECL+ulYLQ+D openpgp:0x1DFD0AED")
+    	 (openssh-configuration
+    	  (password-authentication? #f)
+    	  (permit-root-login #f)
+    	  (authorized-keys
+    	   `(("minkieyume"
+  	    ,%chiko-ssh-key
               ,(local-file "../files/keys/yumemi_ssh_rsa.pub")
-  	      ,(local-file "../files/keys/niko_ssh_rsa.pub"))
-	     ("deploy"
-  	      ,(plain-file "chiko-ssh.pub" "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAOh6siUz1z6TpA5ykI5ftCYLBqV3QHTtECL+ulYLQ+D openpgp:0x1DFD0AED"))))))
+    	      ,(local-file "../files/keys/niko_ssh_rsa.pub"))
+  	     ("deploy"
+    	        ,%chiko-ssh-key)))))
 #+end_src
 
 ** Mcron
@@ -412,6 +412,11 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 
 
 * 工具
+** 硬件监视
+#+begin_src scheme :noweb-ref package
+  "smartmontools"
+#+end_src
+
 ** 网络调试
 #+begin_src scheme :noweb-ref package
   "bind:utils"

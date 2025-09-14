@@ -42,6 +42,7 @@
   (define %direct-rules
     '((("protocol" . "bittorrent"))
       (("protocol" . "stun"))
+      (("ip_version" . 6))
       (("rule_set" . "geosite-private"))
       (("rule_set" . "geosite-cn"))
       (("rule_set" . "geoip-cn"))
@@ -93,7 +94,8 @@
 	    
 	    ,@(map (lambda (rule)
                      `(,@rule
-		       ("server" . "cloudflare")))
+		       ("server" . "cloudflare")
+		       ("strategy" . "ipv4_only")))
                    %proxy-rules))))
       ("inbounds"
        . #((("type". "mixed")
