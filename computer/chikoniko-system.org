@@ -20,7 +20,7 @@
   		    ((compose <<rosenthal-desktop-transformation>>) %rosenthal-desktop-services)))
      (mapped-devices (list <<mapped-device>>))
      (file-systems (append <<filesystems>> %base-file-systems))
-     (packages (append (specifications->packages '(<<package>>)) %base-packages))))
+     (packages (append (specs->pkgs+out '(<<package>>)) %base-packages))))
 
   ((compose <<transformation>>)
    %os)
