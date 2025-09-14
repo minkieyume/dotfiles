@@ -345,9 +345,7 @@
     	  (permit-root-login #f)
     	  (authorized-keys
     	   `(("minkieyume"
-  	    ,%chiko-ssh-key
-              ,(local-file "../files/keys/yumemi_ssh_rsa.pub")
-    	      ,(local-file "../files/keys/niko_ssh_rsa.pub"))
+  	    ,%chiko-ssh-key)
   	     ("deploy"
     	        ,%chiko-ssh-key)))))
 #+end_src

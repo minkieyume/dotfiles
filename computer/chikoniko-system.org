@@ -71,6 +71,16 @@
    (name "niko"))
 #+end_src
 
+*** Deploy
+#+begin_src scheme :noweb-ref user
+  (user-account
+   (name "deploy")
+   (comment "部署专用用户")
+   (group "users")
+   (home-directory "/home/deploy")
+   (supplementary-groups '("wheel")))
+#+end_src
+
 ** 基础模块
 #+begin_src scheme :noweb-ref module
   (gnu)
@@ -346,18 +356,17 @@
   (gnu services ssh)
 #+end_src
 
+配置SSH配置的服务：
 #+begin_src scheme :noweb-ref service
 (service openssh-service-type
-  	 (openssh-configuration
-  	  (password-authentication? #f)
-  	  (permit-root-login #f)
-  	  (authorized-keys
-  	   `(("minkieyume"
-  	      ,(plain-file "chiko-ssh.pub" "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAOh6siUz1z6TpA5ykI5ftCYLBqV3QHTtECL+ulYLQ+D openpgp:0x1DFD0AED")
-              ,(local-file "../files/keys/yumemi_ssh_rsa.pub")
-  	      ,(local-file "../files/keys/niko_ssh_rsa.pub"))
-	     ("deploy"
-  	      ,(plain-file "chiko-ssh.pub" "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAOh6siUz1z6TpA5ykI5ftCYLBqV3QHTtECL+ulYLQ+D openpgp:0x1DFD0AED"))))))
+    	 (openssh-configuration
+    	  (password-authentication? #f)
+    	  (permit-root-login #f)
+    	  (authorized-keys
+    	   `(("minkieyume"
+  	    ,%chiko-ssh-key)
+  	   ("deploy"
+    	      ,%chiko-ssh-key)))))
 #+end_src
 
 ** Mcron
