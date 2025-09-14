@@ -3,27 +3,27 @@
 * Chiko Niko System
 琪可的笔记本配置。
 #+begin_src scheme :tangle ../reconfigure/chikoniko-system.scm :noweb yes :noweb-prefix no
-  (load "../common.scm")
-  (use-modules <<module>>)
+(load "../common.scm")
+(use-modules <<module>>)
 
-  <<define>>
-  (define %os
-    (operating-system
-     <<env>>
-     (bootloader <<bootloader>>)
-     (initrd-modules (cons* <<initrd-module>> %base-initrd-modules))
-     (kernel-arguments (cons* <<kernel-argument>> %default-kernel-arguments))
-     (privileged-programs (cons* <<privileged-program>> %default-privileged-programs))
-     (users (cons* <<user>> %base-user-accounts))
-     (groups (cons* <<group>> %base-groups))
-     (services (cons* <<service>>
+<<define>>
+(define %os
+  (operating-system
+   <<env>>
+   (bootloader <<bootloader>>)
+   (initrd-modules (cons* <<initrd-module>> %base-initrd-modules))
+   (kernel-arguments (cons* <<kernel-argument>> %default-kernel-arguments))
+   (privileged-programs (cons* <<privileged-program>> %default-privileged-programs))
+   (users (cons* <<user>> %base-user-accounts))
+   (groups (cons* <<group>> %base-groups))
+   (services (cons* <<service>>
   		    ((compose <<rosenthal-desktop-transformation>>) %rosenthal-desktop-services)))
-     (mapped-devices (list <<mapped-device>>))
-     (file-systems (append <<filesystems>> %base-file-systems))
-     (packages (append (specs->pkgs+out '(<<package>>)) %base-packages))))
+   (mapped-devices (list <<mapped-device>>))
+   (file-systems (append <<filesystems>> %base-file-systems))
+   (packages (append (specs->pkgs+out <<package>>) %base-packages))))
 
-  ((compose <<transformation>>)
-   %os)
+((compose <<transformation>>)
+ %os)
 #+end_src
 
 ** 基础信息
