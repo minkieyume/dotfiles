@@ -104,17 +104,25 @@ input {
 }
 
 output "DP-1" {
+    mode "3840x2160@60.001"
+    scale 2.0
+}
+
+output "DP-2" {
     focus-at-startup
     mode "1920x1080@60.001"
     scale 1.5
 }
 
+output "DP-3" {
+    mode "1920x1080@60.001"
+    scale 1.5
+}
+
 output "HDMI-A-1" {
-    focus-at-startup
     mode "3840x2160@60.001"
     scale 2.0
 }
-
 
 binds {
     <<binds>>

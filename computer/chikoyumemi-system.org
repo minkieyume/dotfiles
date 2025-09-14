@@ -208,6 +208,7 @@
            (type "btrfs")
            (options (options-for-subvolume subvolume))
            (create-mount-point? #t)
+	   (mount-may-fail? #t)
            (check? (string=? mount-point "/")))))
        '(("@Games"     .   "/galaxy/games")
          ("@AI"  ."/galaxy/ai")
