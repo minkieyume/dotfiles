@@ -123,7 +123,8 @@
         (cons* "kernel.sysrq=1"
           "zswap.enabled=1"
           "zswap.max_pool_percent=90"
-          "modprobe.blacklist=pcspkr"
+          "modprobe.blacklist=pcspkr,nouveau"
+	  "nvidia_drm.modeset=1"
           (operating-system-user-kernel-arguments os)))))
 #+end_src
 
