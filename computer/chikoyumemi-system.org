@@ -597,9 +597,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 	  (pinentry-program
 	   (file-append (spec->pkg "pinentry-emacs") "/bin/pinentry-emacs"))
 	  (ssh-support? #t)
-	  (extra-content (string-join '("enable-ssh-support"
-					"disable-scdaemon"
-					"allow-emacs-pinentry"
+	  (extra-content (string-join '("allow-emacs-pinentry"
 					"allow-loopback-pinentry") "\n"))))
 #+end_src
 
