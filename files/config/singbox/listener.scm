@@ -66,7 +66,7 @@
   (define %config
     `(("log"
        ("disabled" . #f)
-       ("level" . "warn")
+       ("level" . "debug")
        ("timestamp" . #t))
       ("dns"
        ("servers"
