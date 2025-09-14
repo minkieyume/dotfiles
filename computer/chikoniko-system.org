@@ -89,6 +89,7 @@
   (srfi srfi-26)
   (ice-9 match)
   (gnu services sysctl)
+  (gnu services admin)
   (gnu services configuration)
 #+end_src
 
@@ -1045,9 +1046,9 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
 
 **** 日志滚动
 #+begin_src scheme :noweb-ref service
-(simple-service 'sing-box-log-roation-service
-		log-rotation-service-type
-		(compose list "/var/log/sing-box.log"))
+  (simple-service 'sing-box-log-roation-service
+  		log-rotation-service-type
+  		(compose list "/var/log/sing-box.log"))
 #+end_src
 
 

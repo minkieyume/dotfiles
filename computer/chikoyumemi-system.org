@@ -89,6 +89,7 @@
   (srfi srfi-26)
   (ice-9 match)
   (gnu services sysctl)
+  (gnu services admin)
   (gnu services configuration)
 #+end_src
 
