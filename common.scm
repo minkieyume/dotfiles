@@ -20,7 +20,7 @@
 	"https://ci.guix.gnu.org"
 	"https://substitutes.nonguix.org"))
 
-(define %authorized-keys
+(define %chiko-authorized-keys
   (cons* (local-file "./files/keys/non-guix.pub")
 	 (local-file "./files/keys/chikoniko.pub")
 	 %default-authorized-guix-keys))

@@ -7,6 +7,7 @@
     (environment managed-host-environment-type)
     (configuration (machine-ssh-configuration
 		     (host-name "chikocloud")
+		     (build-locally? #f)
 		     (system "x86_64-linux")
 		     (user "deploy")
 		     (port 22)))))
@@ -29,6 +30,7 @@
    (environment managed-host-environment-type)
    (configuration (machine-ssh-configuration
 		   (host-name "chikoniko")
+		   (build-locally? #f)
 		   (system "x86_64-linux")
 		   (user "deploy")
 		   (port 22)))))
@@ -39,6 +41,7 @@
     (environment managed-host-environment-type)
     (configuration (machine-ssh-configuration
 		     (host-name "chikoyumemi")
+		     (build-locally? #f)
 		     (system "x86_64-linux")
 		     (user "deploy")
 		     (port 22)))))

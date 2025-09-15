@@ -61,7 +61,7 @@
 #+begin_src scheme :noweb-ref user
   (user-account
    (name "deploy")
-   (comment "部署专用用户")
+   (comment "Deploy")
    (group "users")
    (home-directory "/home/deploy")
    (supplementary-groups '("wheel")))
@@ -252,7 +252,8 @@
   				 (inherit config)
   				 (substitute-urls %chiko-substitute-urls)
   				 (channels %chiko-channels)
-  				 (extra-options '("--cores=0"))))))))
+  				 (authorized-keys %chiko-authorized-keys)
+  				 (extra-options '("--cores=4"))))))))
 #+end_src
 
 
@@ -346,8 +347,8 @@
     	  (authorized-keys
     	   `(("minkieyume"
   	    ,%chiko-ssh-key)
-  	     ("deploy"
-    	        ,%chiko-ssh-key)))))
+  	   ("deploy"
+    	      ,%chiko-ssh-key)))))
 #+end_src
 
 ** Mcron
@@ -636,29 +637,34 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 
 **** 透明唱片
 #+begin_src scheme :noweb-ref service
-(simple-service 'singbox-tcd
+(simple-service 'sing-box-tcd
 		shepherd-root-service-type
 		(list
 		 (shepherd-service
 		  (documentation "运行一个SingBox TCD，透明唱片播放程序")
-		  (provision '(singbox-tcd))
+		  (provision '(singbox-tcd sing-box-tcd))
 		  (requirement '(sing-box))
 		  (respawn? #f)
 		  (start #~(lambda _
 			     (let* ((ip #$(file-append (spec->pkg "iproute2") "/sbin/ip"))
 				    (st1 (system* ip "route" "add" "local" "default" "dev" "lo" "table" "100"))
-				    (st2 (system* ip "rule" "add" "fwmark" "1" "table" "100")))
+				    (st2 (system* ip "rule" "add" "fwmark" "1" "table" "100"))
+				    (st3 (system* ip "-6" "route" "add" "local" "default" "dev" "lo" "table" "100"))
+				    (st4 (system* ip "-6" "rule" "add" "fwmark" "1" "table" "100")))
 			       (and (map (lambda (st)
 					   (= 0 (status:exit-val st)))
-					 (list st1 st2))))))
+					 (list st1 st2 st3 st4))))))
 		  (stop #~(lambda _
 			    (let* ((ip #$(file-append (spec->pkg "iproute2") "/sbin/ip"))
 				   (st1 (system* ip "rule" "del" "fwmark" "1" "table" "100"))
-				   (st2 (system* ip "route" "del" "local" "default" "dev" "lo" "table" "100")))
+				   (st2 (system* ip "route" "del" "local" "default" "dev" "lo" "table" "100"))
+				   (st3 (system* ip "-6" "rule" "del" "fwmark" "1" "table" "100"))
+				   (st4 (system* ip "-6" "route" "del" "local" "default" "dev" "lo" "table" "100")))
 			      (and (map (lambda (st)
 					  (= 0 (status:exit-val st)))
-					(list st1 st2)))))))))
+					(list st1 st2 st3 st4)))))))))
 #+end_src
+
 
 *** 用户态
 #+begin_src scheme :noweb-ref user

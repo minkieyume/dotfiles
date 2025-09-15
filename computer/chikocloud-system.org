@@ -18,7 +18,7 @@
    (services (cons* <<service>> %base-services))
    (mapped-devices (list <<mapped-device>>))
    (file-systems (append <<filesystems>> %base-file-systems))
-   (packages (append (specifications->packages '(<<package>>)) %base-packages))))
+   (packages (append (specs->pkgs+out <<package>>) %base-packages))))
 
 ((compose <<transformation>>)
  %os)
@@ -56,6 +56,16 @@
     (shell (file-append (spec->pkg "fish") "/bin/fish"))
     (home-directory "/home/minkieyume")
     (supplementary-groups '("wheel" "netdev" "audio" "video")))
+#+end_src
+
+*** Deploy
+#+begin_src scheme :noweb-ref user
+  (user-account
+   (name "deploy")
+   (comment "Deploy")
+   (group "users")
+   (home-directory "/home/deploy")
+   (supplementary-groups '("wheel")))
 #+end_src
 
 ** 基础模块
@@ -220,11 +230,13 @@
 
 *** dhcpd和ntp
 #+begin_src scheme :noweb-ref service
-  (service dhcpcd-service-type
+(service dhcpcd-service-type
   	 (dhcpcd-configuration
-  	  (no-hook '("hostname" "resolv.conf"))
-  	  (static '("domain_name_servers=192.168.122.1"))))
-  (service ntp-service-type)
+	  (no-hook '("hostname" "resolv.conf"))
+	  (static '("ip6_address=2001:41d0:601:1100::592a/128"
+		    "routers=2001:41d0:601:1100::1")))
+
+(service ntp-service-type)
 #+end_src
 
 *** Nftables
@@ -241,16 +253,15 @@
 
 #+begin_src scheme :noweb-ref service
 (service openssh-service-type
-  	 (openssh-configuration
-  	  (password-authentication? #f)
-  	  (permit-root-login #f)
-  	  (authorized-keys
-  	   `(("minkieyume"
-  	      ,(plain-file "chiko-ssh.pub" "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAOh6siUz1z6TpA5ykI5ftCYLBqV3QHTtECL+ulYLQ+D openpgp:0x1DFD0AED")
-              ,(local-file "../files/keys/yumemi_ssh_rsa.pub")
-  	      ,(local-file "../files/keys/niko_ssh_rsa.pub"))
-	     ("deploy"
-  	      ,(plain-file "chiko-ssh.pub" "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAOh6siUz1z6TpA5ykI5ftCYLBqV3QHTtECL+ulYLQ+D openpgp:0x1DFD0AED"))))))
+    	 (openssh-configuration
+    	  (password-authentication? #f)
+    	  (permit-root-login #f)
+    	  (authorized-keys
+    	   `(("minkieyume"
+  	    ,%chiko-ssh-key
+    	      ,(local-file "../files/keys/niko_ssh_rsa.pub"))
+  	   ("deploy"
+  	    ,%chiko-ssh-key)))))
 #+end_src
 
 ** Doas

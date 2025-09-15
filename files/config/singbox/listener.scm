@@ -41,18 +41,20 @@
 
   (define %direct-rules
     '((("protocol" . "bittorrent"))
-      (("protocol" . "stun"))
-      (("ip_version" . 6))
+      (("protocol" . "stun"))      
       (("rule_set" . "geosite-private"))
       (("rule_set" . "geosite-cn"))
-      (("rule_set" . "geoip-cn"))
-      (("rule_set" . "geoip-private"))
       (("port" . #(3478)))
       (("domain_suffix" . "neboer.site"))
       (("domain_suffix" . #("syncthing.net" "discovery-announce-v4.syncthing.net")))
       (("domain_suffix" . #("lan" "local" "localhost")))
       (("domain_suffix" . "yumieko.com"))
       (("domain_suffix" . #("frp-add.com" "frp-pet.com" "frp-fit.com")))))
+  
+  (define %direct-ips
+    '((("ip_version" . 6))
+      (("rule_set" . "geoip-cn"))
+      (("rule_set" . "geoip-private"))))
 
   (define %proxy-rules
     '((("rule_set" . "geosite-gfw"))
@@ -148,11 +150,16 @@
 	    
 	    (("process_name" . #(,@%direct-process))
              ("outbound" . "out_direct"))
+
+	    ,@(map (lambda (rule)
+                     `(,@rule
+		       ("outbound" . "out_direct")))
+                   %direct-ips)
 	    
             ,@(map (lambda (rule)
                      `(,@rule
 		       ("outbound" . "out_direct")))
-                   %direct-rules)
+                   %direct-rules)	    
 	    
 	    ,@(map (lambda (rule)
                      `(,@rule
