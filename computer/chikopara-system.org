@@ -188,7 +188,7 @@
   (let ((options-for-subvolume
           (lambda (subvolume)
             (string-join
-              (list "compress=zstd"
+              (list "compress=zstd" "noatime" "commit=3600"
                 (or (and=> subvolume (cut string-append "subvol=" <>))
                   "subvolid=5"))
               ","))))
@@ -222,7 +222,7 @@
 (let ((options-for-subvolume
        (lambda (subvolume)
          (string-join
-          (list "compress=zstd"
+          (list "compress=zstd" "noatime" "commit=43200"
                 (or (and=> subvolume (cut string-append "subvol=" <>))
                     "subvolid=5"))
           ","))))
@@ -234,7 +234,7 @@
            (type "btrfs")
            (options (string-append (options-for-subvolume subvolume)))
            (create-mount-point? #t)
-  	   (mount-may-fail? #t)
+  	 (mount-may-fail? #t)
            (check? (string=? mount-point "/")))))
        '(("@NanaBackup" . "/backup/nana")
          (#f        . "/mnt/riri"))))
@@ -413,9 +413,12 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 
 
 * 工具
-** 硬件监视
+** 硬件管理
+*** 硬盘监管工具
 #+begin_src scheme :noweb-ref package
   "smartmontools"
+  "iotop"
+  "hdparm"
 #+end_src
 
 ** 网络调试

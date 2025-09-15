@@ -62,8 +62,10 @@
       (("rule_set" . "geosite-stripe"))      
       (("domain_suffix" . "boiledscript.com"))
       (("domain_suffix" . "freedesktop.org"))
-      (("rule_set" . "geoip-telegram"))
       (("inbound" . "proxy_in"))))
+
+  (define %proxy-ips
+    '((("rule_set" . "geoip-telegram"))))
   
   (define %config
     `(("log"
@@ -164,7 +166,11 @@
 	    ,@(map (lambda (rule)
                      `(,@rule
 		       ("outbound" . "out_proxy")))
-                   %proxy-rules)))
+                   %proxy-rules)
+	    ,@(map (lambda (rule)
+                     `(,@rule
+		       ("outbound" . "out_proxy")))
+                   %proxy-ips)))
        ("rule_set"
         . #(,@%rule-sets))
        ("final" . "out_direct")

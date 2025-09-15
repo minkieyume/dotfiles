@@ -229,6 +229,34 @@
          (#f           .     "/mnt/galaxy"))))
 #+end_src
 
+*** 自动挂载
+自动挂载，规则由AutoFS配置。
+#+begin_src scheme :noweb-ref package
+"autofs"
+#+end_src
+
+#+begin_src scheme :noweb-ref service
+  (simple-service 'autofs-file
+  		etc-service-type
+  		(list
+  		 `("autofs.conf" ,(local-file "../files/config/autofs/autofs.conf"))
+  		 `("autofs/auto.master" ,(local-file "../files/config/autofs/auto.master"))
+  		 `("autofs/auto.nfs" ,(local-file "../files/config/autofs/auto.nfs"))))
+#+end_src
+
+#+begin_src scheme :noweb-ref service
+  (simple-service 'autofs
+  		shepherd-root-service-type
+  		(list
+  		 (shepherd-service
+  		   (documentation "自动挂载服务")
+  		   (provision '(autofs))
+  		   (requirement '(file-systems))
+  		   (start #~(make-forkexec-constructor
+  			     (list #$(file-append (spec->pkg autofs) "/sbin/automount"))))
+  		   (stop #~(make-kill-destructor)))))
+#+end_src
+
 
 ** Guix配置
 #+begin_src scheme :noweb-ref transformation
