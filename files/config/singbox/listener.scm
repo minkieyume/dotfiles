@@ -118,7 +118,7 @@
             ("listen" . "::")
             ("listen_port" . 7890))
            (("type" . "tproxy")
-            ("listen" . "::")
+            ("listen" . "::1")
             ("listen_port" . 7891)
             ("tag" . "tproxy_in"))))
       ("outbounds"
