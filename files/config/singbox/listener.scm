@@ -118,7 +118,7 @@
             ("listen" . "::")
             ("listen_port" . 7890))
            (("type" . "tproxy")
-            ("listen" . "::1")
+            ("listen" . "::1") ;;临时必要设置，直到1.13发布时。
             ("listen_port" . 7891)
             ("tag" . "tproxy_in"))))
       ("outbounds"
