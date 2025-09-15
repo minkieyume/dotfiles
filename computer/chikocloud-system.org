@@ -18,7 +18,7 @@
    (services (cons* <<service>> %base-services))
    (mapped-devices (list <<mapped-device>>))
    (file-systems (append <<filesystems>> %base-file-systems))
-   (packages (append (specs->pkgs+out <<package>>) %base-packages))))
+   (packages (append (specifications->packages '(<<package>>)) %base-packages))))
 
 ((compose <<transformation>>)
  %os)
@@ -232,9 +232,9 @@
 #+begin_src scheme :noweb-ref service
 (service dhcpcd-service-type
   	 (dhcpcd-configuration
-	  (no-hook '("hostname" "resolv.conf"))
-	  (static '("ip6_address=2001:41d0:601:1100::592a/128"
-		    "routers=2001:41d0:601:1100::1")))
+	    (no-hook '("hostname" "resolv.conf"))
+	    (static  '("ip6_address=2001:41d0:601:1100::592a/128"
+		      "routers=2001:41d0:601:1100::1"))))
 
 (service ntp-service-type)
 #+end_src

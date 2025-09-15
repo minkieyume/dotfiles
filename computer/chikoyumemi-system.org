@@ -20,7 +20,7 @@
   		    ((compose <<rosenthal-desktop-transformation>>) %rosenthal-desktop-services)))
    (mapped-devices (list <<mapped-device>>))
    (file-systems (append <<filesystems>> %base-file-systems))
-   (packages (append (specs->pkgs+out <<package>>) %base-packages))))
+   (packages (append (specifications->packages '(<<package>>)) %base-packages))))
 
 ((compose <<transformation>>)
  %os)
@@ -920,6 +920,8 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+begin_src scheme :noweb-ref package
   "rust"
   "rust-analyzer"
+  "rust:tools"
+  "rust:cargo"
 #+end_src
 
 ** Zig
