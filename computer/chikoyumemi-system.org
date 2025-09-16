@@ -578,7 +578,7 @@ fish，开箱即用的终端解释器。
   			   '("emacsclient" "--eval" "(kill-emacs)"))))))
 #+end_src
 [[file:../files/config/emacs/Emacs配置.org][Emacs配置]]
-[[file:../files/config/chikoniko/emacs-theme.el][emacs-themes.el]]
+[[file:../files/config/chikoyumemi/init-theme.el][emacs-themes]]
 
 ** Doas
 Doas是比Sudo更简洁，也更为安全的提权工具。
@@ -713,6 +713,10 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 
 * 桌面环境
 ** 显卡配置
+#+begin_src scheme :noweb-ref module
+  (nongnu packages nvidia)
+#+end_src
+
 #+begin_src scheme :noweb-ref transformation
   replace-mesa
   (nonguix-transformation-nvidia)  
@@ -796,7 +800,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   }
   @theme \"" (spec->pkg "rofi") "/share/rofi/themes/fullscreen-preview.rasi\"\n"))))
 #+end_src
-[[file:../files/config/chikoniko/niri.kdl][Niri配置]]
+[[file:../files/config/chikoyumemi/niri.kdl][Niri配置]]
 
 *** Foot
 轻量级的终端模拟器

@@ -225,7 +225,7 @@
   		   (provision '(autofs))
   		   (requirement '(file-systems))
   		   (start #~(make-forkexec-constructor
-  			     (list #$(file-append (spec->pkg "autofs") "/sbin/automount"))))
+  			     (list #$(file-append (spec->pkg "autofs") "/sbin/automount -f -d"))))
   		   (stop #~(make-kill-destructor)))))
 #+end_src
 
