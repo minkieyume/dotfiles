@@ -517,10 +517,10 @@ Ekg是方便快速整理灵感和笔记的笔记插件。
 ** Scheme
 *** 模式配置
 #+begin_src emacs-lisp :noweb-ref config
-  (use-package scheme-mode
-    :mode "\\.neko\\'")
+(use-package scheme-mode
+  :mode "\\.neko\\'")
 
-  (use-package racket-mode)
+(use-package racket-mode)
 #+end_src
 
 *** Geiser工具
@@ -528,7 +528,9 @@ Ekg是方便快速整理灵感和笔记的笔记插件。
   (use-package geiser
     :config
     (setq geiser-active-implementations '(guile chibi racket)
-  	geiser-mode-auto-p nil))
+  	geiser-mode-auto-p t)
+    (add-to-list 'load-path $$emacs-godot-s7-scheme$$)
+    (load "geiser-godot-s7-autoloads.el"))
 
   (use-package geiser-guile)
 

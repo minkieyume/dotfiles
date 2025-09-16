@@ -188,7 +188,7 @@
   (let ((options-for-subvolume
           (lambda (subvolume)
             (string-join
-              (list "compress=zstd" "noatime" "commit=3600"
+              (list "compress=zstd" "commit=3600"
                 (or (and=> subvolume (cut string-append "subvol=" <>))
                   "subvolid=5"))
               ","))))
@@ -199,8 +199,9 @@
                (mount-point mount-point)
                (type "btrfs")
                (options (string-append (options-for-subvolume subvolume)))
-               (create-mount-point? #t)
+  	     (flags '(lazy-time))
   	     (mount-may-fail? #t)
+               (create-mount-point? #t)
                (check? (string=? mount-point "/")))))
       '(("@Picture" . "/resource/picture")
         ("@Music"   . "/resource/music")
@@ -222,7 +223,7 @@
 (let ((options-for-subvolume
        (lambda (subvolume)
          (string-join
-          (list "compress=zstd" "noatime" "commit=43200"
+          (list "compress=zstd" "commit=43200"
                 (or (and=> subvolume (cut string-append "subvol=" <>))
                     "subvolid=5"))
           ","))))
@@ -233,8 +234,9 @@
            (mount-point mount-point)
            (type "btrfs")
            (options (string-append (options-for-subvolume subvolume)))
+           (flags '(lazy-time))
+           (mount-may-fail? #t)
            (create-mount-point? #t)
-  	 (mount-may-fail? #t)
            (check? (string=? mount-point "/")))))
        '(("@NanaBackup" . "/backup/nana")
          (#f        . "/mnt/riri"))))
@@ -322,8 +324,12 @@
 #+begin_src scheme :noweb-ref service
   (service nftables-service-type
     (nftables-configuration
-      (ruleset (local-file "../files/config/chikopara/nftables.conf"))))
+      (ruleset
+       (computed-substitution-with-inputs "nftables.conf"
+          (local-file "../files/config/chikopara/nftables.conf")
+	  (list (local-file "../files/config/singbox" #:recursive? #t))))))
 #+end_src
+
 
 *** Resolv配置
 #+begin_src scheme :noweb-ref service
@@ -331,7 +337,6 @@
         	etc-service-type
         	`(("resolv.conf" ,(plain-file "resolv.conf" "search tailb8a678.ts.net lan\nnameserver 192.168.8.1\nnameserver 8.8.8.8\nnameserver 1.1.1.1"))))
 #+end_src
-
 
 ** OpenSSH
 #+begin_src scheme :noweb-ref module
@@ -414,11 +419,22 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 
 * 工具
 ** 硬件管理
-*** 硬盘监管工具
+*** 磁盘管理
 #+begin_src scheme :noweb-ref package
   "smartmontools"
   "iotop"
   "hdparm"
+#+end_src
+
+**** 磁盘休眠
+#+begin_src scheme :noweb yes :noweb-ref service :noweb-prefix no
+(udev-rules-service 'hdparm
+		    (file->udev-rule
+		     "90-hdparm.rules"
+		     (mixed-text-file "90-hdparm.rules"
+		      #~(string-append
+			 "ACTION==\"add\", SUBSYSTEM==\"block\",KERNEL==\"sd[a-z]\","
+			 "RUN+=\"" #$(file-append (spec->pkg "hdparm") "/sbin/hdparm") " -B 127 -S 120 /dev/%k\""))))
 #+end_src
 
 ** 网络调试
@@ -627,8 +643,10 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   		 (let ((config %sing-box-config-file))
   		   (shepherd-service
   		    (documentation "Run sing-box singing listener.")
-  		    (provision '(sing-box))
+  		    (provision '(sing-box singbox))
   		    (requirement '(networking))
+  		    (respawn-limit 100)
+  		    (respawn-delay 20)
   		    (start #~(make-forkexec-constructor
   			      (list "/run/privileged/bin/sing-box" "run" "-c" #$config)
                                 #:log-file "/var/log/sing-box.log"
@@ -645,7 +663,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 		(list
 		 (shepherd-service
 		  (documentation "运行一个SingBox TCD，透明唱片播放程序")
-		  (provision '(singbox-tcd sing-box-tcd))
+		  (provision '(sing-box-tcd singbox-tcd))
 		  (requirement '(sing-box))
 		  (respawn? #f)
 		  (start #~(lambda _

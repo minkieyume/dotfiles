@@ -253,7 +253,7 @@
   		   (provision '(autofs))
   		   (requirement '(file-systems))
   		   (start #~(make-forkexec-constructor
-  			     (list #$(file-append (spec->pkg autofs) "/sbin/automount"))))
+  			     (list #$(file-append (spec->pkg "autofs") "/sbin/automount"))))
   		   (stop #~(make-kill-destructor)))))
 #+end_src
 
@@ -375,8 +375,12 @@
 #+begin_src scheme :noweb-ref service
   (service nftables-service-type
     (nftables-configuration
-      (ruleset (local-file "../files/config/chikoyumemi/nftables.conf"))))
+      (ruleset
+       (computed-substitution-with-inputs "nftables.conf"
+          (local-file "../files/config/chikoyumemi/nftables.conf")
+	  (list (local-file "../files/config/singbox" #:recursive? #t))))))
 #+end_src
+
 
 *** Resolv配置
 #+begin_src scheme :noweb-ref service
@@ -532,6 +536,7 @@ fish，开箱即用的终端解释器。
 
   ;;外部依赖
   "tree-sitter"
+  "tree-sitter-racket"
   "plantuml"
 #+end_src
 
@@ -541,18 +546,20 @@ fish，开箱即用的终端解释器。
       		`(("emacs/init.el"
       		   ,(computed-substitution-with-inputs "init.el"
       						       (local-file "../files/config/emacs/init.el")
-      						       (specs->pkgs "ccls"
-      								    "fish"
-      								    "python-lsp-server"
-      								    "rust-analyzer"
-      								    "zig-zls"
-    								    "fd"
-								    "mpv"
-								    "ffmpegthumbnailer"
-								    "p7zip"
-								    "imagemagick"
-								    "mediainfo"
-								    "vips")))
+						       (append
+							(list (local-file "../files/config/emacs" #:recursive? #t))
+							(specs->pkgs "ccls"
+      								     "fish"
+      								     "python-lsp-server"
+      								     "rust-analyzer"
+      								     "zig-zls"
+    								     "fd"
+								     "mpv"
+								     "ffmpegthumbnailer"
+								     "p7zip"
+								     "imagemagick"
+								     "mediainfo"
+								     "vips"))))
       		  ("emacs/.init-themes.el"
       		   ,(local-file "../files/config/chikoyumemi/init-theme.el"))))
 #+end_src
@@ -706,6 +713,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 * 桌面环境
 ** 显卡配置
 #+begin_src scheme :noweb-ref transformation
+  replace-mesa
   (nonguix-transformation-nvidia)  
 #+end_src
 
@@ -1089,6 +1097,8 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
   		    (documentation "Run sing-box singing listener.")
   		    (provision '(sing-box))
   		    (requirement '(networking))
+  		    (respawn-limit 100)
+  		    (respawn-delay 20)
   		    (start #~(make-forkexec-constructor
   			      (list "/run/privileged/bin/sing-box" "run" "-c" #$config)
                                 #:log-file "/var/log/sing-box.log"

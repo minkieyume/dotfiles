@@ -33,6 +33,7 @@
 		   (build-locally? #f)
 		   (system "x86_64-linux")
 		   (user "deploy")
+		   (host-key "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDBw3VblSwKSmOPsjtE8wOoo+AJVWtJZ/S9SXW/d4v3V")
 		   (port 22)))))
 
 (define %chikoyumemi
@@ -44,6 +45,7 @@
 		     (build-locally? #f)
 		     (system "x86_64-linux")
 		     (user "deploy")
+		     (host-key "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGAEqd0gx+mPuKJmi2ugGToNQD0zxVhqB7j5FJdMzzcV")
 		     (port 22)))))
 
 (list %chikocloud %chikoniko %chikopara %chikoyumemi)

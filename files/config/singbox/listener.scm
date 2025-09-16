@@ -52,8 +52,7 @@
       (("domain_suffix" . #("frp-add.com" "frp-pet.com" "frp-fit.com")))))
   
   (define %direct-ips
-    '((("ip_version" . 6))
-      (("rule_set" . "geoip-cn"))
+    '((("rule_set" . "geoip-cn"))
       (("rule_set" . "geoip-private"))))
 
   (define %proxy-rules
@@ -96,7 +95,7 @@
 	     ("tag" . "dns_cn"))))
        ("rules"
 	. #((("domain_suffix" . #("ts.net"))
-	     ("domain" . #("chikocloud" "chikopara" "dreamtwi" "yumemios"))
+	     ("domain" . #("chikoyumemi" "chikocloud" "chikopara" "dreamtwi" "yumemios"))
 	     ("server" . "dns_tailscale"))
 	    
 	    (("process_name" . #(,@%direct-process))
@@ -110,7 +109,7 @@
 	    ,@(map (lambda (rule)
                      `(,@rule
 		       ("server" . "cloudflare-doh")
-		       ("strategy" . "ipv4_only")))
+		       ("strategy" . "prefer_ipv4")))
                    %proxy-rules))))
       ("inbounds"
        . #((("type". "mixed")
@@ -118,7 +117,7 @@
             ("listen" . "::")
             ("listen_port" . 7890))
            (("type" . "tproxy")
-            ("listen" . "::1") ;;临时必要设置，直到1.13发布时。
+            ("listen" . "::")
             ("listen_port" . 7891)
             ("tag" . "tproxy_in"))))
       ("outbounds"
@@ -129,6 +128,9 @@
             ("uuid" . ,(nyapasu-ref 'sing-box-chiko-uuid))
 	    ("tls"
 	     ("enabled" . #t))
+	    ("domain_resolver"
+	     ("server" . "dns_cn")
+	     ("strategy" . "ipv4_only"))
 	    ("transport"
 	     ("type" . "ws")
 	     ("path" . ,(nyapasu-ref 'ws-transport-path))
@@ -138,6 +140,10 @@
             ("tag" . "out_direct"))
            (("type" . "block")
             ("tag" . "out_block"))))
+      ;; ("experimental"
+      ;;  ("cache_file"
+      ;; 	("enabled" . #t)
+      ;; 	("path" . "/var/lib/sing-box/cache.db")))
       ("route"
        ("rules"
         . #((("action" . "sniff"))
@@ -172,9 +178,11 @@
 		       ("outbound" . "out_proxy")))
                    %proxy-ips)))
        ("rule_set"
-        . #(,@%rule-sets))
+        . #(,@%rule-sets))       
        ("final" . "out_direct")
-       ("default_domain_resolver" . "dns_cn"))))
+       ("default_domain_resolver"
+	("server" . "dns_cn")
+	("strategy" . "prefer_ipv4")))))
   
   (call-with-output-file file-name
     (lambda (port)
