@@ -716,9 +716,8 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   (nongnu packages nvidia)
 #+end_src
 
-replace-mesa
-
 #+begin_src scheme :noweb-ref transformation
+  replace-mesa
   (nonguix-transformation-nvidia)  
 #+end_src
 
