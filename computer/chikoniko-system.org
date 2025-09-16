@@ -203,11 +203,27 @@
 
 *** 自动挂载
 自动挂载，规则由AutoFS配置。
+#+begin_src scheme :noweb-ref module
+(chiko services autofs)
+#+end_src
+
 #+begin_src scheme :noweb-ref package
 "autofs"
 #+end_src
 
 #+begin_src scheme :noweb-ref service
+(autofs-service-type
+ (autofs-configuration
+  (config-file
+   (local-file "../files/config/autofs/autofs.conf"))
+  (master-file
+   (local-file "../files/config/autofs/auto.master"))
+  (extra-files
+   `(,(local-file "../files/config/autofs/auto.nfs")))))
+#+end_src
+
+**** 归档
+#+begin_src scheme
   (simple-service 'autofs-file
   		etc-service-type
   		(list
@@ -216,7 +232,7 @@
   		 `("autofs/auto.nfs" ,(local-file "../files/config/autofs/auto.nfs"))))
 #+end_src
 
-#+begin_src scheme :noweb-ref service
+#+begin_src scheme
   (simple-service 'autofs
   		shepherd-root-service-type
   		(list
