@@ -212,7 +212,7 @@
 #+end_src
 
 #+begin_src scheme :noweb-ref service
-(autofs-service-type
+(service autofs-service-type
  (autofs-configuration
   (config-file
    (local-file "../files/config/autofs/autofs.conf"))
