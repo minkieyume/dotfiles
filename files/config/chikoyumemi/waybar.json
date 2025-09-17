@@ -8,25 +8,24 @@
 	"modules-right": ["network","wireplumber","clock"],
 	"custom/launcher": {
 		"tooltip": false,
-		"format": "",
-		"on-click":"wofi --show drun",
+		"format": "",
+		"on-click":"$$bin/rofi$$ --show drun",
 	},
 	"wireplumber": {
 		"tooltip": false,
 		"scroll-step": 5,
 		"format": "{icon} {volume}%",
 		"format-muted": "静音模式",
-		"on-click":"flatpak run com.saivert.pwvucontrol",
-		"on-right-click":"$$bin/wpctl$$ set-mute @DEFAULT_SINK@ toggle",
+		"on-click":"$$bin/wpctl$$ set-mute @DEFAULT_SINK@ toggle",
 		"format-icons": {
 			"default": ["", "", ""]
 		}
 	},
 	"network": {
 		"format-wifi": "",
-		"format-ethernet": "",
+		"format-ethernet": "",
 		"tooltip-format": "{essid} ({signalStrength}%)",
-		"format-linked": "{ifname} (No IP) ",
+		"format-linked": "{ifname} (No IP) ",
 		"format-disconnected": "⚠",
 		"format-alt": "{ifname}: {ipaddr}/{cidr}"
 		},
