@@ -211,7 +211,8 @@
 "autofs"
 #+end_src
 
-#+begin_src scheme :noweb-ref service
+*** 暂时归档
+#+begin_src scheme
 (service autofs-service-type
  (autofs-configuration
   (config-file
@@ -773,6 +774,8 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   "swaylock-effects"
   "wireplumber"
   "xwayland-satellite"
+  "helvum"
+  "pavucontrol"
 #+end_src
 
 #+begin_src scheme :noweb-ref home-service
