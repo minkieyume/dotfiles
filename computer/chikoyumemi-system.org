@@ -285,7 +285,7 @@
 
 ** Home服务
 #+begin_src scheme :noweb yes :noweb-prefix no :noweb-ref service
-  (service guix-home-service-type
+(service guix-home-service-type
   	 `(("minkieyume" ,(home-environment
   			   (services (cons* <<home-service>> %rosenthal-desktop-home-services))))))
 #+end_src
@@ -718,7 +718,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 
 #+begin_src scheme :noweb-ref transformation
   replace-mesa
-  (nonguix-transformation-nvidia)  
+  (nonguix-transformation-nvidia)
 #+end_src
 
 ** Greetd
@@ -804,7 +804,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 *** Foot
 轻量级的终端模拟器
 #+begin_src scheme :noweb-ref home-service
-  (simple-service 'emacs-configuration
+  (simple-service 'foot-configuration
   		home-xdg-configuration-files-service-type
   		`(("foot/foot.ini"
   		   ,(local-file "../files/config/chikoyumemi/foot.ini"))))
@@ -824,7 +824,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
       (config
         (computed-substitution-with-inputs "config.json"
           (local-file "../files/config/chikoyumemi/waybar.json")
-          (specs->pkgs "light" "wireplumber")))
+          (specs->pkgs "light" "wireplumber" "rofi")))
       (style
         (local-file "../files/config/chikoyumemi/waybar.css"))))
 #+end_src
@@ -1017,12 +1017,6 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 * 音频配置
 #+begin_src scheme :noweb-ref package
   "helvum"
-#+end_src
-
-#+begin_src scheme :noweb-ref home-service
-(service home-pipewire-service-type
-  	 (home-pipewire-configuration
-	  (extra-content (string-append "pcm.hdmi71 {\n type hw \n card 0 \n device 3 \n channels 8 \n }"))))
 #+end_src
 
 * 游戏

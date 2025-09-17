@@ -802,7 +802,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 *** Foot
 轻量级的终端模拟器
 #+begin_src scheme :noweb-ref home-service
-  (simple-service 'emacs-configuration
+  (simple-service 'foot-configuration
   		home-xdg-configuration-files-service-type
   		`(("foot/foot.ini"
   		   ,(local-file "../files/config/chikoniko/foot.ini"))))
