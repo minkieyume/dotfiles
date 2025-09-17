@@ -833,7 +833,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+begin_src scheme :noweb-ref home-service
   (service home-swaybg-service-type
   	 (home-swaybg-configuration
-  	  (background (local-file "../secret/wallpapers/wallpaper.png"))))
+  	  (background (local-file "../secret/wallpapers/yumemi_wallpaper1.png"))))
 #+end_src
 
 *** mako
