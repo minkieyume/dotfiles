@@ -1019,6 +1019,11 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   "helvum"
 #+end_src
 
+#+begin_src scheme :noweb-ref home-service
+(service home-pipewire-service-type
+  	 (home-pipewire-configuration
+	  (extra-content (string-append "pcm.hdmi71 {\n type hw \n card 0 \n device 3 \n channels 8 \n }"))))
+#+end_src
 
 * 游戏
 ** steam
@@ -1033,11 +1038,6 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   ("GUIX_SANDBOX_EXTRA_SHARES" . "$HOME/Downloads:/niko/picture/screenshots")
 #+end_src
 
-** Retroarch
-#+begin_src scheme :noweb-ref package
-  "retroarch"
-#+end_src
-
 *** 驱动配置
 #+begin_src scheme :noweb yes :noweb-ref service :noweb-prefix no
   (udev-rules-service 'steam-devices (spec->pkg "steam-devices-udev-rules"))
@@ -1049,6 +1049,11 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
   (udev-rule "60-controller-permission.rules" "\
   KERNEL==\"event*\", ATTRS{idVendor}==\"045e\", ATTRS{idProduct}==\"028e\", \
   MODE=\"0660\", GROUP=\"users\"")
+#+end_src
+
+** Retroarch
+#+begin_src scheme :noweb-ref package
+  "retroarch"
 #+end_src
 
 * 创作
