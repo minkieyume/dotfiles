@@ -202,6 +202,8 @@ window-rule {
   Mod+Shift+P               { move-window-up; }
   Mod+Shift+N               { move-window-down; }
 
+  Mod+S                     { focus-monitor-next; }
+
   Mod+WheelScrollDown       { focus-column-right; }
   Mod+WheelScrollUp         { focus-column-left; }
   Mod+Shift+WheelScrollDown { move-column-right; }
@@ -211,7 +213,7 @@ window-rule {
   Mod+Period                { consume-or-expel-window-right; }
   Mod+M                     { maximize-column; }
   Mod+Shift+M               { fullscreen-window; }
-  Mod+L                     { center-column; }
+  Mod+L                     { center-column; }  
   Mod+O                     { toggle-window-floating; }
   Mod+Shift+O               { switch-focus-between-floating-and-tiling; }
   Mod+V                     { focus-workspace-down; }
