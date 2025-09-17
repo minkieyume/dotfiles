@@ -937,7 +937,6 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   "librewolf"
   "icecat-l10n:zh-CN"
   "adaptive-tab-bar-colour-icecat"
-  "bitwarden-icecat"
   "livemarks-icecat"
   "miniflux-injector-icecat"
   "ohmyech-icecat"
@@ -1014,6 +1013,12 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+begin_src scheme :noweb-ref package
   "kodi-wayland"
 #+end_src
+
+* 音频配置
+#+begin_src scheme :noweb-ref package
+  "helvum"
+#+end_src
+
 
 * 游戏
 ** steam
