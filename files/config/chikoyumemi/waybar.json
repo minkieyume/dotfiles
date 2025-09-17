@@ -9,7 +9,7 @@
 	"custom/launcher": {
 		"tooltip": false,
 		"format": "",
-		"on-click":"$$bin/rofi$$ --show drun",
+		"on-click":"$$bin/rofi$$ -show drun",
 	},
 	"wireplumber": {
 		"tooltip": false,
