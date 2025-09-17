@@ -775,6 +775,8 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   "swaylock-effects"
   "wireplumber"
   "xwayland-satellite"
+  "helvum"
+  "pavucontrol"
 #+end_src
 
 #+begin_src scheme :noweb-ref home-service
@@ -824,7 +826,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
       (config
         (computed-substitution-with-inputs "config.json"
           (local-file "../files/config/chikoyumemi/waybar.json")
-          (specs->pkgs "light" "wireplumber" "rofi")))
+          (specs->pkgs "light" "wireplumber" "rofi" "pavucontrol")))
       (style
         (local-file "../files/config/chikoyumemi/waybar.css"))))
 #+end_src
@@ -1012,11 +1014,6 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 ** Kodi
 #+begin_src scheme :noweb-ref package
   "kodi-wayland"
-#+end_src
-
-* 音频配置
-#+begin_src scheme :noweb-ref package
-  "helvum"
 #+end_src
 
 * 游戏
