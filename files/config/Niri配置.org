@@ -104,23 +104,23 @@ input {
 }
 
 output "DP-1" {
-    mode "3840x2160@60.001"
+    mode "3840x2160@60.000"
     scale 2.0
 }
 
 output "DP-2" {
     focus-at-startup
-    mode "1920x1080@60.001"
+    mode "1920x1080@119.879"
     scale 1.5
 }
 
 output "DP-3" {
-    mode "1920x1080@60.001"
+    mode "1920x1080@60.000"
     scale 1.5
 }
 
 output "HDMI-A-1" {
-    mode "3840x2160@60.001"
+    mode "3840x2160@60.000"
     scale 2.0
 }
 
@@ -160,6 +160,11 @@ window-rule {
     open-focused false
     open-floating true
     default-floating-position x=10 y=10 relative-to="bottom-right"
+}
+
+window-rule {
+    match app-id=r#"^steam_app_"#
+    open-focused true
 }
 
 window-rule {
@@ -218,8 +223,8 @@ window-rule {
   Mod+O                     { toggle-window-floating; }
   Mod+Shift+O               { switch-focus-between-floating-and-tiling; }
   Mod+V                     { focus-workspace-down; }
-  Mod+Shift+V               { focus-workspace-up; }
-  Mod+C                     { move-column-to-workspace-down; }
+  Mod+Shift+V               { move-column-to-workspace-down; }
+  Mod+C                     { focus-workspace-up; }
   Mod+Shift+C               { move-column-to-workspace-up; }
 
   Mod+Shift+Q               { close-window; }
@@ -256,5 +261,11 @@ window-rule {
 
 * 环境变量
 #+begin_src json :noweb-ref env
-STEAM_FORCE_DESKTOPUI_SCALING "1.5"
+  STEAM_FORCE_DESKTOPUI_SCALING "1.5"
+  SDL_AUDIODRIVER "alsa"
+  PULSE_LATENCY_MSEC "120"
+  WINE_AUDIO_LATENCY "120"
+  WINEESYNC "1"
+  WINEFSYNC "1"
+  STAGING_AUDIO_PERIOD "10000"
 #+end_src

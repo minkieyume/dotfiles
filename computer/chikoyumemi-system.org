@@ -1028,7 +1028,7 @@ pkg-config这个包似乎有bug，装上会导致nheko等一堆程序找不到�
 #+end_src
 
 * 游戏
-** steam
+** Steam
 #+begin_src scheme :noweb-ref package
   "steam-nvidia"
   "nvidia-vaapi-driver"
@@ -1036,8 +1036,8 @@ pkg-config这个包似乎有bug，装上会导致nheko等一堆程序找不到�
 #+end_src
 
 #+begin_src scheme :noweb-ref home-environment-variable
-  ("GUIX_SANDBOX_HOME" . "/niko/sandbox")
-  ("GUIX_SANDBOX_EXTRA_SHARES" . "$HOME/Downloads:/niko/picture/screenshots")
+  ("GUIX_SANDBOX_HOME" . "/yumemi/sandbox")
+  ("GUIX_SANDBOX_EXTRA_SHARES" . "$HOME/Downloads:/yumemi/picture/screenshots")
 #+end_src
 
 *** 驱动配置

@@ -30,13 +30,13 @@ window#waybar.hidden {
 	font-size: 4px;
 	margin-bottom: 5px;
 	border-radius: 8px;
-	background: #D8E7F2;
+	background: #1A3E60;
 	transition: none;
 }
 
 #workspaces button {
 	transition: none;
-	color: #1A3E60;
+	color: #AFC9E3;
 	background: transparent;
 	font-size: 16px;
 	border-radius: 8px;
@@ -50,7 +50,7 @@ window#waybar.hidden {
 }
 
 #workspaces button.active {
-	color: #1A3E60;
+	color: #D8E7F2;
         border-top: 2px solid #1A3E60;
         border-bottom: 2px solid #1A3E60;
 }
@@ -75,8 +75,8 @@ window#waybar.hidden {
 	margin-bottom: 5px;
 	border-radius: 8px;
 	transition: none;
-	color: #1A3E60;
-	background: #D8E7F2;
+	color: #D8E7F2;
+	background: #1A3E60;
 }
 
 #wireplumber {
@@ -87,8 +87,8 @@ window#waybar.hidden {
 	margin-bottom: 5px;
 	border-radius: 8px;
 	transition: none;
-	color: #1A3E60;
-	background: #D8E7F2;
+	color: #D8E7F2;
+	background: #1A3E60;
 }
 
 #battery {
@@ -99,18 +99,18 @@ window#waybar.hidden {
 	margin-bottom: 5px;
 	border-radius: 8px;
 	transition: none;
-	color: #1A3E60;
-	background: #D8E7F2;
+	color: #D8E7F2;
+	background: #1A3E60;
 }
 
 #battery.charging, #battery.plugged {
-	color: #1A3E60;
+	color: #D8E7F2;
     background-color: #D8E7F2;
 }
 
 #battery.critical:not(.charging) {
     background-color: #D8E7F2;
-    color: #1A3E60;
+    color: #D8E7F2;
     animation-name: blink;
     animation-duration: 0.5s;
     animation-timing-function: linear;
@@ -121,7 +121,7 @@ window#waybar.hidden {
 @keyframes blink {
     to {
         background-color: #D8E7F2;
-        color: #1A3E60;
+        color: #D8E7F2;
     }
 }
 
@@ -133,8 +133,8 @@ window#waybar.hidden {
 	margin-bottom: 5px;
 	border-radius: 8px;
 	transition: none;
-	color: #1A3E60;
-	background: #D8E7F2;
+	color: #D8E7F2;
+	background: #1A3E60;
 }
 
 #bluetooth {
@@ -145,8 +145,8 @@ window#waybar.hidden {
 	margin-bottom: 5px;
 	border-radius: 8px;
 	transition: none;
-	color: #1A3E60;
-	background: #D8E7F2;
+	color: #D8E7F2;
+	background: #1A3E60;
 }
 
 #clock {
@@ -157,8 +157,8 @@ window#waybar.hidden {
 	margin-bottom: 5px;
 	border-radius: 8px;
 	transition: none;
-	color: #1A3E60;
-	background: #D8E7F2;
+	color: #D8E7F2;
+	background: #1A3E60;
 	/*background: #1A1826;*/
 }
 
@@ -170,8 +170,8 @@ window#waybar.hidden {
 	padding-right: 10px;
 	border-radius: 8px;
 	transition: none;
-	color: #1A3E60;
-	background: #D8E7F2;
+	color: #D8E7F2;
+	background: #1A3E60;
 }
 
 #cpu {
@@ -182,8 +182,8 @@ window#waybar.hidden {
 	padding-right: 10px;
 	border-radius: 8px;
 	transition: none;
-	color: #1A3E60;
-	background: #D8E7F2;
+	color: #D8E7F2;
+	background: #1A3E60;
 }
 
 #tray {
@@ -194,8 +194,8 @@ window#waybar.hidden {
 	padding-right: 10px;
 	border-radius: 8px;
 	transition: none;
-	color: #1A3E60;
-	background: #D8E7F2;
+	color: #D8E7F2;
+	background: #1A3E60;
 }
 
 #custom-launcher {
@@ -207,8 +207,8 @@ window#waybar.hidden {
 	padding-right: 5px;
 	border-radius: 8px;
 	transition: none;
-    color: #1A3E60;
-    background: #D8E7F2;
+    color: #D8E7F2;
+    background: #1A3E60;
 }
 
 #custom-power {
@@ -221,8 +221,8 @@ window#waybar.hidden {
 	margin-bottom: 5px;
 	border-radius: 8px;
 	transition: none;
-	color: #1A3E60;
-	background: #D8E7F2;
+	color: #D8E7F2;
+	background: #1A3E60;
 }
 
 #custom-wallpaper {
@@ -233,8 +233,8 @@ window#waybar.hidden {
 	margin-bottom: 5px;
 	border-radius: 8px;
 	transition: none;
-	color: #1A3E60;
-	background: #D8E7F2;
+	color: #D8E7F2;
+	background: #1A3E60;
 }
 
 #custom-spotify {
@@ -245,6 +245,6 @@ window#waybar.hidden {
 	margin-bottom: 5px;
 	border-radius: 8px;
 	transition: none;
-	color: #1A3E60;
-	background: #D8E7F2;
+	color: #D8E7F2;
+	background: #1A3E60;
 }

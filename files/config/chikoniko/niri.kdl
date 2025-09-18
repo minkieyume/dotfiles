@@ -32,6 +32,11 @@ window-rule {
 }
 
 window-rule {
+    match app-id=r#"^steam_app_"#
+    open-focused true
+}
+
+window-rule {
     match app-id="steam" title="好友列表"
     open-maximized false    
 }
@@ -45,6 +50,12 @@ window-rule {
 environment {
     DISPLAY ":233"
     STEAM_FORCE_DESKTOPUI_SCALING "1.5"
+    SDL_AUDIODRIVER "alsa"
+    PULSE_LATENCY_MSEC "120"
+    WINE_AUDIO_LATENCY "120"
+    WINEESYNC "1"
+    WINEFSYNC "1"
+    STAGING_AUDIO_PERIOD "10000"
 }
 
 overview {
@@ -124,8 +135,8 @@ binds {
       Mod+O                     { toggle-window-floating; }
       Mod+Shift+O               { switch-focus-between-floating-and-tiling; }
       Mod+V                     { focus-workspace-down; }
-      Mod+Shift+V               { focus-workspace-up; }
-      Mod+C                     { move-column-to-workspace-down; }
+      Mod+Shift+V               { move-column-to-workspace-down; }
+      Mod+C                     { focus-workspace-up; }
       Mod+Shift+C               { move-column-to-workspace-up; }
       
       Mod+Shift+Q               { close-window; }

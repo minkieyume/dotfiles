@@ -34,7 +34,8 @@
       "syncthing"
       "yggdrasil"
       "smartdns"
-      "PHOGS.exe"))
+      "PHOGS.exe"
+      "Anon1800.exe"))
   
   (define %block-rules
     '((("rule_set" . "geosite-category-ads-all"))))
