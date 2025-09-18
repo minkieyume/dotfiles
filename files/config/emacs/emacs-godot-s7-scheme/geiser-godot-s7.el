@@ -17,7 +17,7 @@
 
 ;; This package extends the `geiser' core package to support Godot s7.
 
-
+
 ;;; Code:
 
 (require 'geiser-connection)
@@ -39,7 +39,7 @@
   (require 'cl-lib)
   (require 'subr-x))
 
-
+
 ;;; Customization
 
 (defgroup geiser-godot-s7 nil
@@ -74,7 +74,7 @@ good candidate for an entry in your project's .dir-locals.el."
   "List of info nodes that, when present, are used for manual lookups."
   :type '(repeat string))
 
-
+
 ;;; REPL support
 
 (defun geiser-godot-s7--binary ()
@@ -91,7 +91,7 @@ good candidate for an entry in your project's .dir-locals.el."
 
 (defconst geiser-godot-s7--prompt-regexp "^s7@([^)]*)> ")
 
-
+
 ;;; Evaluation support
 (defsubst geiser-godot-s7--linearize-args (args)
   "Concatenate the list ARGS."
@@ -142,7 +142,7 @@ good candidate for an entry in your project's .dir-locals.el."
       (save-excursion (skip-syntax-backward "^(>") (1- (point))))
     (save-excursion (skip-syntax-backward "^'-()>") (point))))
 
-
+
 ;;; Compilation shell regexps
 
 (defconst geiser-godot-s7--path-rx "^In \\([^:\n ]+\\):\n")
@@ -174,7 +174,7 @@ good candidate for an entry in your project's .dir-locals.el."
   (let ((f (geiser-godot-s7--resolve-file (match-string-no-properties 1))))
     (and (stringp f) (list f))))
 
-
+
 ;;; Error display and debugger
 
 (defun geiser-godot-s7--set-up-error-links ()
@@ -192,14 +192,14 @@ good candidate for an entry in your project's .dir-locals.el."
     (save-excursion (insert msg)))
   (not (zerop (length msg))))
 
-
+
 ;;; Trying to ascertain whether a buffer is Godot s7 Scheme
 
 (defun geiser-godot-s7--guess ()
   "Ascertain whether the file belongs to a Godot project."
   (locate-dominating-file (buffer-file-name) "project.godot"))
 
-
+
 ;;; Keywords and syntax
 
 (defconst geiser-godot-s7--builtin-keywords
@@ -250,7 +250,7 @@ good candidate for an entry in your project's .dir-locals.el."
   (when-let 1)
   (with-output-to-string 0))
 
-
+
 ;;; REPL startup
 
 (defconst geiser-godot-s7-minimum-version "0.1")
@@ -271,7 +271,7 @@ Start a Scheme Repl in the active Godot s7 scene."
   "Startup function, for a remote connection if REMOTE is t."
   (geiser-godot-s7--set-up-error-links))
 
-
+
 ;;; Manual lookup
 
 (defun geiser-godot-s7--info-spec ()
@@ -322,7 +322,7 @@ Start a Scheme Repl in the active Godot s7 scene."
   (trace-function-foreground 'geiser-godot-s7--get-module)
   (trace-function-foreground 'geiser-godot-s7--keywords)
   (trace-function-foreground 'geiser-godot-s7--display-error))
-
+
 ;;; Implementation definition:
 
 (define-geiser-implementation godot-s7

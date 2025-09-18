@@ -951,6 +951,17 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+end_src
   
 * 程序开发
+** 开发库
+#+begin_src scheme :noweb-ref package
+  "linux-libre-headers"
+#+end_src
+
+** 编译工具
+pkg-config这个包似乎有bug，装上会导致nheko等一堆程序找不到。
+#+begin_src scheme :noweb-ref package
+  "scons"
+#+end_src
+
 ** C/Cpp
 #+begin_src scheme :noweb-ref package
   "gcc-toolchain"

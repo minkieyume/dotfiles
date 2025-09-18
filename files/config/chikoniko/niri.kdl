@@ -109,6 +109,7 @@ binds {
       Mod+Shift+N               { move-window-down; }
       
       Mod+S                     { focus-monitor-next; }
+      Mod+Shift+S               { move-column-to-monitor-next; }
       
       Mod+WheelScrollDown       { focus-column-right; }
       Mod+WheelScrollUp         { focus-column-left; }

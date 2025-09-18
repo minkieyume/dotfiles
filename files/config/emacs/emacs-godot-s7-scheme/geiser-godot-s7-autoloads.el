@@ -5,7 +5,7 @@
 
 ;;; Code:
 
-
+
 ;;;### (autoloads nil "geiser-godot-s7" "geiser-godot-s7.el" (0 0
 ;;;;;;  0 0))
 ;;; Generated autoloads from geiser-godot-s7.el
@@ -26,7 +26,7 @@ Start a Geiser Godot s7 REPL, or switch to a running one." t)
 (register-definition-prefixes "geiser-godot-s7" '("geiser-godot-s7-" "godot-s7"))
 
 ;;;***
-
+
 ;;; End of scraped data
 
 (provide 'geiser-godot-s7-autoloads)

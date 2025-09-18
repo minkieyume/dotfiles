@@ -348,7 +348,7 @@
   :config
   (setq geiser-active-implementations '(guile chibi racket)
 	geiser-mode-auto-p nil)
-  (add-to-list 'load-path $$emacs-godot-s7-scheme$$)
+  (add-to-list 'load-path "$$emacs-godot-s7-scheme$$")
   (load "geiser-godot-s7-autoloads.el"))
 
 (use-package geiser-guile)
