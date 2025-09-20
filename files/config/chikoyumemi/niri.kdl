@@ -55,7 +55,6 @@ environment {
     WINE_AUDIO_LATENCY "120"
     WINEESYNC "1"
     WINEFSYNC "1"
-    STAGING_AUDIO_PERIOD "10000"
 }
 
 overview {

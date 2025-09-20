@@ -211,8 +211,7 @@
 "autofs"
 #+end_src
 
-*** 暂时归档
-#+begin_src scheme
+#+begin_src scheme :noweb-ref service
 (service autofs-service-type
  (autofs-configuration
   (config-file
@@ -220,32 +219,8 @@
   (master-file
    (local-file "../files/config/autofs/auto.master"))
   (extra-files
-   `(,(local-file "../files/config/autofs/auto.nfs")))))
+   `(("auto.nfs" ,(local-file "../files/config/autofs/auto.nfs"))))))
 #+end_src
-
-**** 归档
-#+begin_src scheme
-  (simple-service 'autofs-file
-  		etc-service-type
-  		(list
-  		 `("autofs.conf" ,(local-file "../files/config/autofs/autofs.conf"))
-  		 `("autofs/auto.master" ,(local-file "../files/config/autofs/auto.master"))
-  		 `("autofs/auto.nfs" ,(local-file "../files/config/autofs/auto.nfs"))))
-#+end_src
-
-#+begin_src scheme
-  (simple-service 'autofs
-  		shepherd-root-service-type
-  		(list
-  		 (shepherd-service
-  		   (documentation "自动挂载服务")
-  		   (provision '(autofs))
-  		   (requirement '(file-systems))
-  		   (start #~(make-forkexec-constructor
-  			     (list #$(file-append (spec->pkg "autofs") "/sbin/automount -f -d"))))
-  		   (stop #~(make-kill-destructor)))))
-#+end_src
-
 
 ** Guix配置
 #+begin_src scheme :noweb-ref transformation
