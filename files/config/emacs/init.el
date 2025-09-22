@@ -91,7 +91,7 @@
 	("C-c M-e" . edit-indirect-region)))
 (use-package yaml-mode)
 (use-package conf-mode
-  :mode "\\.kdl\\'")
+  :mode ("\\.kdl\\'" "\\.dlg\\'"))
 (use-package nftables-mode
   :mode "nftables\\.conf\\'")
 

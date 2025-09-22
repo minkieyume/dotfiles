@@ -1062,6 +1062,7 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
 #+begin_src scheme :noweb-ref package
   "krita"
   "inkscape"
+  "libwacom"
 #+end_src
 
 ** 音乐创作

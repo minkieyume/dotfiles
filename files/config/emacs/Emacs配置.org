@@ -165,7 +165,7 @@
 #+begin_src emacs-lisp :noweb-ref config
   (use-package yaml-mode)
   (use-package conf-mode
-    :mode "\\.kdl\\'")
+    :mode ("\\.kdl\\'" "\\.dlg\\'"))
   (use-package nftables-mode
     :mode "nftables\\.conf\\'")
 
