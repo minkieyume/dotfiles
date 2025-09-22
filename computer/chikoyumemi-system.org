@@ -101,7 +101,7 @@
 ** 系统管理
 负责管理系统的基础包
 #+begin_src scheme :noweb-ref package
-  "btop" "curl" "neofetch"
+"btop" "curl" "neofetch"
 #+end_src
 
 ** 密码导入
@@ -1044,6 +1044,11 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
 ** Retroarch
 #+begin_src scheme :noweb-ref package
   "retroarch"
+  "retroarch-joypad-autoconfig"
+  "retroarch-assets"
+  "libretro-database"
+  "libretro-slang-shaders"
+  "libretro-lowresnx"
 #+end_src
 
 * 创作

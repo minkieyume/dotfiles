@@ -23,6 +23,7 @@
 (define %chiko-authorized-keys
   (cons* (local-file "./files/keys/non-guix.pub")
 	 (local-file "./files/keys/chikoniko.pub")
+	 (local-file "./files/keys/chikoyumemi.pub")
 	 %default-authorized-guix-keys))
 
 (define %chiko-ssh-key
