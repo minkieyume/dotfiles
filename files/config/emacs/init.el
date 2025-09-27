@@ -399,7 +399,7 @@
      ("p"  "~/Develop/ProgramDevelop"   "程序开发")
      ("c"  "~/Creator/conlingue"        "造语")
      ("s"  "~/Creator/conlingue/shangrira" "香格里拉语")
-     ("y"  "~/Creator/yumieko/"           "琪可博客")
+     ("y"  "~/Creator/yumieko/content-org" "琪可博客")
      ("e"  "~/Creator/remote/绘画创作"  "绘画")
      ("M"  "~/Creator/remote/音乐创作"  "音乐")
      ("R"  "~/Creator/remote"           "远程创作")))

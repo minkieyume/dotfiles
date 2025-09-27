@@ -21,4 +21,4 @@
 # precedence.
 #
 #+auto.master
-/mnt/nfs /etc/autofs/auto.nfs --timeout=3600
+/mnt/nfs /etc/autofs/auto.nfs --timeout=3600 --ghost

@@ -20,7 +20,7 @@
   		    ((compose <<rosenthal-desktop-transformation>>) %rosenthal-desktop-services)))
    (mapped-devices (list <<mapped-device>>))
    (file-systems (append <<filesystems>> %base-file-systems))
-   (packages (append (specifications->packages '(<<package>>)) %base-packages))))
+   (packages (append (specifications->packages '(<<package>>)) (list <<program>>) %base-packages))))
 
 ((compose <<transformation>>)
  %os)
@@ -98,10 +98,34 @@
   (nonguix transformations)
 #+end_src
 
+** 系统补丁
+*** libxml2补丁
+#+begin_src scheme :noweb-ref
+  (nonguix utils)
+  (guix packages)
+  (guix transformations)
+  (gnu packages xml)
+#+end_src
+
+#+begin_src scheme :noweb-ref
+  (define (rewrite-libxml package)
+    (with-transformation
+     (package-input-rewriting `((,libxml2 . ,(spec->pkg "libxml2@2.14.5"))))
+     package))
+#+end_src
+
+#+begin_src scheme :noweb-ref
+  rewrite-libxml
+#+end_src
+
 ** 系统管理
 负责管理系统的基础包
 #+begin_src scheme :noweb-ref package
 "btop" "curl" "neofetch"
+#+end_src
+
+#+begin_src scheme :noweb-ref program
+(spec->pkg "hello")
 #+end_src
 
 ** 密码导入
@@ -285,18 +309,19 @@
 #+end_src
 
 #+begin_src scheme :noweb-ref home-service
-  (service home-files-service-type
-  	 `((".dash_rsa" ,(local-file "../secret/keys/dash_rsa"))
-  	   (".gitconfig" ,(local-file "../files/config/gitconfig"))
-  	   (".ssh/config" ,(local-file "../files/config/ssh-config"))
-  	   ("Downloads" ,(symlink-to "/yumemi/download"))
-  	   ("Pictures" ,(symlink-to "/yumemi/picture"))
-  	   ("Creator" ,(symlink-to "/yumemi/creator"))
-  	   ("Develop" ,(symlink-to "/yumemi/develop"))
-  	   ("Application" ,(symlink-to "/yumemi/program"))
-  	   ("Audio" ,(symlink-to "/yumemi/audio"))
-  	   ("Video" ,(symlink-to "/yumemi/video"))
-  	   ("Games" ,(symlink-to "/yumemi/games"))))
+  (simple-service 'chiko-home-files
+		home-files-service-type
+		`((".dash_rsa" ,(local-file "../secret/keys/dash_rsa"))
+		  (".gitconfig" ,(local-file "../files/config/gitconfig"))
+		  (".ssh/config" ,(local-file "../files/config/ssh-config"))
+		  ("Downloads" ,(symlink-to "/yumemi/download"))
+		  ("Pictures" ,(symlink-to "/yumemi/picture"))
+		  ("Creator" ,(symlink-to "/yumemi/creator"))
+		  ("Develop" ,(symlink-to "/yumemi/develop"))
+		  ("Application" ,(symlink-to "/yumemi/program"))
+		  ("Audio" ,(symlink-to "/yumemi/audio"))
+		  ("Video" ,(symlink-to "/yumemi/video"))
+		  ("Games" ,(symlink-to "/yumemi/games"))))
 #+end_src
 
 ** 环境变量
@@ -448,13 +473,12 @@ fish，开箱即用的终端解释器。
 基础的包配置
 #+begin_src scheme :noweb-ref package
   "emacs-pgtk"
-
+  
   ;;包管理器
   "emacs-straight"
   "emacs-use-package"
 
   ;;编辑模式
-  "emacs-beancount"
   "emacs-nginx-mode"
   "emacs-edit-indirect"
   "emacs-fish-mode"
@@ -701,7 +725,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 * 桌面环境
 ** 显卡配置
 #+begin_src scheme :noweb-ref module
-  (nongnu packages nvidia)
+  (nongnu packages nvidia)  
 #+end_src
 
 #+begin_src scheme :noweb-ref transformation
@@ -798,13 +822,6 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   		home-xdg-configuration-files-service-type
   		`(("foot/foot.ini"
   		   ,(local-file "../files/config/chikoyumemi/foot.ini"))))
-#+end_src
-
-*** xdg-desktop-portal
-#+begin_src scheme :noweb-ref package
-  "xdg-desktop-portal"
-  "xdg-desktop-portal-gnome"
-  "xdg-desktop-portal-gtk"
 #+end_src
 
 *** waybar
@@ -922,7 +939,27 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   ("GTK_IM_MODULE_FILE" . "$GUIX_GTK3_IM_MODULE_FILE")
 #+end_src
 
-*** librewolf
+** FreeDesktop
+*** xdg-desktop-portal
+#+begin_src scheme :noweb-ref package
+  "xdg-desktop-portal"
+  "xdg-desktop-portal-gnome"
+  "xdg-desktop-portal-gtk"
+#+end_src
+
+*** desktop预设
+#+begin_src scheme :noweb-ref home-service
+(simple-service 'desktop-preset
+  		home-files-service-type
+  		`((".local/share/applications/org.kde.krita.desktop"
+		   ,(computed-substitution-with-inputs "org.kde.krita.desktop"
+  						       (local-file "../files/desktop/org.kde.krita.desktop")
+  						       (list (spec->pkg "krita"))))))
+#+end_src
+
+
+
+** librewolf
 #+begin_src scheme :noweb-ref package
   "librewolf"
   "icecat-l10n:zh-CN"
@@ -937,7 +974,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+begin_src scheme :noweb-ref home-environment-variable
   ("MOZ_ENABLE_WAYLAND" . "1")
 #+end_src
-  
+
 * 程序开发
 ** 开发库
 #+begin_src scheme :noweb-ref package
@@ -994,9 +1031,9 @@ pkg-config这个包似乎有bug，装上会导致nheko等一堆程序找不到�
 #+end_src
 
 * 通讯
-** NHeko
+** Element
 #+begin_src scheme :noweb-ref package
-  "nheko"
+  "element-desktop"
 #+end_src
 
 * 多媒体
@@ -1056,6 +1093,11 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
 *** Godot
 #+begin_src scheme :noweb-ref package
   "godot"
+#+end_src
+
+** 个人网站
+#+begin_src scheme :noweb-ref package
+  "hugo"
 #+end_src
 
 ** 绘画

@@ -86,6 +86,9 @@ input {
 	tap
 	natural-scroll
     }
+    tablet {
+      map-to-output "DP-2"
+    }
     warp-mouse-to-focus
 }
 

@@ -748,4 +748,12 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+end_src
 
 ** Kavita
+#+begin_src scheme :noweb-ref module
+  (chiko services web)
+#+end_src
 
+#+begin_src scheme :noweb-ref service
+  (service kavita-service-type
+  	 (kavita-configuration
+  	  (data-directory "/resource/book/kavita")))
+#+end_src

@@ -3,130 +3,136 @@
 * 设备
 ** ChikoNiko
 #+begin_src json :tangle ./chikoniko/niri.kdl :noweb yes :noweb-prefix yes
-prefer-no-csd
-screenshot-path "/niko/picture/screenshots/%Y%m%d-%H%M%S.png"
+  prefer-no-csd
+  screenshot-path "/niko/picture/screenshots/%Y%m%d-%H%M%S.png"
 
-spawn-at-startup 
-spawn-at-startup <<startup>>
+  spawn-at-startup 
+  spawn-at-startup <<startup>>
 
-<<config>>
+  <<config>>
 
-environment {
-    DISPLAY ":233"
-    <<env>>
-}
+  environment {
+      DISPLAY ":233"
+      <<env>>
+  }
 
-overview {
-    backdrop-color "#E8E3E9"
-}
+  overview {
+      backdrop-color "#E8E3E9"
+  }
 
 
-layout {
-    focus-ring {
-	width 8
-	active-color "#9666ff"
-	inactive-color "#000000"
-    }
-    border {
-	off
-    }
-}
+  layout {
+      focus-ring {
+  	width 8
+  	active-color "#9666ff"
+  	inactive-color "#000000"
+      }
+      border {
+  	off
+      }
+  }
 
-input {
-    keyboard {
-	repeat-delay 300
-	repeat-rate 30
-    }
-    touchpad {
-	tap
-	natural-scroll
-    }
-    warp-mouse-to-focus
-}
+  input {
+      keyboard {
+  	repeat-delay 300
+  	repeat-rate 30
+      }
+      touchpad {
+  	tap
+  	natural-scroll
+      }
+      tablet {
+        map-to-output "eDP-1"
+      }
+      warp-mouse-to-focus
+  }
 
-output "eDP-1" {
-    focus-at-startup
-    mode "1920x1080@60.001"
-    scale 1.5
-}
+  output "eDP-1" {
+      focus-at-startup
+      mode "1920x1080@60.001"
+      scale 1.5
+  }
 
-binds {
-      XF86ScreenSaver   { spawn "$$bin/swaylock$$" "--clock" "--daemonize" "--ignore-empty-password" "--image" "$$wp3283230-oneshot-wallpapers.jpg$$" "--ring-color" "9666ff" "--text-color" "9666ff" "--key-hl-color" "9666ff"; }      
-      <<binds>>
-}
+  binds {
+        XF86ScreenSaver   { spawn "$$bin/swaylock$$" "--clock" "--daemonize" "--ignore-empty-password" "--image" "$$wp3283230-oneshot-wallpapers.jpg$$" "--ring-color" "9666ff" "--text-color" "9666ff" "--key-hl-color" "9666ff"; }      
+        <<binds>>
+  }
 #+end_src
 
 ** ChikoYumemi
 #+begin_src json :tangle ./chikoyumemi/niri.kdl :noweb yes :noweb-prefix yes
-prefer-no-csd
-screenshot-path "/niko/picture/screenshots/%Y%m%d-%H%M%S.png"
+  prefer-no-csd
+  screenshot-path "/niko/picture/screenshots/%Y%m%d-%H%M%S.png"
 
-spawn-at-startup 
-spawn-at-startup <<startup>>
+  spawn-at-startup 
+  spawn-at-startup <<startup>>
 
-<<config>>
+  <<config>>
 
-environment {
-    DISPLAY ":233"
-    <<env>>
-}
+  environment {
+      DISPLAY ":233"
+      <<env>>
+  }
 
-overview {
-    backdrop-color "#E8E3E9"
-}
+  overview {
+      backdrop-color "#E8E3E9"
+  }
 
-layout {
-    focus-ring {
-	width 8
-	active-color "#1A3E60"
-	inactive-color "#000000"
-    }
-    border {
-	off
-    }
-}
+  layout {
+      focus-ring {
+  	width 8
+  	active-color "#1A3E60"
+  	inactive-color "#000000"
+      }
+      border {
+  	off
+      }
+  }
 
-window-rule {
-    geometry-corner-radius 12
-    clip-to-geometry true
-}
+  window-rule {
+      geometry-corner-radius 12
+      clip-to-geometry true
+  }
 
-input {
-    keyboard {
-	repeat-delay 300
-	repeat-rate 30
-    }
-    touchpad {
-	tap
-	natural-scroll
-    }
-    warp-mouse-to-focus
-}
+  input {
+      keyboard {
+  	repeat-delay 300
+  	repeat-rate 30
+      }
+      touchpad {
+  	tap
+  	natural-scroll
+      }
+      tablet {
+        map-to-output "DP-2"
+      }
+      warp-mouse-to-focus
+  }
 
-output "DP-1" {
-    mode "3840x2160@60.000"
-    scale 2.0
-}
+  output "DP-1" {
+      mode "3840x2160@60.000"
+      scale 2.0
+  }
 
-output "DP-2" {
-    focus-at-startup
-    mode "1920x1080@119.879"
-    scale 1.5
-}
+  output "DP-2" {
+      focus-at-startup
+      mode "1920x1080@119.879"
+      scale 1.5
+  }
 
-output "DP-3" {
-    mode "1920x1080@60.000"
-    scale 1.5
-}
+  output "DP-3" {
+      mode "1920x1080@60.000"
+      scale 1.5
+  }
 
-output "HDMI-A-1" {
-    mode "3840x2160@60.000"
-    scale 2.0
-}
+  output "HDMI-A-1" {
+      mode "3840x2160@60.000"
+      scale 2.0
+  }
 
-binds {
-    <<binds>>
-}
+  binds {
+      <<binds>>
+  }
 #+end_src
 
 * 窗口规则
