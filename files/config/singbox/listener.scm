@@ -59,7 +59,8 @@
   (define %proxy-rules
     '((("rule_set" . "geosite-gfw"))
       (("rule_set" . "geosite-category-dev"))
-      (("rule_set" . "geosite-stripe"))      
+      (("rule_set" . "geosite-stripe"))
+      (("domain_suffix" . "manhuagui.com"))
       (("domain_suffix" . "boiledscript.com"))
       (("domain_suffix" . "freedesktop.org"))
       (("inbound" . "proxy_in"))))
@@ -70,7 +71,7 @@
   (define %config
     `(("log"
        ("disabled" . #f)
-       ("level" . "debug")
+       ("level" . "warn")
        ("timestamp" . #t))
       ("dns"
        ("servers"
