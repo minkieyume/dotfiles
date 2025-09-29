@@ -15,15 +15,16 @@
 
 ;;预编译包链接
 (define %chiko-substitute-urls
-  (list "https://mirrors.sjtug.sjtu.edu.cn/guix"
+  (list "https://cache-cdn.guix.moe"
+	"https://mirrors.sjtug.sjtu.edu.cn/guix"
 	"https://bordeaux.guix.gnu.org"
-	"https://ci.guix.gnu.org"
-	"https://substitutes.nonguix.org"))
+	"https://ci.guix.gnu.org"))
 
 (define %chiko-authorized-keys
   (cons* (local-file "./files/keys/non-guix.pub")
 	 (local-file "./files/keys/chikoniko.pub")
 	 (local-file "./files/keys/chikoyumemi.pub")
+	 (local-file "./files/keys/guix-moe.pub") 
 	 %default-authorized-guix-keys))
 
 (define %chiko-ssh-key
