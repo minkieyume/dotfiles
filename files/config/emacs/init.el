@@ -228,6 +228,7 @@
   (setq org-download-image-dir "./org-assets")
   (add-hook 'org-mode-hook 'org-download-enable))
 (setq org-agenda-window-setup 'current-window)
+(setq org-log-done-with-time nil)
 (setq org-agenda-start-with-log-mode t)
 (setq org-agenda-start-with-time-grid t)
 (setq org-agenda-start-on-weekday nil)
@@ -276,6 +277,11 @@
 	("h" "折腾进度"
 	 alltodo ""
 	 ((org-agenda-files '("~/Creator/remote/琪可计划/琪可折腾.org")))
+	 (org-agenda-use-tag-inheritance t))
+	
+	("s" "学习进度"
+	 alltodo ""
+	 ((org-agenda-files '("~/Creator/remote/琪可计划/琪可学习.org")))
 	 (org-agenda-use-tag-inheritance t))))
 (use-package cmake-mode)
 
