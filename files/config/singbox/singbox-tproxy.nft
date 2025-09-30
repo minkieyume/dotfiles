@@ -38,7 +38,6 @@ define RESERVED_PORT = {
 table inet sing-box {
     chain prerouting {
       	type filter hook prerouting priority mangle; policy accept;
-	iifname "lo" return
 	meta mark & 0x1 != 0 return
 	
         ip  daddr $RESERVED_IP4 return
