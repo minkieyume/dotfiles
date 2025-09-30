@@ -31,13 +31,16 @@ define RESERVED_PORT = {
 }
 
 ## 路由规则
-## ip route add local default dev lo table 100
+ ## ip route add local default dev lo table 100
 ## ip rule add fwmark 1 table 100
 ## 原理，将所有打了1标记的包全部重定向交给lo处理。
 ## 进入lo等于重新进入本机的prerouting阶段，因此会由prerouting将包重定向到透明代理端口交给sing-box的透明代理进程处理。
 table inet sing-box {
     chain prerouting {
       	type filter hook prerouting priority mangle; policy accept;
+	iifname "lo" return
+	meta mark & 0x1 != 0 return
+	
         ip  daddr $RESERVED_IP4 return
 	ip6 daddr $RESERVED_IP6 return
 	
@@ -77,6 +80,7 @@ table inet sing-box {
 	udp dport $RESERVED_PORT return
 
 	# 排除 sing-box 用户发出的流量
+	oifname "lo" return
         meta skuid singbox return
 	
         # 排除dns外的所有内网请求。

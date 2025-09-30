@@ -1167,7 +1167,7 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
 		(list
 		 (shepherd-service
 		  (documentation "运行一个SingBox TCD，透明唱片播放程序")
-		  (provision '(singbox-tcd))
+		  (provision '(singbox-tcd sing-box-tcd))
 		  (requirement '(sing-box))
 		  (respawn? #f)
 		  (start #~(lambda _
