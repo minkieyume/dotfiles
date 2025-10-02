@@ -440,6 +440,7 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 ** 网络调试
 #+begin_src scheme :noweb-ref package
   "bind:utils"
+  "tcpdump"
 #+end_src
 
 ** Git
@@ -747,13 +748,11 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
                       "MusicFolder = '/resource/music/musics'"))))
 #+end_src
 
-** Kavita
+** CalibreWeb
 #+begin_src scheme :noweb-ref module
   (chiko services web)
 #+end_src
 
 #+begin_src scheme :noweb-ref service
-  (service kavita-service-type
-  	 (kavita-configuration
-  	  (data-directory "/resource/book/kavita")))
+  (service kavita-service-type)
 #+end_src

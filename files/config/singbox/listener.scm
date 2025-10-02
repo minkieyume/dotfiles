@@ -117,10 +117,12 @@
        . #((("type". "mixed")
             ("tag" . "proxy_in")
             ("listen" . "::")
+	    ("routing_mark" . 0)
             ("listen_port" . 7890))
            (("type" . "tproxy")
             ("listen" . "::")
             ("listen_port" . 7891)
+	    ("routing_mark" . 0)
             ("tag" . "tproxy_in"))))
       ("outbounds"
        . #((("type" . "vless")

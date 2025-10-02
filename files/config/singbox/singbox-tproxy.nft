@@ -22,12 +22,14 @@ define RESERVED_IP6 = {
     2001:db8::/32,      # 文档前缀
     2002::/16,          # 6to4
     2001::/32,           # Teredo
-    2001:10::/28        # <- 可选补充
+    2001:10::/28,        # <- 可选补充
+    2409:8a50:e78:e5a0::/64 # 自家IPV6
 }
 
 define RESERVED_PORT = {
     3478,
-    5349
+    5349,
+    123
 }
 
 ## 路由规则
@@ -37,8 +39,7 @@ define RESERVED_PORT = {
 ## 进入lo等于重新进入本机的prerouting阶段，因此会由prerouting将包重定向到透明代理端口交给sing-box的透明代理进程处理。
 table inet sing-box {
     chain prerouting {
-      	type filter hook prerouting priority mangle; policy accept;
-	meta mark & 0x1 != 0 return
+      	type filter hook prerouting priority mangle; policy accept;	
 	
         ip  daddr $RESERVED_IP4 return
 	ip6 daddr $RESERVED_IP6 return
