@@ -75,13 +75,14 @@ table inet sing-box {
 	ip6 nexthdr tcp tcp flags syn tcp option maxseg size set 1432
 	
         ip  daddr $RESERVED_IP4 return
-	ip6 daddr $RESERVED_IP6 return	
+	ip6 daddr $RESERVED_IP6 return
 	tcp dport $RESERVED_PORT return
 	udp dport $RESERVED_PORT return
 
 	# 排除 sing-box 用户发出的流量
 	oifname "lo" return
         meta skuid singbox return
+	meta mark & 0x1 != 0 return
 	
         # 排除dns外的所有内网请求。
         ip  daddr 192.168.0.0/16 tcp dport != 53 return

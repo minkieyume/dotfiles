@@ -1043,7 +1043,7 @@ pkg-config这个包似乎有bug，装上会导致nheko等一堆程序找不到�
 #+end_src
 
 ** obs
-#+begin_src scheme :noweb-ref package
+#+begin_src scheme
   "obs-nvidia"
 #+end_src
 

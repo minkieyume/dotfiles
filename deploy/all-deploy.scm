@@ -7,7 +7,7 @@
     (environment managed-host-environment-type)
     (configuration (machine-ssh-configuration
 		     (host-name "chikocloud")
-		     (build-locally? #f)
+		     (build-locally? #t)
 		     (system "x86_64-linux")
 		     (user "deploy")
 		     (port 22)))))
@@ -18,7 +18,7 @@
     (environment managed-host-environment-type)
     (configuration (machine-ssh-configuration
 		     (host-name "chikopara")
-		     (build-locally? #f)
+		     (build-locally? #t)
 		     (system "x86_64-linux")
 		     (user "deploy")
 		     (host-key "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAsA8jBgb45qWfTGX/zOmQY+zaIxq6we8tBOpe6wVkUu")
@@ -30,7 +30,7 @@
    (environment managed-host-environment-type)
    (configuration (machine-ssh-configuration
 		   (host-name "chikoniko")
-		   (build-locally? #f)
+		   (build-locally? #t)
 		   (system "x86_64-linux")
 		   (user "deploy")
 		   (host-key "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDBw3VblSwKSmOPsjtE8wOoo+AJVWtJZ/S9SXW/d4v3V")
@@ -42,7 +42,7 @@
     (environment managed-host-environment-type)
     (configuration (machine-ssh-configuration
 		     (host-name "chikoyumemi")
-		     (build-locally? #f)
+		     (build-locally? #t)
 		     (system "x86_64-linux")
 		     (user "deploy")
 		     (host-key "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGAEqd0gx+mPuKJmi2ugGToNQD0zxVhqB7j5FJdMzzcV")

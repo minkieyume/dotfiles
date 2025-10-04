@@ -35,7 +35,8 @@
       "yggdrasil"
       "smartdns"
       "PHOGS.exe"
-      "Anon1800.exe"))
+      "Anon1800.exe"
+      "ACU.exe"))
   
   (define %block-rules
     '((("rule_set" . "geosite-category-ads-all"))))
