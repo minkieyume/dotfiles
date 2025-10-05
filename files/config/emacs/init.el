@@ -33,6 +33,8 @@
   (setq company-minimum-prefix-length 1)
   (setq company-idle-delay 0.2)
   (global-company-mode t))
+(use-package company-box
+  :hook (company-mode . company-box-mode))
 (use-package vertico
   :init
   (vertico-mode t))
@@ -169,6 +171,11 @@
 ;;   (aider-popular-models '("ollama_chat/starcoder2:instruct" "ollama_chat/deepseek-coder-v2:16b-lite-instruct-q4_K_M"))
 ;;   :config
 ;;   (setenv "OLLAMA_API_BASE" "http://127.0.0.1:11434"))
+(use-package copilot
+	     :bind (("TAB" . copilot-accept-completion))
+	     :hook ((prog-mode . copilot-mode))
+	     :config
+	     (copilot-install-server))
 (use-package triples)
 (use-package ekg
   :bind (("C-c n c" . ekg-capture)
@@ -451,7 +458,7 @@
    ("h"   . dirvish-history-jump) ; remapped `describe-mode' 历史跳转
    ("s"   . dirvish-quicksort)    ; remapped `dired-sort-toggle-or-edit' 快速排序
    ("v"   . dirvish-vc-menu)      ; remapped `dired-view-file' 版本控制
-   ("w" . dirvish-copy-file-path)
+   ("w" . dirvish-y-file-path)
    ("TAB" . dirvish-subtree-toggle) ;子树切换
    ("M-f" . dirvish-history-go-forward) ;导航到下一个历史位置
    ("M-b" . dirvish-history-go-backward) ;导航到上一个历史位置

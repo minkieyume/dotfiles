@@ -473,7 +473,7 @@ fish，开箱即用的终端解释器。
 基础的包配置
 #+begin_src scheme :noweb-ref package
   "emacs-pgtk"
-  
+
   ;;包管理器
   "emacs-straight"
   "emacs-use-package"
@@ -498,6 +498,7 @@ fish，开箱即用的终端解释器。
 
   ;;编辑器优化
   "emacs-company"
+  "emacs-company-box-chiko"
   "emacs-vertico"
   "emacs-orderless"
   "emacs-consult"
@@ -525,6 +526,7 @@ fish，开箱即用的终端解释器。
 
   ;;AI集成
   "emacs-llm"
+  "emacs-copilot"
 
   ;;笔记软件
   "emacs-ekg"

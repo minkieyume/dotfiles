@@ -446,7 +446,6 @@ fish，开箱即用的终端解释器。
   "emacs-use-package"
 
   ;;编辑模式
-  "emacs-beancount"
   "emacs-nginx-mode"
   "emacs-edit-indirect"
   "emacs-fish-mode"
@@ -466,6 +465,7 @@ fish，开箱即用的终端解释器。
 
   ;;编辑器优化
   "emacs-company"
+  "emacs-company-box-chiko"
   "emacs-vertico"
   "emacs-orderless"
   "emacs-consult"
@@ -493,6 +493,7 @@ fish，开箱即用的终端解释器。
 
   ;;AI集成
   "emacs-llm"
+  "emacs-copilot"
 
   ;;笔记软件
   "emacs-ekg"
@@ -557,7 +558,7 @@ fish，开箱即用的终端解释器。
   			   '("emacsclient" "--eval" "(kill-emacs)"))))))
 #+end_src
 [[file:../files/config/emacs/Emacs配置.org][Emacs配置]]
-[[file:../files/config/chikoniko/emacs-theme.el][emacs-themes.el]]
+[[file:../files/config/chikoniko/init-theme.el][emacs-themes]]
 
 ** Doas
 Doas是比Sudo更简洁，也更为安全的提权工具。
@@ -786,13 +787,6 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   		   ,(local-file "../files/config/chikoniko/foot.ini"))))
 #+end_src
 
-*** xdg-desktop-portal
-#+begin_src scheme :noweb-ref package
-  "xdg-desktop-portal"
-  "xdg-desktop-portal-gnome"
-  "xdg-desktop-portal-gtk"
-#+end_src
-
 *** waybar
 #+begin_src scheme :noweb-ref home-service
   (service home-waybar-service-type
@@ -909,7 +903,6 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   "librewolf"
   "icecat-l10n:zh-CN"
   "adaptive-tab-bar-colour-icecat"
-  "bitwarden-icecat"
   "livemarks-icecat"
   "miniflux-injector-icecat"
   "ohmyech-icecat"
@@ -920,8 +913,40 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+begin_src scheme :noweb-ref home-environment-variable
   ("MOZ_ENABLE_WAYLAND" . "1")
 #+end_src
-  
+
+** FreeDesktop
+*** xdg-desktop-portal
+#+begin_src scheme :noweb-ref package
+  "xdg-desktop-portal"
+  "xdg-desktop-portal-gnome"
+  "xdg-desktop-portal-gtk"
+#+end_src
+
+*** desktop预设
+#+begin_src scheme :noweb-ref home-service
+(simple-service 'desktop-preset
+  		home-files-service-type
+  		`((".local/share/applications/org.kde.krita.desktop"
+		   ,(computed-substitution-with-inputs "org.kde.krita.desktop"
+  						       (local-file "../files/desktop/org.kde.krita.desktop")
+  						       (list (spec->pkg "krita"))))))
+#+end_src
+
+
+
 * 程序开发
+** 开发库
+#+begin_src scheme :noweb-ref package
+  "linux-libre-headers"
+#+end_src
+
+** 编译工具
+pkg-config这个包似乎有bug，装上会导致nheko等一堆程序找不到。
+#+begin_src scheme :noweb-ref package
+  "scons"
+#+end_src
+
+
 ** C/Cpp
 #+begin_src scheme :noweb-ref package
   "gcc-toolchain"
@@ -966,10 +991,11 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+end_src
 
 * 通讯
-** NHeko
+** Element
 #+begin_src scheme :noweb-ref package
-  "nheko"
+  "element-desktop"
 #+end_src
+
 
 * 多媒体
 ** mpv
@@ -1025,10 +1051,17 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
   "godot"
 #+end_src
 
+** 个人网站
+#+begin_src scheme :noweb-ref package
+  "hugo"
+#+end_src
+
+
 ** 绘画
 #+begin_src scheme :noweb-ref package
   "krita"
   "inkscape"
+  "libwacom"
 #+end_src
 
 ** 音乐创作
@@ -1071,7 +1104,7 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
   		 (let ((config %sing-box-config-file))
   		   (shepherd-service
   		    (documentation "Run sing-box singing listener.")
-  		    (provision '(sing-box singbox))
+  		    (provision '(sing-box))
   		    (requirement '(networking))
   		    (respawn-limit 100)
   		    (respawn-delay 20)
@@ -1086,33 +1119,30 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
 
 **** 透明唱片
 #+begin_src scheme :noweb-ref service
-(simple-service 'sing-box-tcd
+(simple-service 'singbox-tcd
 		shepherd-root-service-type
 		(list
 		 (shepherd-service
 		  (documentation "运行一个SingBox TCD，透明唱片播放程序")
-		  (provision '(sing-box-tcd singbox-tcd))
+		  (provision '(singbox-tcd sing-box-tcd))
 		  (requirement '(sing-box))
 		  (respawn? #f)
 		  (start #~(lambda _
 			     (let* ((ip #$(file-append (spec->pkg "iproute2") "/sbin/ip"))
 				    (st1 (system* ip "route" "add" "local" "default" "dev" "lo" "table" "100"))
-				    (st2 (system* ip "rule" "add" "fwmark" "1" "table" "100"))
-				    (st3 (system* ip "-6" "route" "add" "local" "default" "dev" "lo" "table" "100"))
-				    (st4 (system* ip "-6" "rule" "add" "fwmark" "1" "table" "100")))
+				    (st2 (system* ip "rule" "add" "fwmark" "1" "table" "100")))
 			       (and (map (lambda (st)
 					   (= 0 (status:exit-val st)))
-					 (list st1 st2 st3 st4))))))
+					 (list st1 st2))))))
 		  (stop #~(lambda _
 			    (let* ((ip #$(file-append (spec->pkg "iproute2") "/sbin/ip"))
 				   (st1 (system* ip "rule" "del" "fwmark" "1" "table" "100"))
-				   (st2 (system* ip "route" "del" "local" "default" "dev" "lo" "table" "100"))
-				   (st3 (system* ip "-6" "rule" "del" "fwmark" "1" "table" "100"))
-				   (st4 (system* ip "-6" "route" "del" "local" "default" "dev" "lo" "table" "100")))
+				   (st2 (system* ip "route" "del" "local" "default" "dev" "lo" "table" "100")))
 			      (and (map (lambda (st)
 					  (= 0 (status:exit-val st)))
-					(list st1 st2 st3 st4)))))))))
+					(list st1 st2)))))))))
 #+end_src
+
 
 **** 用户态
 #+begin_src scheme :noweb-ref user
@@ -1122,3 +1152,5 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
     (system? #t)
     (home-directory "/var/empty/"))
 #+end_src
+
+

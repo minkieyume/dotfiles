@@ -58,6 +58,13 @@
     (global-company-mode t))
 #+end_src
 
+**** CompanyBox
+Company的前端
+#+begin_src emacs-lisp :noweb-ref
+(use-package company-box
+  :hook (company-mode . company-box-mode))
+#+end_src
+
 ** MiniBuff补全
 #+begin_src emacs-lisp :noweb-ref config
   (use-package vertico
@@ -266,6 +273,16 @@
   ;;   :config
   ;;   (setenv "OLLAMA_API_BASE" "http://127.0.0.1:11434"))
 #+end_src
+
+** Compilot
+#+begin_src emacs-lisp :noweb-ref config
+(use-package copilot
+	     :bind (("TAB" . copilot-accept-completion))
+	     :hook ((prog-mode . copilot-mode))
+	     :config
+	     (copilot-install-server))
+#+end_src
+
 
 * 写作
 ** Ekg
@@ -675,7 +692,7 @@ Ekg是方便快速整理灵感和笔记的笔记插件。
      ("h"   . dirvish-history-jump) ; remapped `describe-mode' 历史跳转
      ("s"   . dirvish-quicksort)    ; remapped `dired-sort-toggle-or-edit' 快速排序
      ("v"   . dirvish-vc-menu)      ; remapped `dired-view-file' 版本控制
-     ("w" . dirvish-copy-file-path)
+     ("w" . dirvish-y-file-path)
      ("TAB" . dirvish-subtree-toggle) ;子树切换
      ("M-f" . dirvish-history-go-forward) ;导航到下一个历史位置
      ("M-b" . dirvish-history-go-backward) ;导航到上一个历史位置
