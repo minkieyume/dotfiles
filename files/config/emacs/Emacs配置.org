@@ -277,7 +277,7 @@ Company的前端
 ** Compilot
 #+begin_src emacs-lisp :noweb-ref config
 (use-package copilot
-	     :bind (("TAB" . copilot-accept-completion))
+	     :bind (("C-c TAB" . copilot-accept-completion))
 	     :hook ((prog-mode . copilot-mode))
 	     :config
 	     (copilot-install-server))

@@ -34,9 +34,15 @@
       "syncthing"
       "yggdrasil"
       "smartdns"
-      "PHOGS.exe"
+      "PHOGS.exe"))
+
+  (define %hysteria-process
+    '("ACU.exe"
       "Anon1800.exe"
-      "ACU.exe"))
+      "upc.exe"
+      "UbisoftConnect.exe"
+      "UbisoftGameLauncher.exe"
+      "UplayWebCore.exe"))
   
   (define %block-rules
     '((("rule_set" . "geosite-category-ads-all"))))
@@ -52,6 +58,12 @@
       (("domain_suffix" . #("lan" "local" "localhost")))
       (("domain_suffix" . "yumieko.com"))
       (("domain_suffix" . #("frp-add.com" "frp-pet.com" "frp-fit.com")))))
+
+  (define %hysteria-rules
+    '((("domain_suffix" . "ubisoft.com"))
+      (("domain_suffix" . "ubi.com"))
+      (("domain_suffix" . "uplay.com"))
+      (("domain_suffix" . "ubisoftconnect.com"))))
   
   (define %direct-ips
     '((("rule_set" . "geoip-cn"))
@@ -72,7 +84,7 @@
   (define %config
     `(("log"
        ("disabled" . #f)
-       ("level" . "warn")
+       ("level" . "debug")
        ("timestamp" . #t))
       ("dns"
        ("servers"
@@ -141,6 +153,19 @@
 	     ("path" . ,(nyapasu-ref 'ws-transport-path))
 	     ("max_early_data" . 512)
 	     ("early_data_header_name" . "Sec-WebSocket-Protocol")))
+	   (("type" . "hysteria")
+	    ("tag" . "out_hysteria")
+	    ("server" . "play.yumieko.com")
+	    ("server_port" . 443)
+	    ("up_mbps" . 100)
+	    ("down_mbps" . 100)
+	    ("obfs" . ,(nyapasu-ref 'hysteria-obfs))
+	    ("auth_str" . ,(nyapasu-ref 'hysteria-password))
+	    ("tls"
+	     ("enabled" . #t)
+	     ("server_name" . "play.yumieko.com")
+	     ("alpn" . #("h2", "http/1.1"))
+	     ("min_version" . "1.3")))
            (("type" . "direct")
             ("tag" . "out_direct"))
            (("type" . "block")
@@ -164,6 +189,9 @@
 	    (("process_name" . #(,@%direct-process))
              ("outbound" . "out_direct"))
 
+	    (("process_name" . #(,@%hysteria-process))
+             ("outbound" . "out_hysteria"))
+
 	    ,@(map (lambda (rule)
                      `(,@rule
 		       ("outbound" . "out_direct")))
@@ -172,7 +200,12 @@
             ,@(map (lambda (rule)
                      `(,@rule
 		       ("outbound" . "out_direct")))
-                   %direct-rules)	    
+                   %direct-rules)
+
+	    ,@(map (lambda (rule)
+                     `(,@rule
+		       ("outbound" . "out_hysteria")))
+                   %hysteria-rules)
 	    
 	    ,@(map (lambda (rule)
                      `(,@rule
