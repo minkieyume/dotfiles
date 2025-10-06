@@ -172,7 +172,7 @@
 ;;   :config
 ;;   (setenv "OLLAMA_API_BASE" "http://127.0.0.1:11434"))
 (use-package copilot
-	     :bind (("TAB" . copilot-accept-completion))
+	     :bind (("C-c TAB" . copilot-accept-completion))
 	     :hook ((prog-mode . copilot-mode))
 	     :config
 	     (copilot-install-server))
