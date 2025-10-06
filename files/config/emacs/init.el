@@ -188,10 +188,7 @@
 
 (use-package copilot-chat
 	     :bind (:map global-map
-		    ("C-c o" . copilot-chat-transient)
-		    ("C-c C-y" . copilot-chat-yank)
-		    ("C-c M-y" . copilot-chat-yank-pop)
-		    ("C-c C-M-y" . (lambda () (interactive) (copilot-chat-yank-pop -1))))
+		    ("C-c o" . copilot-chat-transient))
 	     :hook ((git-commit-setup . copilot-chat-insert-commit-message)))
 (use-package triples)
 (use-package ekg
