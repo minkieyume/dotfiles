@@ -1048,6 +1048,12 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
   "godot"
 #+end_src
 
+*** Tiled
+#+begin_src scheme :noweb-ref package
+  "tiled"
+#+end_src
+
+
 ** 个人网站
 #+begin_src scheme :noweb-ref package
   "hugo"

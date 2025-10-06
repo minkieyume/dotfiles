@@ -16,9 +16,6 @@
 (setq inhibit-startup-message t) ; 禁用启动消息
 (setq initial-scratch-message "") ; 可选：清空 *scratch* 缓冲区的初始内容
 
-;; 设置新建窗格默认往右边打开
-(setq split-width-threshold 0)  ; 始终优先水平分割（左右分割）
-
 (setq ring-bell-function 'ignore)
 (setq backup-directory-alist
       `((".*" . ,(expand-file-name "emacs/backups/"
