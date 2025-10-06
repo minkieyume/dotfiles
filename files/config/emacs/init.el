@@ -175,10 +175,16 @@
 ;;   :config
 ;;   (setenv "OLLAMA_API_BASE" "http://127.0.0.1:11434"))
 (use-package copilot
-	     :bind (("C-c TAB" . copilot-accept-completion))
-	     :hook ((prog-mode . copilot-mode))
-	     :config
-	     (copilot-install-server))
+  :bind (:map copilot-completion-map
+          ("<tab>" . 'copilot-accept-completion)
+          ("TAB" . 'copilot-accept-completion)
+          ("C-TAB" . 'copilot-accept-completion-by-word)
+          ("C-<tab>" . 'copilot-accept-completion-by-word)
+          ("C-n" . 'copilot-next-completion)
+          ("C-p" . 'copilot-previous-completion))
+  :hook ((prog-mode . copilot-mode))
+  :config
+  (add-to-list 'copilot-indentation-alist '(scheme-mode 2)))
 
 (use-package copilot-chat
 	     :bind (:map global-map
@@ -394,9 +400,9 @@
   :init
   (setq treesit-extra-load-path '("~/.treesitter/gdscript")))
 (use-package magit
-  :config
-  (with-eval-after-load 'git-commit
-    (setq git-commit-cd-to-toplevel t)))
+	     :config
+	     (with-eval-after-load 'git-commit
+				   (setq git-commit-cd-to-toplevel t)))
 (use-package pinentry
   :config
   (pinentry-start)
