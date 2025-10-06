@@ -34,7 +34,9 @@
       "syncthing"
       "yggdrasil"
       "smartdns"
-      "PHOGS.exe"))
+      "PHOGS.exe"
+      "tailscaled"
+      "tailscale"))
 
   (define %hysteria-process
     '("ACU.exe"
