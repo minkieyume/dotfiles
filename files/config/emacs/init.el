@@ -176,6 +176,13 @@
 	     :hook ((prog-mode . copilot-mode))
 	     :config
 	     (copilot-install-server))
+
+(use-package copilot-chat
+	     :bind (:map global-map
+		    ("C-c C-y" . copilot-chat-yank)
+		    ("C-c M-y" . copilot-chat-yank-pop)
+		    ("C-c C-M-y" . (lambda () (interactive) (copilot-chat-yank-pop -1))))
+	     :hook ((git-commit-setup . copilot-chat-insert-commit-message)))
 (use-package triples)
 (use-package ekg
   :bind (("C-c n c" . ekg-capture)
