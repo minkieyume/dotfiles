@@ -490,6 +490,7 @@ fish，开箱即用的终端解释器。
   ;;AI集成
   "emacs-llm"
   "emacs-copilot"
+  "emacs-copilot-chat"
 
   ;;笔记软件
   "emacs-ekg"

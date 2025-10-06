@@ -284,6 +284,7 @@ Company的前端
 
 (use-package copilot-chat
 	     :bind (:map global-map
+		    ("C-c o" . copilot-chat-transient)
 		    ("C-c C-y" . copilot-chat-yank)
 		    ("C-c M-y" . copilot-chat-yank-pop)
 		    ("C-c C-M-y" . (lambda () (interactive) (copilot-chat-yank-pop -1))))
