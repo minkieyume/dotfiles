@@ -286,7 +286,10 @@ Company的前端（已禁用）
           ("C-p" . 'copilot-previous-completion))
   :hook ((prog-mode . copilot-mode))
   :config
-  (add-to-list 'copilot-indentation-alist '(scheme-mode 2)))
+  (add-to-list 'copilot-indentation-alist '(scheme-mode 2))
+  (add-to-list 'copilot-indentation-alist '(nftables-mode 2))
+  (add-to-list 'copilot-indentation-alist '(conf-mode 2))
+  (add-to-list 'copilot-indentation-alist '(lisp-interaction-mode 2)))
 
 (use-package copilot-chat
 	     :bind (:map global-map

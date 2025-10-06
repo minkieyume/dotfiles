@@ -23,7 +23,7 @@ define RESERVED_IP6 = {
     2002::/16,          # 6to4
     2001::/32,           # Teredo
     2001:10::/28,        # <- 可选补充
-    2409:8a50:e78:e5a0::/64 # 自家IPV6
+    2409::/16 ## 中国移动， 本机IPV6
 }
 
 define RESERVED_PORT = {

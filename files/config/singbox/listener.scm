@@ -41,10 +41,11 @@
   (define %hysteria-process
     '("ACU.exe"
       "Anon1800.exe"
-      "upc.exe"
-      "UbisoftConnect.exe"
-      "UbisoftGameLauncher.exe"
-      "UplayWebCore.exe"))
+      ;; "upc.exe"
+      ;; "UbisoftConnect.exe"
+      ;; "UbisoftGameLauncher.exe"
+      ;; "UplayWebCore.exe"
+      ))
   
   (define %block-rules
     '((("rule_set" . "geosite-category-ads-all"))))
@@ -195,7 +196,7 @@
              ("outbound" . "out_direct"))
 
 	    (("process_name" . #(,@%hysteria-process))
-             ("outbound" . "out_hysteria"))
+             ("outbound" . "out_direct"))
 
 	    ,@(map (lambda (rule)
                      `(,@rule
@@ -207,10 +208,10 @@
 		       ("outbound" . "out_direct")))
                    %direct-rules)
 
-	    ,@(map (lambda (rule)
-                     `(,@rule
-		       ("outbound" . "out_hysteria")))
-                   %hysteria-rules)
+	    ;; ,@(map (lambda (rule)
+            ;;          `(,@rule
+	    ;; 	       ("outbound" . "out_hysteria")))
+            ;;        %hysteria-rules)
 	    
 	    ,@(map (lambda (rule)
                      `(,@rule
