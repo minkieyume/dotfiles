@@ -207,10 +207,6 @@
 (chiko services autofs)
 #+end_src
 
-#+begin_src scheme :noweb-ref package
-"autofs"
-#+end_src
-
 #+begin_src scheme :noweb-ref service
 (service autofs-service-type
  (autofs-configuration
@@ -219,8 +215,9 @@
   (master-file
    (local-file "../files/config/autofs/auto.master"))
   (extra-files
-   `(("auto.nfs" ,(local-file "../files/config/autofs/auto.nfs"))))))
+   `(("auto.nfs" . ,(local-file "../files/config/autofs/auto.nfs"))))))
 #+end_src
+
 
 ** Guix配置
 #+begin_src scheme :noweb-ref transformation
@@ -262,8 +259,7 @@
 
 #+begin_src scheme :noweb-ref home-service
   (service home-files-service-type
-  	 `((".ssh/id_rsa" ,(local-file "../secret/keys/niko_ssh_rsa"))  	   
-  	   (".dash_rsa" ,(local-file "../secret/keys/dash_rsa"))
+  	 `((".dash_rsa" ,(local-file "../secret/keys/dash_rsa"))
   	   (".gitconfig" ,(local-file "../files/config/gitconfig"))
   	   (".ssh/config" ,(local-file "../files/config/ssh-config"))
   	   ("Downloads" ,(symlink-to "/niko/download"))
