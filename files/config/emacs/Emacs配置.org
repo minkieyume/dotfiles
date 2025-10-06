@@ -60,7 +60,7 @@
 
 **** CompanyBox
 Company的前端
-#+begin_src emacs-lisp :noweb-ref
+#+begin_src emacs-lisp :noweb-ref config
 (use-package company-box
   :hook (company-mode . company-box-mode))
 #+end_src
