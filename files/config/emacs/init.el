@@ -36,8 +36,6 @@
   (setq company-minimum-prefix-length 1)
   (setq company-idle-delay 0.2)
   (global-company-mode t))
-(use-package company-box
-  :hook (company-mode . company-box-mode))
 (use-package vertico
   :init
   (vertico-mode t))
