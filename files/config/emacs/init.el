@@ -193,8 +193,7 @@
 (use-package mcp
   :after copilot-chat
   :custom (mcp-hub-servers
-           `(("filesystem" . (:command "npx" :args ("-y" "@modelcontextprotocol/server-filesystem" "~/Develop")))
-             ("fetch" . (:command "uvx" :args ("mcp-server-fetch")))))
+           `(("fetch" . (:command "uvx" :args ("mcp-server-fetch")))))
   :config (require 'mcp-hub)
   :hook (after-init . mcp-hub-start-all-server))
 (use-package triples)
