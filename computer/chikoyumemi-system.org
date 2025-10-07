@@ -1103,6 +1103,11 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
   "tiled"
 #+end_src
 
+** AI软件
+*** Ollama
+#+begin_src scheme :noweb-ref package
+  "ollama-linux-amd64"
+#+end_src
 
 ** 个人网站
 #+begin_src scheme :noweb-ref package
