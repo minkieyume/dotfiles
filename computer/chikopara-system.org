@@ -666,6 +666,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 		  (documentation "运行一个SingBox TCD，透明唱片播放程序")
 		  (provision '(sing-box-tcd singbox-tcd))
 		  (requirement '(sing-box))
+		  (auto-start? #f)
 		  (respawn? #f)
 		  (start #~(lambda _
 			     (let* ((ip #$(file-append (spec->pkg "iproute2") "/sbin/ip"))
@@ -757,7 +758,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   		    (respawn-limit 100)
   		    (respawn-delay 20)
   		    (start #~(make-forkexec-constructor
-  			      (list (file-append ((spec->pkg "phodav") "bin/chezdav"))
+  			      (list #$(file-append ((spec->pkg "phodav") "bin/chezdav"))
 				    "--port" #$(number->string port)
 				    "--path" #$path				    
 				    "--htdigest" #$(plain-file "phodav-htdigest.conf" (string-join
