@@ -187,7 +187,9 @@
 (use-package copilot-chat
 	     :bind (:map global-map
 		    ("C-c o" . copilot-chat-transient))
-	     :hook ((git-commit-setup . copilot-chat-insert-commit-message)))
+	     :hook ((git-commit-setup . copilot-chat-insert-commit-message))
+	     :custom
+	     ((copilot-chat-default-model "claude-sonnect-4.5")))
 (use-package triples)
 (use-package ekg
   :bind (("C-c n c" . ekg-capture)

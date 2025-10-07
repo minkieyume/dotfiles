@@ -294,7 +294,9 @@ Company的前端（已禁用）
 (use-package copilot-chat
 	     :bind (:map global-map
 		    ("C-c o" . copilot-chat-transient))
-	     :hook ((git-commit-setup . copilot-chat-insert-commit-message)))
+	     :hook ((git-commit-setup . copilot-chat-insert-commit-message))
+	     :custom
+	     ((copilot-chat-default-model "claude-sonnect-4.5")))
 #+end_src
 
 * 写作

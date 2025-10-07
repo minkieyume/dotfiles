@@ -738,6 +738,40 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
              "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt)")))))
 #+end_src
 
+** Phodav
+#+begin_src scheme :noweb-ref package
+  "phodav"
+#+end_src
+
+#+begin_src scheme :noweb-ref service
+(simple-service 'phodav-service
+  		shepherd-root-service-type
+  		(list
+  		 (let ((port 8990)
+		       (path "/resource")
+		       (users '(("chiko" . "09ed42cad7c512496c9de58d499ce426"))))
+  		   (shepherd-service
+  		    (documentation "Run Phodav Mount")
+  		    (provision '(phodav chezdav))
+  		    (requirement '(networking))
+  		    (respawn-limit 100)
+  		    (respawn-delay 20)
+  		    (start #~(make-forkexec-constructor
+  			      (list (file-append ((spec->pkg "phodav") "bin/chezdav"))
+				    "--port" #$(number->string port)
+				    "--path" #$path				    
+				    "--htdigest" #$(plain-file "phodav-htdigest.conf" (string-join
+										       (map
+											(lambda (u)
+											  (string-append (car u)
+													 ":Phodav:" (or (cdr u) ""))) users)
+										       "\n"))
+				    "--realm" "Phodav"
+				    "--public")
+                              #:log-file "/var/log/phodav.log"))
+  		    (stop #~(make-kill-destructor))))))
+#+end_src
+
 ** Navidrome
 #+begin_src scheme :noweb-ref service
   (service navidrome-service-type
