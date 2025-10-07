@@ -750,7 +750,8 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   		(list
   		 (let ((port 8990)
 		       (path "/resource")
-		       (users '(("chiko" . "09ed42cad7c512496c9de58d499ce426"))))
+		       (users '(("chiko" . "09ed42cad7c512496c9de58d499ce426")))
+		       (no-mdns #t)) ;; set to #t to disable mdns
   		   (shepherd-service
   		    (documentation "Run Phodav Mount")
   		    (provision '(phodav chezdav))
@@ -759,7 +760,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   		    (respawn-limit 100)
   		    (respawn-delay 20)
   		    (start #~(make-forkexec-constructor
-  			      (list #$(file-append ((spec->pkg "phodav") "/bin/chezdav"))
+  			      (list #$(file-append (spec->pkg "phodav") "/bin/chezdav")
 				    "--port" #$(number->string port)
 				    "--path" #$path				    
 				    "--htdigest" #$(plain-file "phodav-htdigest.conf" (string-join
@@ -769,7 +770,8 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 													 ":Phodav:" (or (cdr u) ""))) users)
 										       "\n"))
 				    "--realm" "Phodav"
-				    "--public")
+				    "--public"
+				    #$(if no-mdns "--no-mdns" ""))
                               #:log-file "/var/log/phodav.log"))
   		    (stop #~(make-kill-destructor))))))
 #+end_src

@@ -270,6 +270,18 @@
    `(("auto.nfs" . ,(local-file "../files/config/autofs/auto.nfs"))))))
 #+end_src
 
+*** Dav挂载
+#+begin_src scheme :noweb-ref package
+  "davfs2"
+#+end_src
+
+#+begin_src scheme :noweb-ref service
+(simple-service 'dav-config
+		etc-service-type
+		`(("davfs2/davfs2.conf"
+		   ,(plain-file "davfs2.conf" "use_locks 0\n use_compression 0\n ignore_dav_header 1\n"))))
+#+end_src
+
 ** Guix配置
 #+begin_src scheme :noweb-ref transformation
   (lambda (os)
@@ -528,6 +540,7 @@ fish，开箱即用的终端解释器。
   "emacs-llm"
   "emacs-copilot"
   "emacs-copilot-chat"
+  "emacs-mcp"
 
   ;;笔记软件
   "emacs-ekg"
@@ -1100,7 +1113,7 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
 
 *** Tiled
 #+begin_src scheme :noweb-ref package
-  "tiled"
+  "tiled-appimage"
 #+end_src
 
 ** AI软件

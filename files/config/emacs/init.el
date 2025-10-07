@@ -189,7 +189,14 @@
 		    ("C-c o" . copilot-chat-transient))
 	     :hook ((git-commit-setup . copilot-chat-insert-commit-message))
 	     :custom
-	     ((copilot-chat-default-model "claude-sonnect-4.5")))
+	     ((copilot-chat-default-model "claude-sonnect-4")))
+(use-package mcp
+  :after copilot-chat
+  :custom (mcp-hub-servers
+           `(("filesystem" . (:command "npx" :args ("-y" "@modelcontextprotocol/server-filesystem" "~/Develop")))
+             ("fetch" . (:command "uvx" :args ("mcp-server-fetch")))))
+  :config (require 'mcp-hub)
+  :hook (after-init . mcp-hub-start-all-server))
 (use-package triples)
 (use-package ekg
   :bind (("C-c n c" . ekg-capture)
