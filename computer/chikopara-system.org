@@ -755,10 +755,11 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   		    (documentation "Run Phodav Mount")
   		    (provision '(phodav chezdav))
   		    (requirement '(networking))
+		    (respawn? #t)
   		    (respawn-limit 100)
   		    (respawn-delay 20)
   		    (start #~(make-forkexec-constructor
-  			      (list #$(file-append ((spec->pkg "phodav") "bin/chezdav"))
+  			      (list #$(file-append ((spec->pkg "phodav") "/bin/chezdav"))
 				    "--port" #$(number->string port)
 				    "--path" #$path				    
 				    "--htdigest" #$(plain-file "phodav-htdigest.conf" (string-join
