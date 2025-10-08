@@ -218,9 +218,15 @@
    `(("auto.nfs" . ,(local-file "../files/config/autofs/auto.nfs"))))))
 #+end_src
 
-*** Dav挂载
+*** GVFS
+GVFS是一个能将网络目录挂载为本地虚拟文件系统，且对本地程序优化更好的挂载工具
 #+begin_src scheme :noweb-ref package
-  "davfs2"
+  "gvfs"
+  "glib:bin"  
+#+end_src
+
+#+begin_src scheme :noweb-ref service
+(service gvfs-service-type)
 #+end_src
 
 ** Guix配置

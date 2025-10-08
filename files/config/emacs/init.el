@@ -182,7 +182,9 @@
   (add-to-list 'copilot-indentation-alist '(scheme-mode 2))
   (add-to-list 'copilot-indentation-alist '(nftables-mode 2))
   (add-to-list 'copilot-indentation-alist '(conf-mode 2))
-  (add-to-list 'copilot-indentation-alist '(lisp-interaction-mode 2)))
+  (add-to-list 'copilot-indentation-alist '(lisp-interaction-mode 2))
+  (add-to-list 'copilot-indentation-alist '(emacs-lisp-mode 2))
+  (add-to-list 'copilot-indentation-alist '(lisp-data-mode 2)))
 
 (use-package copilot-chat
 	     :bind (:map global-map
@@ -424,6 +426,7 @@
    '(("h" "~/"                          "Home")
      ("d" "~/Downloads"                  "下载")
      ("m" "/mnt/"                       "Drives")
+     ("r" "/run/user/1000/gvfs/dav:host=chikopara,port=8990,ssl=false/" "远程资源路径")
      ("t" "~/.local/share/Trash/files/" "TrashCan")
      ("D"  "~/Develop"                  "开发目录")
      ("C"  "~/Creator"                  "创作目录")
@@ -463,7 +466,7 @@
   (delete-by-moving-to-trash t)
   (dired-listing-switches
    "-lhv --group-directories-first")
-  (dirvish-default-layout '(0 0.11 0.55))    
+  (dirvish-default-layout '(0 0.11 0.55))
   :config
   (dirvish-peek-mode) ; Preview files in minibuffer
   (dirvish-side-follow-mode) ; similar to `treemacs-follow-mode'
@@ -478,7 +481,8 @@
    ("h"   . dirvish-history-jump) ; remapped `describe-mode' 历史跳转
    ("s"   . dirvish-quicksort)    ; remapped `dired-sort-toggle-or-edit' 快速排序
    ("v"   . dirvish-vc-menu)      ; remapped `dired-view-file' 版本控制
-   ("w" . dirvish-y-file-path)
+   ("w" . dirvish-copy-file-name)
+   ("W" . dirvish-copy-file-path)
    ("TAB" . dirvish-subtree-toggle) ;子树切换
    ("M-f" . dirvish-history-go-forward) ;导航到下一个历史位置
    ("M-b" . dirvish-history-go-backward) ;导航到上一个历史位置

@@ -240,33 +240,15 @@
          (#f           .     "/mnt/galaxy"))))
 #+end_src
 
-*** 自动挂载
-自动挂载，规则由AutoFS配置。
-#+begin_src scheme :noweb-ref module
-(chiko services autofs)
-#+end_src
-
-#+begin_src scheme :noweb-ref service
-(service autofs-service-type
- (autofs-configuration
-  (config-file
-   (local-file "../files/config/autofs/autofs.conf"))
-  (master-file
-   (local-file "../files/config/autofs/auto.master"))
-  (extra-files
-   `(("auto.nfs" . ,(local-file "../files/config/autofs/auto.nfs"))))))
-#+end_src
-
-*** Dav挂载
+*** GVFS
+GVFS是一个能将网络目录挂载为本地虚拟文件系统，且对本地程序优化更好的挂载工具
 #+begin_src scheme :noweb-ref package
-  "davfs2"
+  "gvfs"
+  "glib:bin"  
 #+end_src
 
 #+begin_src scheme :noweb-ref service
-(simple-service 'dav-config
-		etc-service-type
-		`(("davfs2/davfs2.conf"
-		   ,(plain-file "davfs2.conf" "use_locks 0\n use_compression 0\n ignore_dav_header 1\n"))))
+(service gvfs-service-type)
 #+end_src
 
 ** Guix配置
@@ -672,6 +654,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 ** KeepassXC
 密码管理软件
 #+begin_src scheme :noweb-ref package
+  "libsecret"
   "keepassxc"
   "keepassxc-browser-icecat"
 #+end_src
