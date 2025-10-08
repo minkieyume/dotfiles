@@ -1,0 +1,14 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=digiKam
+Name[zh_CN]=digiKam 数码相册管理
+Comment=Professional Photo Management with the Power of Open Source
+Comment[zh_CN]=专业的开源数码照片管理软件
+Icon=org.kde.digikam
+Exec=flatpak run org.kde.digikam %F
+NoDisplay=false
+Categories=Graphics;Photography;Qt;KDE;
+StartupNotify=true
+MimeType=image/jpeg;image/jpg;image/png;image/tiff;image/bmp;image/gif;image/x-canon-cr2;image/x-canon-crw;image/x-nikon-nef;image/x-sony-arw;image/x-adobe-dng;image/x-panasonic-raw;image/x-olympus-orf;image/x-fuji-raf;image/x-kodak-dcr;image/x-minolta-mrw;image/x-sigma-x3f;image/x-pentax-pef;image/x-samsung-srw;
+Keywords=photo;photography;image;picture;album;collection;organize;manage;raw;metadata;

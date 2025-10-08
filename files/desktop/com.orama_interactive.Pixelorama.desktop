@@ -1,0 +1,14 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Pixelorama
+Name[zh_CN]=Pixelorama 像素绘画
+Comment=A free & open-source 2D sprite editor, made with the Godot Engine
+Comment[zh_CN]=基于 Godot 引擎开发的免费开源 2D 精灵编辑器
+Icon=com.orama_interactive.Pixelorama
+Exec=flatpak run com.orama_interactive.Pixelorama %F
+NoDisplay=false
+Categories=Graphics;2DGraphics;RasterGraphics;
+StartupNotify=true
+MimeType=image/png;image/jpeg;image/bmp;image/gif;image/tiff;image/webp;application/x-pixelorama-project;
+Keywords=pixel;art;sprite;2d;graphics;drawing;painting;animation;game;development;

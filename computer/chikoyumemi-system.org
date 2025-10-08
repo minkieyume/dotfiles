@@ -98,24 +98,11 @@
   (nonguix transformations)
 #+end_src
 
-** 系统补丁
-*** libxml2补丁
-#+begin_src scheme :noweb-ref
-  (nonguix utils)
-  (guix packages)
-  (guix transformations)
-  (gnu packages xml)
-#+end_src
-
-#+begin_src scheme :noweb-ref
-  (define (rewrite-libxml package)
-    (with-transformation
-     (package-input-rewriting `((,libxml2 . ,(spec->pkg "libxml2@2.14.5"))))
-     package))
-#+end_src
-
-#+begin_src scheme :noweb-ref
-  rewrite-libxml
+** 基础变量
+#+begin_src scheme :noweb-ref define
+(define %this-dir
+  (let ((f (current-filename)))
+    (if f (dirname f) (getcwd))))
 #+end_src
 
 ** 系统管理
@@ -541,6 +528,7 @@ fish，开箱即用的终端解释器。
   "emacs-copilot"
   "emacs-copilot-chat"
   "emacs-mcp"
+  "uv"
 
   ;;笔记软件
   "emacs-ekg"
@@ -964,8 +952,9 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+end_src
 
 *** desktop预设
+**** Krita
 #+begin_src scheme :noweb-ref home-service
-(simple-service 'desktop-preset
+(simple-service 'krita-desktop
   		home-files-service-type
   		`((".local/share/applications/org.kde.krita.desktop"
 		   ,(computed-substitution-with-inputs "org.kde.krita.desktop"
@@ -973,7 +962,21 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   						       (list (spec->pkg "krita"))))))
 #+end_src
 
-
+**** Flatpak
+#+begin_src scheme :noweb-ref home-service
+(let ((desktop-files '("org.mapeditor.Tiled.desktop"
+		       "org.kde.digikam.desktop"
+		       "org.localsend.localsend_app.desktop"
+		       "com.calibre_ebook.calibre.desktop"
+		       "com.orama_interactive.Pixelorama.desktop"
+		       "com.qq.QQ.desktop")))
+  (simple-service 'flatpak-desktop
+                  home-files-service-type
+		  `(,@(map (lambda (desktop-file)
+                             `(,(string-append ".local/share/applications/" desktop-file)
+			       ,(local-file (string-append %this-dir "/../files/desktop/" desktop-file))))
+			   desktop-files))))
+#+end_src
 
 ** librewolf
 #+begin_src scheme :noweb-ref package

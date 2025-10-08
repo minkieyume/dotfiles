@@ -1,0 +1,14 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=calibre
+Name[zh_CN]=calibre 电子书管理
+Comment=E-book library management
+Comment[zh_CN]=电子书库管理软件
+Icon=com.calibre_ebook.calibre
+Exec=flatpak run com.calibre_ebook.calibre %F
+NoDisplay=false
+Categories=Office;Publishing;Database;
+StartupNotify=true
+MimeType=application/epub+zip;application/x-mobipocket-ebook;application/pdf;text/plain;application/x-sony-bbeb;text/rtf;text/html;application/xhtml+xml;application/x-cbr;application/x-cbz;application/x-cbc;application/vnd.oasis.opendocument.text;application/msword;application/vnd.ms-htmlhelp;
+Keywords=ebook;epub;mobi;pdf;library;conversion;metadata;

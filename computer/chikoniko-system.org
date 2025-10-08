@@ -496,6 +496,7 @@ fish，开箱即用的终端解释器。
   "emacs-copilot"
   "emacs-copilot-chat"
   "emacs-mcp"
+  "uv"
 
   ;;笔记软件
   "emacs-ekg"
@@ -925,14 +926,32 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+end_src
 
 *** desktop预设
+**** Krita
 #+begin_src scheme :noweb-ref home-service
-(simple-service 'desktop-preset
+(simple-service 'krita-desktop
   		home-files-service-type
   		`((".local/share/applications/org.kde.krita.desktop"
 		   ,(computed-substitution-with-inputs "org.kde.krita.desktop"
   						       (local-file "../files/desktop/org.kde.krita.desktop")
   						       (list (spec->pkg "krita"))))))
 #+end_src
+
+**** Flatpak
+#+begin_src scheme :noweb-ref home-service
+(let ((desktop-files '("org.mapeditor.Tiled.desktop"
+                       "org.kde.digikam.desktop"
+                       "org.localsend.localsend_app.desktop"
+                       "com.calibre_ebook.calibre.desktop"
+                       "com.orama_interactive.Pixelorama.desktop"
+                       "com.qq.QQ.desktop")))
+  (simple-service 'flatpak-desktop
+                  home-files-service-type
+                  (map (lambda (desktop-file)
+                         (list (string-append ".local/share/applications/" desktop-file)
+                               (local-file (string-append "../files/desktop/" desktop-file))))
+                       desktop-files)))
+#+end_src
+
 
 
 

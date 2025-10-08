@@ -1,0 +1,14 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=QQ
+Name[zh_CN]=QQ
+Comment=Tencent QQ Instant Messenger
+Comment[zh_CN]=腾讯 QQ 即时通讯软件
+Icon=com.qq.QQ
+Exec=flatpak run com.qq.QQ %U
+NoDisplay=false
+Categories=Network;InstantMessaging;
+StartupNotify=true
+MimeType=x-scheme-handler/tencent;
+Keywords=qq;chat;im;message;tencent;social;

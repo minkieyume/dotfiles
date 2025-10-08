@@ -1,0 +1,14 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=LocalSend
+Name[zh_CN]=LocalSend 本地传输
+Comment=Share files to nearby devices
+Comment[zh_CN]=向附近设备分享文件
+Icon=org.localsend.localsend_app
+Exec=flatpak run org.localsend.localsend_app %F
+NoDisplay=false
+Categories=Network;FileTransfer;Utility;
+StartupNotify=true
+MimeType=text/plain;image/jpeg;image/png;image/gif;image/bmp;image/tiff;video/mp4;video/avi;video/mkv;audio/mp3;audio/wav;audio/flac;application/pdf;application/zip;application/x-rar;
+Keywords=file;transfer;share;network;local;wireless;

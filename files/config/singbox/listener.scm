@@ -38,13 +38,13 @@
       "tailscaled"
       "tailscale"))
 
-  (define %hysteria-process
+  (define %tailscale-process
     '("ACU.exe"
       "Anon1800.exe"
-      ;; "upc.exe"
-      ;; "UbisoftConnect.exe"
-      ;; "UbisoftGameLauncher.exe"
-      ;; "UplayWebCore.exe"
+      "upc.exe"
+      "UbisoftConnect.exe"
+      "UbisoftGameLauncher.exe"
+      "UplayWebCore.exe"
       ))
   
   (define %block-rules
@@ -62,11 +62,12 @@
       (("domain_suffix" . "yumieko.com"))
       (("domain_suffix" . #("frp-add.com" "frp-pet.com" "frp-fit.com")))))
 
-  (define %hysteria-rules
+  (define %tailscale-rules
     '((("domain_suffix" . "ubisoft.com"))
       (("domain_suffix" . "ubi.com"))
       (("domain_suffix" . "uplay.com"))
-      (("domain_suffix" . "ubisoftconnect.com"))))
+      (("domain_suffix" . "ubisoftconnect.com"))
+      (("domain_suffix" . "whatismyipaddress.com"))))
   
   (define %direct-ips
     '((("rule_set" . "geoip-cn"))
@@ -143,6 +144,14 @@
             ("listen_port" . 7891)
 	    ("routing_mark" . 0)
             ("tag" . "tproxy_in"))))
+      ;; ("endpoints"
+      ;;  . #((("type" . "tailscale")
+      ;; 	    ("tag" . "ts-ep")
+      ;; 	    ("state_directory" . "/var/lib/sing-box")
+      ;; 	    ("advertise_routes" . #("192.168.8.0/24"))
+      ;; 	    ("advertise_exit_node" . #t)
+      ;; 	    ("exit_node_allow_lan_access" . #t)
+      ;; 	    ("accept_routes" . #t))))
       ("outbounds"
        . #((("type" . "vless")
             ("tag" . "out_proxy")
@@ -159,19 +168,6 @@
 	     ("path" . ,(nyapasu-ref 'ws-transport-path))
 	     ("max_early_data" . 512)
 	     ("early_data_header_name" . "Sec-WebSocket-Protocol")))
-	   (("type" . "hysteria")
-	    ("tag" . "out_hysteria")
-	    ("server" . "play.yumieko.com")
-	    ("server_port" . 443)
-	    ("up_mbps" . 100)
-	    ("down_mbps" . 100)
-	    ("obfs" . ,(nyapasu-ref 'hysteria-obfs))
-	    ("auth_str" . ,(nyapasu-ref 'hysteria-password))
-	    ("tls"
-	     ("enabled" . #t)
-	     ("server_name" . "play.yumieko.com")
-	     ("alpn" . #("h2", "http/1.1"))
-	     ("min_version" . "1.3")))
            (("type" . "direct")
             ("tag" . "out_direct"))
            (("type" . "block")
@@ -195,8 +191,8 @@
 	    (("process_name" . #(,@%direct-process))
              ("outbound" . "out_direct"))
 
-	    (("process_name" . #(,@%hysteria-process))
-             ("outbound" . "out_direct"))
+	    ;; (("process_name" . #(,@%tailscale-process))
+            ;;  ("outbound" . "ts-ep"))
 
 	    ,@(map (lambda (rule)
                      `(,@rule
@@ -210,8 +206,8 @@
 
 	    ;; ,@(map (lambda (rule)
             ;;          `(,@rule
-	    ;; 	       ("outbound" . "out_hysteria")))
-            ;;        %hysteria-rules)
+	    ;; 	       ("outbound" . "ts-ep")))
+            ;;        %tailscale-rules)
 	    
 	    ,@(map (lambda (rule)
                      `(,@rule

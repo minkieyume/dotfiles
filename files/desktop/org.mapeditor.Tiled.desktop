@@ -1,0 +1,14 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Tiled Map Editor
+Name[zh_CN]=Tiled 地图编辑器
+Comment=A flexible level editor for tile-based games
+Comment[zh_CN]=基于瓦片的游戏关卡编辑器
+Icon=org.mapeditor.Tiled
+Exec=flatpak run org.mapeditor.Tiled %F
+NoDisplay=false
+Categories=Graphics;2DGraphics;Development;
+StartupNotify=true
+MimeType=application/x-tmx;application/x-tsx;application/x-tx;
+Keywords=tiled;map;editor;game;development;
