@@ -217,50 +217,70 @@ Company的前端（已禁用）
 
 * AI辅助
 ** AI前置库
+*** llm
+llm是AI最重要的核心前置库。
 #+begin_src emacs-lisp :noweb-ref config
 (use-package llm)
 #+end_src
 
+*** vecdb
+llm是一个给AI的向量数据库。
+#+begin_src emacs-lisp
+(use-package vecdb
+	     :config
+	     (defvar my-vecdb-provider (make-vecdb-qdrant-provider :api-key <yourkey> :url <url>))
+	     (setq ekg-vecdb-provider (cons ash/vecdb-provider (make-vecdb-collection :name "ekg" :vector-size 1536))))
+#+end_src
+
+*** MCP
+mcp是AI与外界互动的接口库。
+#+begin_src emacs-lisp :noweb-ref config
+(use-package mcp  
+  :custom (mcp-hub-servers
+           `(("fetch" . (:command "uvx" :args ("mcp-server-fetch")))))
+  :config (require 'mcp-hub)
+  :hook (after-init . mcp-hub-start-all-server))
+#+end_src
+
 ** Ellama
 #+begin_src emacs-lisp :noweb-ref config
-  ;; (use-package ellama
-  ;;   :straight t
-  ;;   :bind ("C-c e" . ellama)
-  ;;   ;; send last message in chat buffer with C-c C-c
-  ;;   :hook (org-ctrl-c-ctrl-c-final . ellama-chat-send-last-message)
-  ;;   :init
-  ;;   (require 'llm-ollama)
-  ;;   (setopt ellama-language "Chinese")
-  ;;   (setopt ellama-provider
-  ;;   	  (make-llm-ollama
-  ;;   	   ;; this model should be pulled to use it
-  ;;   	   ;; value should be the same as you print in terminal during pull
-  ;;   	   :chat-model "deepseek-r1:8b"
-  ;;   	   :embedding-model "bge-m3:latest"
-  ;;   	   :default-chat-non-standard-params '(("num_ctx" . 8192))))
-  ;;   (setopt ellama-summarization-provider ellama-provider)
-  ;;   (setopt ellama-coding-provider ellama-provider)
-    
-  ;;   (setopt ellama-extraction-provider ellama-provider)
-  ;;   ;; Naming Provider
-  ;;   (setopt ellama-naming-provider ellama-provider)
-  ;;   (setopt ellama-naming-scheme 'ellama-generate-name-by-llm)
-  ;;   ;; Translater Provider
-  ;;   (setopt ellama-translation-provider ellama-provider)
-  ;;   (setopt ellama-extraction-provider ellama-provider)
-  ;;   (setopt ellama-providers
-  ;;   	  '(("deepseek-r1" . (make-llm-ollama
-  ;;   			      :chat-model "deepseek-r1:8b"
-  ;;   			      :embedding-model "bge-m3:latest"
-  ;; 			      :default-chat-non-standard-params '(("num_ctx" . 8192))))))
-  ;;   :config
-  ;;   (setopt ellama-auto-scroll t)
-  ;;   ;; show ellama context in header line in all buffers
-  ;;   (ellama-context-header-line-global-mode +1)
-  ;;   ;; show ellama session id in header line in all buffers
-  ;;   (ellama-session-header-line-global-mode +1)
-  ;;   (advice-add 'pixel-scroll-precision :before #'ellama-disable-scroll)
-  ;;   (advice-add 'end-of-buffer :after #'ellama-enable-scroll))
+(use-package ellama
+	     :bind ("C-c e" . ellama)
+	     ;; send last message in chat buffer with C-c C-c
+	     :hook (org-ctrl-c-ctrl-c-final . ellama-chat-send-last-message)
+	     :init
+	     (require 'llm-ollama)
+	     (setopt ellama-language "Chinese")
+	     (setopt ellama-provider
+    		     (make-llm-ollama
+    		      ;; this model should be pulled to use it
+    		      ;; value should be the same as you print in terminal during pull
+    		      :chat-model "deepseek-r1:8b"
+    		      :embedding-model "bge-m3:latest"
+    		      :default-chat-non-standard-params '(("num_ctx" . 8192))))
+	     (setopt ellama-summarization-provider ellama-provider)
+	     (setopt ellama-coding-provider ellama-provider)
+	     
+	     (setopt ellama-extraction-provider ellama-provider)
+	     ;; Naming Provider
+	     (setopt ellama-naming-provider ellama-provider)
+	     (setopt ellama-naming-scheme 'ellama-generate-name-by-llm)
+	     ;; Translater Provider
+	     (setopt ellama-translation-provider ellama-provider)
+	     (setopt ellama-extraction-provider ellama-provider)
+	     (setopt ellama-providers
+    		     '(("deepseek-r1" . (make-llm-ollama
+    					 :chat-model "deepseek-r1:8b"
+    					 :embedding-model "bge-m3:latest"
+					 :default-chat-non-standard-params '(("num_ctx" . 8192))))))
+	     :config
+	     (setopt ellama-auto-scroll t)
+	     ;; show ellama context in header line in all buffers
+	     (ellama-context-header-line-global-mode +1)
+	     ;; show ellama session id in header line in all buffers
+	     (ellama-session-header-line-global-mode +1)
+	     (advice-add 'pixel-scroll-precision :before #'ellama-disable-scroll)
+	     (advice-add 'end-of-buffer :after #'ellama-enable-scroll))
 #+end_src
 
 ** Aider
@@ -286,29 +306,22 @@ Company的前端（已禁用）
           ("C-p" . 'copilot-previous-completion))
   :hook ((prog-mode . copilot-mode))
   :config
+  (add-to-list 'copilot-indentation-alist '(prog-mode 2))
   (add-to-list 'copilot-indentation-alist '(scheme-mode 2))
   (add-to-list 'copilot-indentation-alist '(nftables-mode 2))
   (add-to-list 'copilot-indentation-alist '(conf-mode 2))
   (add-to-list 'copilot-indentation-alist '(lisp-interaction-mode 2))
   (add-to-list 'copilot-indentation-alist '(emacs-lisp-mode 2))
-  (add-to-list 'copilot-indentation-alist '(lisp-data-mode 2)))
+  (add-to-list 'copilot-indentation-alist '(lisp-data-mode 2))
+  (add-to-list 'copilot-indentation-alist '(fish-mode 2)))
 
 (use-package copilot-chat
 	     :bind (:map global-map
 		    ("C-c o" . copilot-chat-transient))
 	     :hook ((git-commit-setup . copilot-chat-insert-commit-message))
 	     :custom
-	     ((copilot-chat-default-model "claude-sonnect-4")))
-#+end_src
-
-** MCP
-#+begin_src emacs-lisp :noweb-ref config
-(use-package mcp
-  :after copilot-chat
-  :custom (mcp-hub-servers
-           `(("fetch" . (:command "uvx" :args ("mcp-server-fetch")))))
-  :config (require 'mcp-hub)
-  :hook (after-init . mcp-hub-start-all-server))
+	     ((copilot-chat-default-model "claude-sonnect-4.5")
+	      (copilot-chat-commit-prompt (f-read-text "$$ai/prompts/git-commit.md$$"))))
 #+end_src
 
 * 写作

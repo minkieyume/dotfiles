@@ -124,44 +124,49 @@
   :bind-keymap
   ("C-c p" . projectile-command-map))
 (use-package llm)
-;; (use-package ellama
-;;   :straight t
-;;   :bind ("C-c e" . ellama)
-;;   ;; send last message in chat buffer with C-c C-c
-;;   :hook (org-ctrl-c-ctrl-c-final . ellama-chat-send-last-message)
-;;   :init
-;;   (require 'llm-ollama)
-;;   (setopt ellama-language "Chinese")
-;;   (setopt ellama-provider
-;;   	  (make-llm-ollama
-;;   	   ;; this model should be pulled to use it
-;;   	   ;; value should be the same as you print in terminal during pull
-;;   	   :chat-model "deepseek-r1:8b"
-;;   	   :embedding-model "bge-m3:latest"
-;;   	   :default-chat-non-standard-params '(("num_ctx" . 8192))))
-;;   (setopt ellama-summarization-provider ellama-provider)
-;;   (setopt ellama-coding-provider ellama-provider)
-  
-;;   (setopt ellama-extraction-provider ellama-provider)
-;;   ;; Naming Provider
-;;   (setopt ellama-naming-provider ellama-provider)
-;;   (setopt ellama-naming-scheme 'ellama-generate-name-by-llm)
-;;   ;; Translater Provider
-;;   (setopt ellama-translation-provider ellama-provider)
-;;   (setopt ellama-extraction-provider ellama-provider)
-;;   (setopt ellama-providers
-;;   	  '(("deepseek-r1" . (make-llm-ollama
-;;   			      :chat-model "deepseek-r1:8b"
-;;   			      :embedding-model "bge-m3:latest"
-;; 			      :default-chat-non-standard-params '(("num_ctx" . 8192))))))
-;;   :config
-;;   (setopt ellama-auto-scroll t)
-;;   ;; show ellama context in header line in all buffers
-;;   (ellama-context-header-line-global-mode +1)
-;;   ;; show ellama session id in header line in all buffers
-;;   (ellama-session-header-line-global-mode +1)
-;;   (advice-add 'pixel-scroll-precision :before #'ellama-disable-scroll)
-;;   (advice-add 'end-of-buffer :after #'ellama-enable-scroll))
+(use-package mcp
+  :after copilot-chat
+  :custom (mcp-hub-servers
+           `(("fetch" . (:command "uvx" :args ("mcp-server-fetch")))))
+  :config (require 'mcp-hub)
+  :hook (after-init . mcp-hub-start-all-server))
+(use-package ellama
+	     :bind ("C-c e" . ellama)
+	     ;; send last message in chat buffer with C-c C-c
+	     :hook (org-ctrl-c-ctrl-c-final . ellama-chat-send-last-message)
+	     :init
+	     (require 'llm-ollama)
+	     (setopt ellama-language "Chinese")
+	     (setopt ellama-provider
+    		     (make-llm-ollama
+    		      ;; this model should be pulled to use it
+    		      ;; value should be the same as you print in terminal during pull
+    		      :chat-model "deepseek-r1:8b"
+    		      :embedding-model "bge-m3:latest"
+    		      :default-chat-non-standard-params '(("num_ctx" . 8192))))
+	     (setopt ellama-summarization-provider ellama-provider)
+	     (setopt ellama-coding-provider ellama-provider)
+	     
+	     (setopt ellama-extraction-provider ellama-provider)
+	     ;; Naming Provider
+	     (setopt ellama-naming-provider ellama-provider)
+	     (setopt ellama-naming-scheme 'ellama-generate-name-by-llm)
+	     ;; Translater Provider
+	     (setopt ellama-translation-provider ellama-provider)
+	     (setopt ellama-extraction-provider ellama-provider)
+	     (setopt ellama-providers
+    		     '(("deepseek-r1" . (make-llm-ollama
+    					 :chat-model "deepseek-r1:8b"
+    					 :embedding-model "bge-m3:latest"
+					 :default-chat-non-standard-params '(("num_ctx" . 8192))))))
+	     :config
+	     (setopt ellama-auto-scroll t)
+	     ;; show ellama context in header line in all buffers
+	     (ellama-context-header-line-global-mode +1)
+	     ;; show ellama session id in header line in all buffers
+	     (ellama-session-header-line-global-mode +1)
+	     (advice-add 'pixel-scroll-precision :before #'ellama-disable-scroll)
+	     (advice-add 'end-of-buffer :after #'ellama-enable-scroll))
 ;; (use-package aider
 ;;   :straight (:host github :repo "tninja/aider.el")
 ;;   :bind (("C-c C-a" . aider-transient-menu))
@@ -179,25 +184,22 @@
           ("C-p" . 'copilot-previous-completion))
   :hook ((prog-mode . copilot-mode))
   :config
+  (add-to-list 'copilot-indentation-alist '(prog-mode 2))
   (add-to-list 'copilot-indentation-alist '(scheme-mode 2))
   (add-to-list 'copilot-indentation-alist '(nftables-mode 2))
   (add-to-list 'copilot-indentation-alist '(conf-mode 2))
   (add-to-list 'copilot-indentation-alist '(lisp-interaction-mode 2))
   (add-to-list 'copilot-indentation-alist '(emacs-lisp-mode 2))
-  (add-to-list 'copilot-indentation-alist '(lisp-data-mode 2)))
+  (add-to-list 'copilot-indentation-alist '(lisp-data-mode 2))
+  (add-to-list 'copilot-indentation-alist '(fish-mode 2)))
 
 (use-package copilot-chat
 	     :bind (:map global-map
 		    ("C-c o" . copilot-chat-transient))
 	     :hook ((git-commit-setup . copilot-chat-insert-commit-message))
 	     :custom
-	     ((copilot-chat-default-model "claude-sonnect-4")))
-(use-package mcp
-  :after copilot-chat
-  :custom (mcp-hub-servers
-           `(("fetch" . (:command "uvx" :args ("mcp-server-fetch")))))
-  :config (require 'mcp-hub)
-  :hook (after-init . mcp-hub-start-all-server))
+	     ((copilot-chat-default-model "claude-sonnect-4.5")
+	      (copilot-chat-commit-prompt (f-read-text "$$ai/prompts/git-commit.md$$"))))
 (use-package triples)
 (use-package ekg
   :bind (("C-c n c" . ekg-capture)

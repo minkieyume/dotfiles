@@ -510,7 +510,6 @@ fish，开箱即用的终端解释器。
   "emacs-copilot"
   "emacs-copilot-chat"
   "emacs-mcp"
-  "uv"
 
   ;;笔记软件
   "emacs-ekg"
@@ -1012,7 +1011,30 @@ pkg-config这个包似乎有bug，装上会导致nheko等一堆程序找不到�
 ** Python
 #+begin_src scheme :noweb-ref package
   "python"
-  "python-lsp-server"
+  "pipx"
+#+end_src
+
+*** UV
+注：关于uv的安装，因为guix没有uv最新版，因此暂时安装uv手动通过下列命令完成安装：
+#+begin_src shell
+pipx install uv
+#+end_src
+
+安装patchelf包：
+#+begin_src scheme :noweb-ref package
+"patchelf"
+#+end_src
+
+然后使用patchelf命令来修复路径问题：
+#+begin_src shell
+patchelf --set-interpreter /gnu/store/py9r4p4jp2pa1jaagbcvw35d79j5kcg5-glibc-2.41/lib/ld-linux-x86-64.so.2 ./uv
+patchelf --set-interpreter /gnu/store/py9r4p4jp2pa1jaagbcvw35d79j5kcg5-glibc-2.41/lib/ld-linux-x86-64.so.2 ./uvx
+#+end_src
+
+最后，添加环境变量：
+#+begin_src scheme :noweb-ref home-environment-variable
+  ("LD_LIBRARY_PATH" . "$HOME/.guix-profile/lib:/run/current-system/profile/lib:$LD_LIBRARY_PATH")
+  ("PATH" . "$HOME/.local/bin:$PATH")
 #+end_src
 
 ** Racket
@@ -1097,15 +1119,37 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
   "godot"
 #+end_src
 
-*** Tiled
-#+begin_src scheme :noweb-ref package
-  "tiled-appimage"
+** AI软件
+#+begin_src scheme :noweb-ref module
+(chiko services ai)
 #+end_src
 
-** AI软件
 *** Ollama
 #+begin_src scheme :noweb-ref package
   "ollama-linux-amd64"
+#+end_src
+
+#+begin_src scheme :noweb-ref home-service
+(simple-service 'ollama-serve
+                home-shepherd-service-type
+                (list (shepherd-service
+                       (provision '(ollama))
+                       (documentation "Run ollama serve daemon")
+                       (start #~(make-forkexec-constructor
+                                 (list #$(file-append (spec->pkg "ollama-linux-amd64") "/bin/ollama")
+                                       "serve")
+                                 #:environment-variables
+				 (append
+				  (list "OLLAMA_HOST=0.0.0.0:11434")
+				  (default-environment-variables))))
+                       (stop #~(make-kill-destructor)))))
+#+end_src
+
+*** Qdrant
+#+begin_src scheme :noweb-ref service
+(service qdrant-service-type
+	 (qdrant-configuration
+	  (image "qdrant/qdrant:v1.15.5-gpu-nvidia")))
 #+end_src
 
 ** 个人网站

@@ -36,16 +36,15 @@
       "smartdns"
       "PHOGS.exe"
       "tailscaled"
-      "tailscale"))
+      "tailscale"
+      "Anon1800.exe"))
 
   (define %tailscale-process
-    '("ACU.exe"
-      "Anon1800.exe"
+    '("ACU.exe"      
       "upc.exe"
       "UbisoftConnect.exe"
       "UbisoftGameLauncher.exe"
-      "UplayWebCore.exe"
-      ))
+      "UplayWebCore.exe"))
   
   (define %block-rules
     '((("rule_set" . "geosite-category-ads-all"))))
@@ -78,9 +77,12 @@
       (("rule_set" . "geosite-category-dev"))
       (("rule_set" . "geosite-stripe"))
       (("domain_suffix" . "manhuagui.com"))
+      (("domain_suffix" . "indienova.com"))
       (("domain_suffix" . "github.com"))
       (("domain_suffix" . "githubusercontent.com"))
+      (("domain_suffix" . "docker.io"))
       (("ip_cidr" . #("140.82.112.0/20" "140.82.121.0/20" "192.30.252.0/22" "185.199.108.0/22" "143.55.64.0/20")))
+      (("ip_cidr" . #("2600:1f18::/32")))
       (("domain_suffix" . "boiledscript.com"))
       (("domain_suffix" . "freedesktop.org"))
       (("inbound" . "proxy_in"))))

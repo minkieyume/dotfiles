@@ -40,6 +40,8 @@ define RESERVED_PORT = {
 table inet sing-box {
     chain prerouting {
       	type filter hook prerouting priority mangle; policy accept;	
+
+	iifname "tailscale0" return
 	
         ip  daddr $RESERVED_IP4 return
 	ip6 daddr $RESERVED_IP6 return
@@ -81,6 +83,7 @@ table inet sing-box {
 
 	# 排除 sing-box 用户发出的流量
 	oifname "lo" return
+	oifname "tailscale0" return
         meta skuid singbox return
 	meta mark & 0x1 != 0 return
 	
