@@ -72,6 +72,9 @@
     '((("rule_set" . "geoip-cn"))
       (("rule_set" . "geoip-private"))))
 
+  (define %ipv4-dns
+    '((("domain_suffix" . #("docker.io" "registry-1.docker.io")))))
+
   (define %proxy-rules
     '((("rule_set" . "geosite-gfw"))
       (("rule_set" . "geosite-category-dev"))
@@ -80,7 +83,6 @@
       (("domain_suffix" . "indienova.com"))
       (("domain_suffix" . "github.com"))
       (("domain_suffix" . "githubusercontent.com"))
-      (("domain_suffix" . "docker.io"))
       (("ip_cidr" . #("140.82.112.0/20" "140.82.121.0/20" "192.30.252.0/22" "185.199.108.0/22" "143.55.64.0/20")))
       (("ip_cidr" . #("2600:1f18::/32")))
       (("domain_suffix" . "boiledscript.com"))
@@ -129,6 +131,12 @@
                      `(,@rule
 		       ("server" . "dns_cn")))
                    %direct-rules)
+
+	    ,@(map (lambda (rule)
+                     `(,@rule
+		       ("server" . "cloudflare-doh")
+		       ("strategy" . "ipv4_only")))
+                   %ipv4-dns)
 	    
 	    ,@(map (lambda (rule)
                      `(,@rule

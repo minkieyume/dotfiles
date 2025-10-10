@@ -507,9 +507,12 @@ fish，开箱即用的终端解释器。
 
   ;;AI集成
   "emacs-llm"
+  "emacs-vecdb"
   "emacs-copilot"
   "emacs-copilot-chat"
   "emacs-mcp"
+  "emacs-ellama"
+  "emacs-elisa"
 
   ;;笔记软件
   "emacs-ekg"
@@ -544,7 +547,8 @@ fish，开箱即用的终端解释器。
       		   ,(computed-substitution-with-inputs "init.el"
       						       (local-file "../files/config/emacs/init.el")
 						       (append
-							(list (local-file "../files/config/emacs" #:recursive? #t))
+							(list (local-file "../files/config/emacs" #:recursive? #t)
+							      (local-file "../secret/epasu" #:recursive? #t))
 							(specs->pkgs "ccls"
       								     "fish"
       								     "python-lsp-server"
@@ -1031,9 +1035,27 @@ patchelf --set-interpreter /gnu/store/py9r4p4jp2pa1jaagbcvw35d79j5kcg5-glibc-2.4
 patchelf --set-interpreter /gnu/store/py9r4p4jp2pa1jaagbcvw35d79j5kcg5-glibc-2.41/lib/ld-linux-x86-64.so.2 ./uvx
 #+end_src
 
+然后，在.local/bin中写下列shell脚本：
+#+begin_src shell uv
+#!/usr/bin/env bash
+# ↑ 用 bash 兼容模式执行（fish 会自动调用外部 bash）
+# 即使在 fish 环境下运行这个脚本，也没问题
+
+export LD_LIBRARY_PATH="$HOME/.guix-profile/lib:/run/current-system/profile/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+exec /home/minkieyume/.local/share/pipx/venvs/uv/bin/uv "$@"
+#+end_src
+
+#+begin_src shell uvx
+#!/usr/bin/env bash
+# ↑ 用 bash 兼容模式执行（fish 会自动调用外部 bash）
+# 即使在 fish 环境下运行这个脚本，也没问题
+
+export LD_LIBRARY_PATH="$HOME/.guix-profile/lib:/run/current-system/profile/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+exec /home/minkieyume/.local/share/pipx/venvs/uv/bin/uvx "$@"
+#+end_src
+
 最后，添加环境变量：
 #+begin_src scheme :noweb-ref home-environment-variable
-  ("LD_LIBRARY_PATH" . "$HOME/.guix-profile/lib:/run/current-system/profile/lib:$LD_LIBRARY_PATH")
   ("PATH" . "$HOME/.local/bin:$PATH")
 #+end_src
 
@@ -1129,6 +1151,20 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
   "ollama-linux-amd64"
 #+end_src
 
+#+begin_src scheme :noweb-ref define
+(define ollama-gpu-wrapper
+  (program-file
+   "ollama-gpu-wrapper"
+   #~(begin
+       (setenv "LD_LIBRARY_PATH"
+               (string-append
+                #$(file-append (spec->pkg "nvidia-driver") "/lib")
+                (let ((old (getenv "LD_LIBRARY_PATH")))
+                  (if old (string-append ":" old) ""))))
+       (setenv "OLLAMA_HOST" "0.0.0.0:11434")
+       (execl #$(file-append (spec->pkg "ollama-linux-amd64") "/bin/ollama") "ollama" "serve"))))
+#+end_src
+
 #+begin_src scheme :noweb-ref home-service
 (simple-service 'ollama-serve
                 home-shepherd-service-type
@@ -1136,12 +1172,7 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
                        (provision '(ollama))
                        (documentation "Run ollama serve daemon")
                        (start #~(make-forkexec-constructor
-                                 (list #$(file-append (spec->pkg "ollama-linux-amd64") "/bin/ollama")
-                                       "serve")
-                                 #:environment-variables
-				 (append
-				  (list "OLLAMA_HOST=0.0.0.0:11434")
-				  (default-environment-variables))))
+                                 (list #$ollama-gpu-wrapper)))
                        (stop #~(make-kill-destructor)))))
 #+end_src
 
@@ -1149,7 +1180,8 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
 #+begin_src scheme :noweb-ref service
 (service qdrant-service-type
 	 (qdrant-configuration
-	  (image "qdrant/qdrant:v1.15.5-gpu-nvidia")))
+	  (image "qdrant/qdrant:v1.15.5-gpu-nvidia")
+	  (api-key (nyapasu-ref 'qdrant-api-key))))
 #+end_src
 
 ** 个人网站
@@ -1230,17 +1262,21 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
 		  (start #~(lambda _
 			     (let* ((ip #$(file-append (spec->pkg "iproute2") "/sbin/ip"))
 				    (st1 (system* ip "route" "add" "local" "default" "dev" "lo" "table" "100"))
-				    (st2 (system* ip "rule" "add" "fwmark" "1" "table" "100")))
+				    (st2 (system* ip "rule" "add" "fwmark" "1" "table" "100"))
+				    (st3 (system* ip "-6" "route" "add" "local" "default" "dev" "lo" "table" "100"))
+				    (st4 (system* ip "-6" "rule" "add" "fwmark" "1" "table" "100")))
 			       (and (map (lambda (st)
 					   (= 0 (status:exit-val st)))
-					 (list st1 st2))))))
+					 (list st1 st2 st3 st4))))))
 		  (stop #~(lambda _
 			    (let* ((ip #$(file-append (spec->pkg "iproute2") "/sbin/ip"))
 				   (st1 (system* ip "rule" "del" "fwmark" "1" "table" "100"))
-				   (st2 (system* ip "route" "del" "local" "default" "dev" "lo" "table" "100")))
+				   (st2 (system* ip "route" "del" "local" "default" "dev" "lo" "table" "100"))
+				   (st3 (system* ip "-6" "rule" "del" "fwmark" "1" "table" "100"))
+				   (st4 (system* ip "-6" "route" "del" "local" "default" "dev" "lo" "table" "100")))
 			      (and (map (lambda (st)
 					  (= 0 (status:exit-val st)))
-					(list st1 st2)))))))))
+					(list st1 st2 st3 st4)))))))))
 #+end_src
 
 
