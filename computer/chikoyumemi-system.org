@@ -1148,7 +1148,7 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
 
 *** Ollama
 #+begin_src scheme :noweb-ref package
-  "ollama-linux-amd64"
+  "ollama-linux-amd64-nvidia"
 #+end_src
 
 #+begin_src scheme :noweb-ref define
@@ -1157,12 +1157,10 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
    "ollama-gpu-wrapper"
    #~(begin
        (setenv "LD_LIBRARY_PATH"
-               (string-append
-                #$(file-append (spec->pkg "nvidia-driver") "/lib")
-                (let ((old (getenv "LD_LIBRARY_PATH")))
-                  (if old (string-append ":" old) ""))))
+               (string-append #$(file-append (spec->pkg "nvidia-driver") "/lib")))
        (setenv "OLLAMA_HOST" "0.0.0.0:11434")
-       (execl #$(file-append (spec->pkg "ollama-linux-amd64") "/bin/ollama") "ollama" "serve"))))
+       (setenv "OLLAMA_DEBUG" "1")
+       (execl #$(file-append (spec->pkg "ollama-linux-amd64-nvidia") "/bin/ollama") "ollama" "serve"))))
 #+end_src
 
 #+begin_src scheme :noweb-ref home-service
@@ -1172,7 +1170,8 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
                        (provision '(ollama))
                        (documentation "Run ollama serve daemon")
                        (start #~(make-forkexec-constructor
-                                 (list #$ollama-gpu-wrapper)))
+                                 (list #$ollama-gpu-wrapper)
+				 #:log-file "log/ollama-serve.log"))
                        (stop #~(make-kill-destructor)))))
 #+end_src
 
