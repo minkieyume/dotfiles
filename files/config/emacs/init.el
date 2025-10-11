@@ -134,7 +134,10 @@
   (setq ekg-vecdb-provider (cons chiko-vecdb-provider (make-vecdb-collection :name "ekg" :vector-size 1024))))
 (use-package mcp  
   :custom (mcp-hub-servers
-           `(("fetch" . (:command "uvx" :args ("mcp-server-fetch")))))
+	   `(("fetch" . (:command "uvx" :args ("mcp-server-fetch")))
+	     ("curl" . (:command "npx" :args ("-y" "@mcp-get-community/server-curl")))
+	     ("godot" . (:command "npx" :args ("godot-mcp") :env (:DEBUG "true"
+	     						     :GODOT_PATH "$$bin/godot$$")))))
   :config (require 'mcp-hub)
   :hook (after-init . mcp-hub-start-all-server))
 (use-package ellama
@@ -205,7 +208,7 @@
 		    ("C-c o" . copilot-chat-transient))
 	     :hook ((git-commit-setup . copilot-chat-insert-commit-message))
 	     :custom
-	     ((copilot-chat-default-model "claude-sonnect-4.5")
+	     ((copilot-chat-default-model "claude-sonnect-4")
 	      (copilot-chat-commit-prompt (f-read-text "$$ai/prompts/git-commit.md$$"))))
 (use-package triples)
 (use-package ekg
@@ -238,7 +241,7 @@
 	       :embedding-model "bge-m3:latest"
 	       :default-chat-non-standard-params '(("num_ctx" . 8192))))
 	(qwen3 (make-llm-ollama
-		:chat-model "qwen3:4b"
+		:chat-model "qwen3:4b-instruct"
 		:embedding-model "bge-m3:latest"
 		:default-chat-non-standard-params '(("num_ctx" . 8192))))
 	(bge-m3 (make-llm-ollama
@@ -309,7 +312,7 @@
 	
 	("p" "程序进度"
 	 alltodo ""
-         ((org-agenda-files '()))
+         ((org-agenda-files '("~/Creator/ProgramDevelop/emacs/llm-index/todo.org")))
 	 (org-agenda-use-tag-inheritance t))
 	
 	("h" "折腾进度"
@@ -417,6 +420,7 @@
 	     :config
 	     (with-eval-after-load 'git-commit
 				   (setq git-commit-cd-to-toplevel t)))
+(use-package forge)
 (use-package pinentry
   :config
   (pinentry-start)
@@ -476,6 +480,7 @@
   (dired-listing-switches
    "-lhv --group-directories-first")
   (dirvish-default-layout '(0 0.11 0.55))
+  (dirvish-large-directory-threshold 1000)
   :config
   (dirvish-peek-mode) ; Preview files in minibuffer
   (dirvish-side-follow-mode) ; similar to `treemacs-follow-mode'

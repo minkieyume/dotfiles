@@ -454,6 +454,7 @@ fish，开箱即用的终端解释器。
 基础的包配置
 #+begin_src scheme :noweb-ref package
   "emacs-pgtk"
+  "emacs-eldev"
 
   ;;包管理器
   "emacs-straight"
@@ -525,6 +526,7 @@ fish，开箱即用的终端解释器。
   ;;版本控制
   "emacs-magit"
   "emacs-magit-todos"
+  "emacs-forge"
 
   ;;文件管理
   "emacs-dirvish@d877433f957a363ad78b228e13a8e5215f2d6593"
@@ -559,6 +561,7 @@ fish，开箱即用的终端解释器。
 								     "ffmpegthumbnailer"
 								     "p7zip"
 								     "imagemagick"
+								     "godot"
 								     "mediainfo"
 								     "vips"))))
       		  ("emacs/.init-themes.el"
@@ -935,6 +938,8 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   "xdg-desktop-portal"
   "xdg-desktop-portal-gnome"
   "xdg-desktop-portal-gtk"
+  "xdg-utils"
+  "flatpak-xdg-utils"
 #+end_src
 
 *** desktop预设
@@ -1069,6 +1074,10 @@ exec /home/minkieyume/.local/share/pipx/venvs/uv/bin/uvx "$@"
   "chibi-scheme"
 #+end_src
 
+*** Guile
+#+begin_src scheme :noweb-ref package
+  "guile-cairo"
+#+end_src
 
 * 包管理器
 ** Flatpak

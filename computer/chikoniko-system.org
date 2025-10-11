@@ -929,6 +929,8 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   "xdg-desktop-portal"
   "xdg-desktop-portal-gnome"
   "xdg-desktop-portal-gtk"
+  "xdg-utils"
+  "flatpak-xdg-utils"
 #+end_src
 
 *** desktop预设

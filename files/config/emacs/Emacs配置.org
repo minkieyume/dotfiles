@@ -238,12 +238,24 @@ llm是一个给AI的向量数据库。
 
 *** MCP
 mcp是AI与外界互动的接口库。
-#+begin_src emacs-lisp :noweb-ref config
+#+begin_src emacs-lisp :noweb-ref config :noweb yes
 (use-package mcp  
   :custom (mcp-hub-servers
-           `(("fetch" . (:command "uvx" :args ("mcp-server-fetch")))))
+	   `(("fetch" . (:command "uvx" :args ("mcp-server-fetch")))
+	     <<mcp-servers>>))
   :config (require 'mcp-hub)
   :hook (after-init . mcp-hub-start-all-server))
+#+end_src
+
+**** Curl MCP
+#+begin_src emacs-lisp :noweb-ref mcp-servers
+("curl" . (:command "npx" :args ("-y" "@mcp-get-community/server-curl")))
+#+end_src
+
+**** Godot-MCP
+#+begin_src emacs-lisp :noweb-ref mcp-servers
+("godot" . (:command "npx" :args ("godot-mcp") :env (:DEBUG "true"
+						     :GODOT_PATH "$$bin/godot$$")))
 #+end_src
 
 ** Ellama
@@ -324,7 +336,7 @@ mcp是AI与外界互动的接口库。
 		    ("C-c o" . copilot-chat-transient))
 	     :hook ((git-commit-setup . copilot-chat-insert-commit-message))
 	     :custom
-	     ((copilot-chat-default-model "claude-sonnect-4.5")
+	     ((copilot-chat-default-model "claude-sonnect-4")
 	      (copilot-chat-commit-prompt (f-read-text "$$ai/prompts/git-commit.md$$"))))
 #+end_src
 
@@ -363,7 +375,7 @@ Ekg是方便快速整理灵感和笔记的笔记插件。
 	       :embedding-model "bge-m3:latest"
 	       :default-chat-non-standard-params '(("num_ctx" . 8192))))
 	(qwen3 (make-llm-ollama
-		:chat-model "qwen3:4b"
+		:chat-model "qwen3:4b-instruct"
 		:embedding-model "bge-m3:latest"
 		:default-chat-non-standard-params '(("num_ctx" . 8192))))
 	(bge-m3 (make-llm-ollama
@@ -468,7 +480,7 @@ Ekg是方便快速整理灵感和笔记的笔记插件。
   	
   	("p" "程序进度"
   	 alltodo ""
-           ((org-agenda-files '()))
+           ((org-agenda-files '("~/Creator/ProgramDevelop/emacs/llm-index/todo.org")))
   	 (org-agenda-use-tag-inheritance t))
   	
   	("h" "折腾进度"
@@ -645,6 +657,12 @@ Ekg是方便快速整理灵感和笔记的笔记插件。
 				   (setq git-commit-cd-to-toplevel t)))
 #+end_src
 
+** Forge
+用于管理分支和PR
+#+begin_src emacs-lisp :noweb-ref config
+(use-package forge)
+#+end_src
+
 ** Pinentry
 配置Pinentry，允许emacs作为GPG验证前端。
 #+begin_src emacs-lisp :noweb-ref config
@@ -723,6 +741,7 @@ Ekg是方便快速整理灵感和笔记的笔记插件。
     (dired-listing-switches
      "-lhv --group-directories-first")
     (dirvish-default-layout '(0 0.11 0.55))
+    (dirvish-large-directory-threshold 1000)
     :config
     (dirvish-peek-mode) ; Preview files in minibuffer
     (dirvish-side-follow-mode) ; similar to `treemacs-follow-mode'
