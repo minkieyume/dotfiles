@@ -953,6 +953,17 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   						       (list (spec->pkg "krita"))))))
 #+end_src
 
+**** Element
+#+begin_src scheme :noweb-ref home-service
+(simple-service 'element-desktop
+  		home-files-service-type
+  		`((".local/share/applications/element-desktop.desktop"
+		   ,(computed-substitution-with-inputs "element-desktop.desktop"
+  						       (local-file "../files/desktop/element-desktop.desktop")
+  						       (list (spec->pkg "element-desktop"))))))
+#+end_src
+
+
 **** Flatpak
 #+begin_src scheme :noweb-ref home-service
 (let ((desktop-files '("org.mapeditor.Tiled.desktop"
@@ -1143,19 +1154,12 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
   "libretro-lowresnx"
 #+end_src
 
-* 创作
-** 游戏开发
-*** Godot
-#+begin_src scheme :noweb-ref package
-  "godot"
-#+end_src
-
-** AI软件
+* AI软件
 #+begin_src scheme :noweb-ref module
 (chiko services ai)
 #+end_src
 
-*** Ollama
+** Ollama
 #+begin_src scheme :noweb-ref package
   "ollama-linux-amd64-nvidia"
 #+end_src
@@ -1184,12 +1188,20 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
                        (stop #~(make-kill-destructor)))))
 #+end_src
 
-*** Qdrant
+** Qdrant
 #+begin_src scheme :noweb-ref service
 (service qdrant-service-type
 	 (qdrant-configuration
 	  (image "qdrant/qdrant:v1.15.5-gpu-nvidia")
 	  (api-key (nyapasu-ref 'qdrant-api-key))))
+#+end_src
+
+
+* 创作
+** 游戏开发
+*** Godot
+#+begin_src scheme :noweb-ref package
+  "godot"
 #+end_src
 
 ** 个人网站

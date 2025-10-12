@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Element
+Exec=/gnu/store/k37i0h29qcfk78x4mibfl4cwmnhhx570-element-desktop-1.12.0/bin/element-desktop  --ozone-platform=wayland %U
+Terminal=false
+Type=Application
+Icon=element-desktop
+StartupWMClass=Element
+Comment=Element: the future of secure communication
+MimeType=x-scheme-handler/io.element.desktop;x-scheme-handler/element;
+Categories=Network;InstantMessaging;Chat;

@@ -29,7 +29,7 @@ define RESERVED_IP6 = {
 define RESERVED_PORT = {
     3478,
     5349,
-    123
+    53317
 }
 
 ## 路由规则
