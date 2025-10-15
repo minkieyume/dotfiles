@@ -609,7 +609,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 ** SingBox
 八音盒软件
 #+begin_src scheme :noweb-ref module
-(rosenthal packages networking)
+(chiko services networking)
 #+end_src
 
 #+begin_src scheme :noweb-ref package
@@ -629,16 +629,26 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
             (sing-box-listener #$output)))))
 #+end_src
 
+*** 服务
+#+begin_src scheme :noweb-ref service
+(service sing-box-service-type
+  	 (sing-box-configuration
+  	  (sing-box (spec->pkg "sing-box"))
+  	  (config-file %sing-box-config-file)
+  	  (tproxy-nft-config-file (local-file "../files/config/singbox/singbox-tproxy.nft"))
+  	  (auto-start? #f)))
+#+end_src
+
 *** 权限
-#+begin_src scheme :noweb-ref privileged-program
+#+begin_src scheme
   (privileged-program
    (program (file-append (spec->pkg "sing-box") "/bin/sing-box"))
    (capabilities "cap_net_admin,cap_net_bind_service,cap_net_raw+ep"))
 #+end_src
 
 *** 服务
-#+begin_src scheme :noweb-ref service
-  (simple-service 'sing-box-service
+#+begin_src scheme
+(simple-service 'sing-box-service
   		shepherd-root-service-type
   		(list
   		 (let ((config %sing-box-config-file))
@@ -646,19 +656,20 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   		    (documentation "Run sing-box singing listener.")
   		    (provision '(sing-box singbox))
   		    (requirement '(networking))
+		      (auto-start? #f)
   		    (respawn-limit 100)
   		    (respawn-delay 20)
   		    (start #~(make-forkexec-constructor
   			      (list "/run/privileged/bin/sing-box" "run" "-c" #$config)
-                                #:log-file "/var/log/sing-box.log"
-                                #:supplementary-groups '("netdev")
-    		                #:user "singbox"
+                              #:log-file "/var/log/sing-box.log"
+                              #:supplementary-groups '("netdev")
+    		              #:user "singbox"
   			      #:resource-limits '((nofile 100000 100000))))
   		    (stop #~(make-kill-destructor))))))
 #+end_src
 
 **** 透明唱片
-#+begin_src scheme :noweb-ref service
+#+begin_src scheme
 (simple-service 'sing-box-tcd
 		shepherd-root-service-type
 		(list
@@ -690,7 +701,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 
 
 *** 用户态
-#+begin_src scheme :noweb-ref user
+#+begin_src scheme
   (user-account
     (name "singbox")
     (group "nogroup")

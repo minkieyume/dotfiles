@@ -37,12 +37,12 @@
       "PHOGS.exe"
       "tailscaled"
       "tailscale"
-      "Anon1800.exe"))
+      "Anon1800.exe"
+      "ACU.exe"
+      "upc.exe"))
 
   (define %tailscale-process
-    '("ACU.exe"      
-      "upc.exe"
-      "UbisoftConnect.exe"
+    '("UbisoftConnect.exe"
       "UbisoftGameLauncher.exe"
       "UplayWebCore.exe"))
   

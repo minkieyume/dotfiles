@@ -136,6 +136,7 @@
   :custom (mcp-hub-servers
 	   `(("fetch" . (:command "uvx" :args ("mcp-server-fetch")))
 	     ("curl" . (:command "npx" :args ("-y" "@mcp-get-community/server-curl")))
+	     ("filesystem" . (:command "npx" :args ("-y" "@modelcontextprotocol/server-filesystem" "~/Develop/")))
 	     ("godot" . (:command "npx" :args ("godot-mcp") :env (:DEBUG "true"
 	     						     :GODOT_PATH "$$bin/godot$$")))))
   :config (require 'mcp-hub)
@@ -190,8 +191,8 @@
           ("TAB" . 'copilot-accept-completion)
           ("C-TAB" . 'copilot-accept-completion-by-word)
           ("C-<tab>" . 'copilot-accept-completion-by-word)
-          ("C-n" . 'copilot-next-completion)
-          ("C-p" . 'copilot-previous-completion))
+          ("C-c n" . 'copilot-next-completion)
+          ("C-c p" . 'copilot-previous-completion))
   :hook ((prog-mode . copilot-mode))
   :config
   (add-to-list 'copilot-indentation-alist '(prog-mode 2))
@@ -208,7 +209,7 @@
 		    ("C-c o" . copilot-chat-transient))
 	     :hook ((git-commit-setup . copilot-chat-insert-commit-message))
 	     :custom
-	     ((copilot-chat-default-model "claude-sonnect-4")
+	     ((copilot-chat-default-model "gpt-4.1")
 	      (copilot-chat-commit-prompt (f-read-text "$$ai/prompts/git-commit.md$$"))))
 (use-package triples)
 (use-package ekg
@@ -265,8 +266,11 @@
 (global-set-key (kbd "C-c a") #'org-agenda)
 (global-set-key (kbd "C-c c") #'org-capture)
 (use-package org-download
+  :bind (:map org-mode-map
+	      ("C-c y" . org-download-clipboard))
+  :custom
+  (org-download-image-dir "./org-assets")
   :config
-  (setq org-download-image-dir "./org-assets")
   (add-hook 'org-mode-hook 'org-download-enable))
 (setq org-agenda-window-setup 'current-window)
 (setq org-log-done-with-time nil)
@@ -420,7 +424,8 @@
 	     :config
 	     (with-eval-after-load 'git-commit
 				   (setq git-commit-cd-to-toplevel t)))
-(use-package forge)
+(use-package forge
+  :after magit)
 (use-package pinentry
   :config
   (pinentry-start)
@@ -485,8 +490,7 @@
   (dirvish-peek-mode) ; Preview files in minibuffer
   (dirvish-side-follow-mode) ; similar to `treemacs-follow-mode'
   :bind
-  (("C-c f" . dirvish-fd)
-   :map dirvish-mode-map ; Dirvish inherits `dired-mode-map'
+  (:map dirvish-mode-map ; Dirvish inherits `dired-mode-map'
    ("a"   . dirvish-quick-access) ;快速访问
    ("f"   . dirvish-file-info-menu) ;文件信息
    ("y"   . dirvish-yank-menu) ;剪贴板菜单
@@ -541,3 +545,30 @@
 (when (and (executable-find "$$bin/fish$$")
                  (require 'fish-completion nil t))
         (global-fish-completion-mode))
+(require 'oauth2)
+(setq user-mail-address "minkieyume@gmail.com"
+      user-full-name "MinkieChiko")
+
+(setq gnus-select-method
+      '(nnimap "gmail"
+               (nnimap-address "imap.gmail.com")
+	       (nnimap-inbox "INBOX")
+	       (nnimap-expunge t)
+               (nnimap-server-port 993)
+               (nnimap-stream ssl)
+	       (nnimap-authenticator xoauth2)))
+
+(setq gnus-default-method gnus-select-method)
+
+(setq gnus-secondary-select-methods nil)
+
+(setq message-send-mail-function 'smtpmail-send-it
+      smtpmail-smtp-server "smtp.gmail.com"
+      smtpmail-smtp-service 587
+      smtpmail-stream-type 'ssl
+      gnus-ignored-newsgroups "^to\\.\\|^[0-9. ]+\\( \\|$\\)\\|^[\"]\"[#'()]"
+      smtpmail-auth-supported '(xoauth2))
+
+(setq mm-text-html-renderer 'shr
+      gnus-default-charset 'utf-8
+      mm-coding-system-priorities '(utf-8 gbk gb2312))

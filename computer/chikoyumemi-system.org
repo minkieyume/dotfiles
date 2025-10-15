@@ -368,11 +368,9 @@ GVFS是一个能将网络目录挂载为本地虚拟文件系统，且对本地�
 *** Nftables
 #+begin_src scheme :noweb-ref service
   (service nftables-service-type
-    (nftables-configuration
-      (ruleset
-       (computed-substitution-with-inputs "nftables.conf"
-          (local-file "../files/config/chikoyumemi/nftables.conf")
-	  (list (local-file "../files/config/singbox" #:recursive? #t))))))
+  	 (nftables-configuration
+  	  (ruleset
+  	   (local-file "../files/config/chikoyumemi/nftables.conf"))))
 #+end_src
 
 
@@ -457,8 +455,7 @@ fish，开箱即用的终端解释器。
   "emacs-eldev"
 
   ;;包管理器
-  "emacs-straight"
-  "emacs-use-package"
+  "emacs-use-package"  
 
   ;;编辑模式
   "emacs-nginx-mode"
@@ -484,6 +481,9 @@ fish，开箱即用的终端解释器。
   "emacs-vertico"
   "emacs-orderless"
   "emacs-consult"
+  "emacs-ripgrep"
+  "ripgrep"
+  "ripgrep-all"
   "emacs-marginalia"
   "emacs-embark"
   "emacs-rainbow-delimiters"
@@ -505,6 +505,7 @@ fish，开箱即用的终端解释器。
   "emacs-emacsql"
   "emacs-ox-hugo"
   "emacs-org-download"
+  "emacs-oauth2"
 
   ;;AI集成
   "emacs-llm"
@@ -580,6 +581,13 @@ fish，开箱即用的终端解释器。
   			#~(make-forkexec-constructor
   			   '("emacsclient" "--eval" "(kill-emacs)"))))))
 #+end_src
+
+#+begin_src scheme :noweb-ref home-service
+  (simple-service 'emacs-auth-info
+		home-files-service-type
+		`((".authinfo.gpg" ,(local-file "../secret/authinfo.gpg"))))
+#+end_src
+
 [[file:../files/config/emacs/Emacs配置.org][Emacs配置]]
 [[file:../files/config/chikoyumemi/init-theme.el][emacs-themes]]
 
@@ -1224,6 +1232,10 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
 
 *** SingBox
 八音盒软件
+#+begin_src scheme :noweb-ref module
+(chiko services networking)
+#+end_src
+
 #+begin_src scheme :noweb-ref package
 "sing-box"
 #+end_src
@@ -1241,15 +1253,26 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
             (sing-box-listener #$output)))))
 #+end_src
 
+**** 服务
+#+begin_src scheme :noweb-ref service
+(service sing-box-service-type
+  	 (sing-box-configuration
+  	  (sing-box (spec->pkg "sing-box"))
+  	  (config-file %sing-box-config-file)
+  	  (tproxy-nft-config-file (local-file "../files/config/singbox/singbox-tproxy.nft"))
+  	  (auto-start? #t)))
+#+end_src
+
+
 **** 权限
-#+begin_src scheme :noweb-ref privileged-program
+#+begin_src scheme
   (privileged-program
     (program (file-append (spec->pkg "sing-box") "/bin/sing-box"))
     (capabilities "cap_net_admin,cap_net_bind_service,cap_net_raw+ep"))
 #+end_src
 
 **** 服务
-#+begin_src scheme :noweb-ref service
+#+begin_src scheme
   (simple-service 'sing-box-service
   		shepherd-root-service-type
   		(list
@@ -1270,7 +1293,7 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
 #+end_src
 
 **** 透明唱片
-#+begin_src scheme :noweb-ref service
+#+begin_src scheme
 (simple-service 'singbox-tcd
 		shepherd-root-service-type
 		(list
@@ -1281,27 +1304,32 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
 		  (respawn? #f)
 		  (start #~(lambda _
 			     (let* ((ip #$(file-append (spec->pkg "iproute2") "/sbin/ip"))
+				    (nft #$(file-append (spec->pkg "nftables") "/sbin/nft"))
+				    (ste (system* nft "add" "table" "inet" "sing-box"))
+				    (st0 (system* nft "-f" #$(local-file "../files/config/singbox/singbox-tproxy.nft")))
 				    (st1 (system* ip "route" "add" "local" "default" "dev" "lo" "table" "100"))
 				    (st2 (system* ip "rule" "add" "fwmark" "1" "table" "100"))
 				    (st3 (system* ip "-6" "route" "add" "local" "default" "dev" "lo" "table" "100"))
 				    (st4 (system* ip "-6" "rule" "add" "fwmark" "1" "table" "100")))
 			       (and (map (lambda (st)
 					   (= 0 (status:exit-val st)))
-					 (list st1 st2 st3 st4))))))
+					 (list ste st0 st1 st2 st3 st4))))))
 		  (stop #~(lambda _
 			    (let* ((ip #$(file-append (spec->pkg "iproute2") "/sbin/ip"))
+				   (nft #$(file-append (spec->pkg "nftables") "/sbin/nft"))
+				   (st0 (system* nft "delete" "table" "inet" "sing-box"))
 				   (st1 (system* ip "rule" "del" "fwmark" "1" "table" "100"))
 				   (st2 (system* ip "route" "del" "local" "default" "dev" "lo" "table" "100"))
 				   (st3 (system* ip "-6" "rule" "del" "fwmark" "1" "table" "100"))
 				   (st4 (system* ip "-6" "route" "del" "local" "default" "dev" "lo" "table" "100")))
 			      (and (map (lambda (st)
 					  (= 0 (status:exit-val st)))
-					(list st1 st2 st3 st4)))))))))
+					(list st0 st1 st2 st3 st4)))))))))
 #+end_src
 
 
 **** 用户态
-#+begin_src scheme :noweb-ref user
+#+begin_src scheme
   (user-account
     (name "singbox")
     (group "nogroup")
