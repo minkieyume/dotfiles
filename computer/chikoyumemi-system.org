@@ -12,6 +12,7 @@
    <<env>>
    (bootloader <<bootloader>>)
    (initrd-modules (cons* <<initrd-module>> %base-initrd-modules))
+   (kernel-loadable-modules (specifications->packages '(<<kernel-loadable-module>>)))
    (kernel-arguments (cons* <<kernel-argument>> %default-kernel-arguments))
    (privileged-programs (cons* <<privileged-program>> %default-privileged-programs))
    (users (cons* <<user>> %base-user-accounts))
@@ -44,6 +45,10 @@
 *** 内核模块
 #+begin_src scheme :noweb-ref initrd-module
   "dummy"
+#+end_src
+
+#+begin_src scheme :noweb-ref kernel-loadable-module
+  "v4l2loopback-linux-module"
 #+end_src
 
 ** 用户配置
@@ -685,18 +690,11 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+end_src
 
 * 代理
-** Yggdrasil
-#+begin_src scheme :noweb-ref service
-  (service yggdrasil-service-type
-    (yggdrasil-configuration
-      (autoconf? #f) ;; use only the public peers
-      (json-config
-        '((peers . #("tls://yg-hkg.magicum.net:32333"
-                     "quic://yg-hkg.magicum.net:32334"))
-           (listen . #("tls://0.0.0.0:1234"
-                       "quic://0.0.0.0:1234"
-                       "tls://[::]:1234"
-                       "quic://[::]:1234"))))))
+** GNU Net
+#+begin_src scheme :noweb-ref package
+  "gnunet"
+  "gnunet-scheme"
+  "gnunet-gtk"
 #+end_src
 
 ** Tailscale
@@ -1105,9 +1103,9 @@ exec /home/minkieyume/.local/share/pipx/venvs/uv/bin/uvx "$@"
 #+end_src
 
 * 通讯
-** Element
+** Jami
 #+begin_src scheme :noweb-ref package
-  "element-desktop"
+  "jami"
 #+end_src
 
 * 多媒体
@@ -1116,10 +1114,29 @@ exec /home/minkieyume/.local/share/pipx/venvs/uv/bin/uvx "$@"
   "mpv-nvidia"
 #+end_src
 
-** obs
-#+begin_src scheme
+** Obs
+#+begin_src scheme :noweb-ref package
   "obs-nvidia"
 #+end_src
+
+** V4L2
+#+begin_src scheme :noweb-ref package
+  "v4l-utils"
+#+end_src
+
+#+begin_src scheme :noweb-ref transformation
+(nonguix-transformation-linux)
+
+(lambda (os)
+  (operating-system
+   (inherit os)      
+   (kernel-arguments
+    (cons* "v4l2loopback.devices=1"
+  	 "v4l2loopback.exclusive_caps=1"
+  	 "v4l2loopback.card_label=Virtual Camera"
+           (operating-system-user-kernel-arguments os)))))
+#+end_src
+
 
 ** Kodi
 #+begin_src scheme :noweb-ref package

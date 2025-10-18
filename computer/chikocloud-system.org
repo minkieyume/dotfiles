@@ -350,8 +350,9 @@ fish，开箱即用的终端解释器。
 
 *** 备份数据库
 #+begin_src scheme :noweb-ref mcron-job
-  (job "0 2 * * *" "doas -u misskey pg_dump -U misskey -d misskey > /tmp/misskey.sql && ( rsync -avz --timeout=30 /tmp/misskey.sql rsync://100.119.107.8/backup/misskey/misskey.sql ; rm /tmp/misskey.sql)")
-  (job "0 2 * * *" "rsync -avz --timeout=30 /var/lib/misskey/files rsync://100.119.107.8/backup/misskey/files")
+  (job "0 2 * * *" "doas -u misskey pg_dump -U misskey -d misskey > /tmp/misskey.sql && ( rsync -avz --timeout=30 /tmp/misskey.sql rsync://100.119.107.8/backup/misskey ; rm /tmp/misskey.sql)")
+  (job "0 2 * * *" "chmod -R 755 /var/lib/misskey/files")
+  (job "0 2 * * *" "rsync -avz --timeout=30 /var/lib/misskey/files rsync://100.119.107.8/backup/misskey")
 #+end_src
 
 ** GPG
@@ -502,6 +503,7 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
   (service misskey-service-type
     (misskey-configuration
       (image "misskey/misskey:latest")
+      (postgresql-password-file "/var/lib/misskey/ppasu")
       (config
         `((url . "https://littlewing.yumieko.com")
            (port . 3000)

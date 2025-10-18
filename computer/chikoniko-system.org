@@ -12,6 +12,7 @@
    <<env>>
    (bootloader <<bootloader>>)
    (initrd-modules (cons* <<initrd-module>> %base-initrd-modules))
+   (kernel-loadable-modules (specifications->packages '(<<kernel-loadable-module>>)))
    (kernel-arguments (cons* <<kernel-argument>> %default-kernel-arguments))
    (privileged-programs (cons* <<privileged-program>> %default-privileged-programs))
    (users (cons* <<user>> %base-user-accounts))
@@ -44,6 +45,10 @@
 *** 内核模块
 #+begin_src scheme :noweb-ref initrd-module
   "dummy"
+#+end_src
+
+#+begin_src scheme :noweb-ref kernel-loadable-module
+  "v4l2loopback-linux-module"
 #+end_src
 
 ** 用户配置
@@ -446,10 +451,10 @@ fish，开箱即用的终端解释器。
 基础的包配置
 #+begin_src scheme :noweb-ref package
   "emacs-pgtk"
+  "emacs-eldev"
 
   ;;包管理器
-  "emacs-straight"
-  "emacs-use-package"
+  "emacs-use-package"  
 
   ;;编辑模式
   "emacs-nginx-mode"
@@ -475,6 +480,9 @@ fish，开箱即用的终端解释器。
   "emacs-vertico"
   "emacs-orderless"
   "emacs-consult"
+  "emacs-ripgrep"
+  "ripgrep"
+  "ripgrep-all"
   "emacs-marginalia"
   "emacs-embark"
   "emacs-rainbow-delimiters"
@@ -496,13 +504,16 @@ fish，开箱即用的终端解释器。
   "emacs-emacsql"
   "emacs-ox-hugo"
   "emacs-org-download"
+  "emacs-oauth2"
 
   ;;AI集成
   "emacs-llm"
+  "emacs-vecdb"
   "emacs-copilot"
   "emacs-copilot-chat"
   "emacs-mcp"
-  "uv"
+  "emacs-ellama"
+  "emacs-elisa"
 
   ;;笔记软件
   "emacs-ekg"
@@ -515,6 +526,7 @@ fish，开箱即用的终端解释器。
   ;;版本控制
   "emacs-magit"
   "emacs-magit-todos"
+  "emacs-forge"
 
   ;;文件管理
   "emacs-dirvish@d877433f957a363ad78b228e13a8e5215f2d6593"
@@ -537,7 +549,8 @@ fish，开箱即用的终端解释器。
       		   ,(computed-substitution-with-inputs "init.el"
       						       (local-file "../files/config/emacs/init.el")
 						       (append
-							(list (local-file "../files/config/emacs" #:recursive? #t))
+							(list (local-file "../files/config/emacs" #:recursive? #t)
+							      (local-file "../secret/epasu" #:recursive? #t))
 							(specs->pkgs "ccls"
       								     "fish"
       								     "python-lsp-server"
@@ -548,6 +561,7 @@ fish，开箱即用的终端解释器。
 								     "ffmpegthumbnailer"
 								     "p7zip"
 								     "imagemagick"
+								     "godot"
 								     "mediainfo"
 								     "vips"))))
       		  ("emacs/.init-themes.el"
@@ -566,6 +580,13 @@ fish，开箱即用的终端解释器。
   			#~(make-forkexec-constructor
   			   '("emacsclient" "--eval" "(kill-emacs)"))))))
 #+end_src
+
+#+begin_src scheme :noweb-ref home-service
+  (simple-service 'emacs-auth-info
+		home-files-service-type
+		`((".authinfo.gpg" ,(local-file "../secret/authinfo.gpg"))))
+#+end_src
+
 [[file:../files/config/emacs/Emacs配置.org][Emacs配置]]
 [[file:../files/config/chikoniko/init-theme.el][emacs-themes]]
 
