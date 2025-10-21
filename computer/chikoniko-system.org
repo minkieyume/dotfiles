@@ -994,6 +994,26 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 			   desktop-files))))
 #+end_src
 
+* AI软件
+** Aider
+Aider暂时没有包，需要用uvx安装。
+#+begin_src scheme :noweb-ref home-service
+(simple-service 'aider-file
+		home-files-service-type
+		`((".local/bin/aider" ,aider-wrapper)))
+#+end_src
+
+#+begin_src scheme :noweb-ref define
+(define aider-wrapper
+  (program-file
+   "aider-wrapper"
+   #~(begin
+       (apply execl (append
+		     (list (string-append (getenv "HOME") "/.local/bin/uvx")
+			   "uvx" "--from" "aider-chat" "aider")
+		     (cdr (command-line)))))))
+#+end_src
+
 
 * 程序开发
 ** 开发库
@@ -1031,7 +1051,49 @@ pkg-config这个包似乎有bug，装上会导致nheko等一堆程序找不到�
 ** Python
 #+begin_src scheme :noweb-ref package
   "python"
-  "python-lsp-server"
+  "pipx"
+#+end_src
+
+*** UV
+注：关于uv的安装，因为guix没有uv最新版，因此暂时安装uv手动通过下列命令完成安装：
+#+begin_src shell
+pipx install uv
+#+end_src
+
+安装patchelf包：
+#+begin_src scheme :noweb-ref package
+"patchelf"
+#+end_src
+
+然后使用patchelf命令来修复路径问题：
+#+begin_src shell
+patchelf --set-interpreter /gnu/store/py9r4p4jp2pa1jaagbcvw35d79j5kcg5-glibc-2.41/lib/ld-linux-x86-64.so.2 ./uv
+patchelf --set-interpreter /gnu/store/py9r4p4jp2pa1jaagbcvw35d79j5kcg5-glibc-2.41/lib/ld-linux-x86-64.so.2 ./uvx
+#+end_src
+
+然后，在.local/bin中写下列shell脚本：
+#+begin_src shell uv
+#!/usr/bin/env bash
+# ↑ 用 bash 兼容模式执行（fish 会自动调用外部 bash）
+# 即使在 fish 环境下运行这个脚本，也没问题
+
+export LD_LIBRARY_PATH="$HOME/.guix-profile/lib:/run/current-system/profile/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+exec /home/minkieyume/.local/share/pipx/venvs/uv/bin/uv "$@"
+#+end_src
+
+#+begin_src shell uvx
+#!/usr/bin/env bash
+# ↑ 用 bash 兼容模式执行（fish 会自动调用外部 bash）
+# 即使在 fish 环境下运行这个脚本，也没问题
+
+export LD_LIBRARY_PATH="$HOME/.guix-profile/lib:/run/current-system/profile/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+exec /home/minkieyume/.local/share/pipx/venvs/uv/bin/uvx "$@"
+#+end_src
+
+最后，添加环境变量：
+#+begin_src scheme :noweb-ref home-environment-variable
+  ("PATH" . "$HOME/.local/bin:$PATH")
+  ("UV_INDEX_URL" . "https://pypi.tuna.tsinghua.edu.cn/simple")
 #+end_src
 
 ** Racket

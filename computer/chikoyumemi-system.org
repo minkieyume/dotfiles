@@ -529,6 +529,7 @@ fish，开箱即用的终端解释器。
   "emacs-mcp"
   "emacs-ellama"
   "emacs-elisa"
+  "emacs-aider"
 
   ;;笔记软件
   "emacs-ekg"
@@ -1088,6 +1089,7 @@ exec /home/minkieyume/.local/share/pipx/venvs/uv/bin/uvx "$@"
 最后，添加环境变量：
 #+begin_src scheme :noweb-ref home-environment-variable
   ("PATH" . "$HOME/.local/bin:$PATH")
+  ("UV_INDEX_URL" . "https://pypi.tuna.tsinghua.edu.cn/simple")
 #+end_src
 
 ** Racket
@@ -1230,6 +1232,24 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
 	  (api-key (nyapasu-ref 'qdrant-api-key))))
 #+end_src
 
+** Aider
+Aider暂时没有包，需要用uvx安装。
+#+begin_src scheme :noweb-ref home-service
+(simple-service 'aider-file
+		home-files-service-type
+		`((".local/bin/aider" ,aider-wrapper)))
+#+end_src
+
+#+begin_src scheme :noweb-ref define
+(define aider-wrapper
+  (program-file
+   "aider-wrapper"
+   #~(begin
+       (apply execl (append
+		     (list (string-append (getenv "HOME") "/.local/bin/uvx")
+			   "uvx" "--from" "aider-chat" "aider")
+		     (cdr (command-line)))))))
+#+end_src
 
 * 创作
 ** 游戏开发

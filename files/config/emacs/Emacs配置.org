@@ -307,13 +307,21 @@ mcp是AI与外界互动的接口库。
 
 ** Aider
 #+begin_src emacs-lisp :noweb-ref config
-  ;; (use-package aider
-  ;;   :straight (:host github :repo "tninja/aider.el")
-  ;;   :bind (("C-c C-a" . aider-transient-menu))
-  ;;   :custom
-  ;;   (aider-popular-models '("ollama_chat/starcoder2:instruct" "ollama_chat/deepseek-coder-v2:16b-lite-instruct-q4_K_M"))
-  ;;   :config
-  ;;   (setenv "OLLAMA_API_BASE" "http://127.0.0.1:11434"))
+(use-package aider	     
+  	     :custom
+  	     (aider-popular-models '("openai/gpt-4.1" "openai/gpt-5-codex" "openai/claude-haiku-4.5"
+  				     "openai/claude-sonnet-4.5"))
+	       (aider-args '("--model" "openai/gpt-4.1" "--no-auto-accept-architect"))
+  	     :config
+  	     (setenv "OLLAMA_API_BASE" "http://127.0.0.1:11434")
+  	     (setenv "OPENAI_API_BASE" "https://api.githubcopilot.com")
+  	     (setenv "OPENAI_API_KEY"
+  		     (let* ((entry (car (auth-source-search
+  					 :host "api.githubcopilot.com"
+  					 :user "dreamtwi")))
+  			    (secret-fn (plist-get entry :secret))
+  			    (password (if secret-fn (funcall secret-fn))))
+  		       password)))
 #+end_src
 
 ** Compilot
@@ -711,7 +719,8 @@ Ekg是方便快速整理灵感和笔记的笔记插件。
        ("d" "~/Downloads"                  "下载")
        ("m" "/mnt/"                       "Drives")
        ("r" "/run/user/1000/gvfs/dav:host=chikopara,port=8990,ssl=false/" "远程资源路径")
-       ("t" "~/.local/share/Trash/files/" "TrashCan")
+       ("t" "~/Tools/" "工具箱")
+       ("T" "~/.local/share/Trash/files/" "TrashCan")
        ("D"  "~/Develop"                  "开发目录")
        ("C"  "~/Creator"                  "创作目录")
        ("P"  "~/Pictures"                 "图片目录")
