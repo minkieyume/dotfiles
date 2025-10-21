@@ -523,6 +523,7 @@ fish，开箱即用的终端解释器。
   "emacs-mcp"
   "emacs-ellama"
   "emacs-elisa"
+  "emacs-aider"
 
   ;;笔记软件
   "emacs-ekg"
