@@ -37,6 +37,8 @@
       "PHOGS.exe"
       "tailscaled"
       "tailscale"
+      "jami"
+      ".jami-real"
       "Anon1800.exe"
       "ACU.exe"
       "upc.exe"))

@@ -500,47 +500,33 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 
 ** Misskey
 #+begin_src scheme :noweb-ref service
-  (service misskey-service-type
-    (misskey-configuration
-      (image "misskey/misskey:latest")
-      (postgresql-password-file "/var/lib/misskey/ppasu")
-      (config
-        `((url . "https://littlewing.yumieko.com")
-           (port . 3000)
-           (db
-             . ((host . localhost)
-                 (port . 5432)
-                 (db . misskey)
-                 (user . misskey)
-                 (pass . ,(nyapasu-ref 'misskeydb))))
-           (dbReplications . #f)
-           (redis
-             . ((host . localhost)
-                 (port . 6379)))
-           (fulltextSearch
-             . ((provider . sqlLike)))
-           (id . "aidx")
-           (clusterLimit . 4)
-           (outgoingAddressFamily . dual)
-           (proxyRemoteFiles . #t)
-           (signToActivityPubGet . #t)))))
+(service misskey-service-type
+  	 (misskey-configuration
+  	  (image "misskey/misskey:latest")
+  	  (postgresql-password-file "/var/lib/misskey/ppasu")
+  	  (config
+           `(("url" . "https://littlewing.yumieko.com")
+             ("port" . 3000)
+             ("db"
+  	      ("host" . "localhost")
+              ("port" . 5432)
+              ("db" . "misskey")
+              ("user" . "misskey")
+              ("pass" . ,(nyapasu-ref 'misskeydb)))
+             ("dbReplications" . #f)
+             ("redis"
+	      ("host" . "localhost")
+              ("port" . 6379))
+             ("fulltextSearch"
+	      ("provider" . "sqlLike"))
+             ("id" . "aidx")
+             ("clusterLimit" . 4)
+             ("outgoingAddressFamily" . "dual")
+             ("proxyRemoteFiles" . #t)
+             ("signToActivityPubGet" . #t)))))
 #+end_src
 
 * 代理
-** Yggdrasil
-#+begin_src scheme :noweb-ref service
-  (service yggdrasil-service-type
-  	 (yggdrasil-configuration
-  	  (autoconf? #f) ;; use only the public peers
-  	  (json-config
-  	   '((peers . #("tls://ygg.jjolly.dev:3443"
-  			"tls://yg-hkg.magicum.net:32333"))
-               (listen . #("tls://0.0.0.0:1234"
-  			 "quic://0.0.0.0:1234"
-  			 "tls://[::]:1234"
-  			 "quic://[::]:1234"))))))
-#+end_src
-
 ** Tailscale
 #+begin_src scheme :noweb-ref module
   (rosenthal services networking)
@@ -548,6 +534,13 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 
 #+begin_src scheme :noweb-ref service
   (service tailscale-service-type)
+#+end_src
+
+** OpenDHT
+#+begin_src scheme :noweb-ref service
+(service opendht-service-type
+	 (opendht-configuration
+	   (peer-discovery? #t)))
 #+end_src
 
 * 容器

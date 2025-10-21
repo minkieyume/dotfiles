@@ -11,7 +11,7 @@
   (operating-system
    <<env>>
    (bootloader <<bootloader>>)
-   (initrd-modules (cons* <<initrd-module>> %base-initrd-modules))
+   (initrd-modules (append '(<<initrd-module>>) %base-initrd-modules))
    (privileged-programs (cons* <<privileged-program>> %default-privileged-programs))
    (users (cons* <<user>> %base-user-accounts))
    (services (cons* <<service>> %base-services))
@@ -34,7 +34,7 @@
 
 ** 系统模块
 #+begin_src scheme :noweb-ref initrd-module
-  "dummy"
+
 #+end_src
 
 ** 用户配置
@@ -550,19 +550,12 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   (rosenthal services web)
 #+end_src
 
-* 代理
-** Yggdrasil
-#+begin_src scheme :noweb-ref service
-  (service yggdrasil-service-type
-    (yggdrasil-configuration
-      (autoconf? #f) ;; use only the public peers
-      (json-config
-        '((peers . #("tls://yg-hkg.magicum.net:32333"
-                     "quic://yg-hkg.magicum.net:32334"))
-           (listen . #("tls://0.0.0.0:1234"
-                       "quic://0.0.0.0:1234"
-                       "tls://[::]:1234"
-                       "quic://[::]:1234"))))))
+* 组网
+** GNU Net
+#+begin_src scheme :noweb-ref package
+  "gnunet"
+  "gnunet-scheme"
+  "gnunet-gtk"
 #+end_src
 
 ** Tailscale
@@ -573,6 +566,14 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+begin_src scheme :noweb-ref service
   (service tailscale-service-type)
 #+end_src
+
+** OpenDHT
+#+begin_src scheme :noweb-ref service
+(service opendht-service-type
+	 (opendht-configuration
+	   (peer-discovery? #t)))
+#+end_src
+
 
 
 * 容器
@@ -609,14 +610,14 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 ** SingBox
 八音盒软件
 #+begin_src scheme :noweb-ref module
-(chiko services networking)
+((chiko services networking) #:prefix chiko:)
 #+end_src
 
 #+begin_src scheme :noweb-ref package
 "sing-box"
 #+end_src
 
-*** 配置导入
+**** 配置导入
 #+begin_src scheme :noweb-ref define
   (define %sing-box-listener
     (local-file "../files/config/singbox/listener.scm"))
@@ -629,84 +630,14 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
             (sing-box-listener #$output)))))
 #+end_src
 
-*** 服务
+**** 服务
 #+begin_src scheme :noweb-ref service
-(service sing-box-service-type
-  	 (sing-box-configuration
+(service chiko:sing-box-service-type
+  	 (chiko:sing-box-configuration
   	  (sing-box (spec->pkg "sing-box"))
   	  (config-file %sing-box-config-file)
   	  (tproxy-nft-config-file (local-file "../files/config/singbox/singbox-tproxy.nft"))
-  	  (auto-start? #f)))
-#+end_src
-
-*** 权限
-#+begin_src scheme
-  (privileged-program
-   (program (file-append (spec->pkg "sing-box") "/bin/sing-box"))
-   (capabilities "cap_net_admin,cap_net_bind_service,cap_net_raw+ep"))
-#+end_src
-
-*** 服务
-#+begin_src scheme
-(simple-service 'sing-box-service
-  		shepherd-root-service-type
-  		(list
-  		 (let ((config %sing-box-config-file))
-  		   (shepherd-service
-  		    (documentation "Run sing-box singing listener.")
-  		    (provision '(sing-box singbox))
-  		    (requirement '(networking))
-		      (auto-start? #f)
-  		    (respawn-limit 100)
-  		    (respawn-delay 20)
-  		    (start #~(make-forkexec-constructor
-  			      (list "/run/privileged/bin/sing-box" "run" "-c" #$config)
-                              #:log-file "/var/log/sing-box.log"
-                              #:supplementary-groups '("netdev")
-    		              #:user "singbox"
-  			      #:resource-limits '((nofile 100000 100000))))
-  		    (stop #~(make-kill-destructor))))))
-#+end_src
-
-**** 透明唱片
-#+begin_src scheme
-(simple-service 'sing-box-tcd
-		shepherd-root-service-type
-		(list
-		 (shepherd-service
-		  (documentation "运行一个SingBox TCD，透明唱片播放程序")
-		  (provision '(sing-box-tcd singbox-tcd))
-		  (requirement '(sing-box))
-		  (auto-start? #f)
-		  (respawn? #f)
-		  (start #~(lambda _
-			     (let* ((ip #$(file-append (spec->pkg "iproute2") "/sbin/ip"))
-				    (st1 (system* ip "route" "add" "local" "default" "dev" "lo" "table" "100"))
-				    (st2 (system* ip "rule" "add" "fwmark" "1" "table" "100"))
-				    (st3 (system* ip "-6" "route" "add" "local" "default" "dev" "lo" "table" "100"))
-				    (st4 (system* ip "-6" "rule" "add" "fwmark" "1" "table" "100")))
-			       (and (map (lambda (st)
-					   (= 0 (status:exit-val st)))
-					 (list st1 st2 st3 st4))))))
-		  (stop #~(lambda _
-			    (let* ((ip #$(file-append (spec->pkg "iproute2") "/sbin/ip"))
-				   (st1 (system* ip "rule" "del" "fwmark" "1" "table" "100"))
-				   (st2 (system* ip "route" "del" "local" "default" "dev" "lo" "table" "100"))
-				   (st3 (system* ip "-6" "rule" "del" "fwmark" "1" "table" "100"))
-				   (st4 (system* ip "-6" "route" "del" "local" "default" "dev" "lo" "table" "100")))
-			      (and (map (lambda (st)
-					  (= 0 (status:exit-val st)))
-					(list st1 st2 st3 st4)))))))))
-#+end_src
-
-
-*** 用户态
-#+begin_src scheme
-  (user-account
-    (name "singbox")
-    (group "nogroup")
-    (system? #t)
-    (home-directory "/var/empty/"))
+  	  (auto-start? #t)))
 #+end_src
 
 * 网盘

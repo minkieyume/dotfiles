@@ -11,7 +11,7 @@
   (operating-system
    <<env>>
    (bootloader <<bootloader>>)
-   (initrd-modules (cons* <<initrd-module>> %base-initrd-modules))
+   (initrd-modules (append '(<<initrd-module>>) %base-initrd-modules))
    (kernel-loadable-modules (specifications->packages '(<<kernel-loadable-module>>)))
    (kernel-arguments (cons* <<kernel-argument>> %default-kernel-arguments))
    (privileged-programs (cons* <<privileged-program>> %default-privileged-programs))
@@ -43,13 +43,22 @@
 #+end_src
 
 *** 内核模块
+**** 初始化模块
 #+begin_src scheme :noweb-ref initrd-module
-  "dummy"
 #+end_src
 
+**** 可加载模块
 #+begin_src scheme :noweb-ref kernel-loadable-module
   "v4l2loopback-linux-module"
 #+end_src
+
+**** 模块自动加载
+#+begin_src scheme :noweb-ref service
+(service kernel-module-loader-service-type
+	 (kernel-module-loader-configuration
+	  (modules '("uvcvideo" "videodev" "v4l2loopback"))))
+#+end_src
+
 
 ** 用户配置
 *** Root
@@ -682,19 +691,12 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   	 (syncthing-configuration (user "minkieyume")))
 #+end_src
 
-* 代理
-** Yggdrasil
-#+begin_src scheme :noweb-ref service
-  (service yggdrasil-service-type
-    (yggdrasil-configuration
-      (autoconf? #f) ;; use only the public peers
-      (json-config
-        '((peers . #("tls://yg-hkg.magicum.net:32333"
-                     "quic://yg-hkg.magicum.net:32334"))
-           (listen . #("tls://0.0.0.0:1234"
-                       "quic://0.0.0.0:1234"
-                       "tls://[::]:1234"
-                       "quic://[::]:1234"))))))
+* 组网
+** GNU Net
+#+begin_src scheme :noweb-ref package
+  "gnunet"
+  "gnunet-scheme"
+  "gnunet-gtk"
 #+end_src
 
 ** Tailscale
@@ -782,6 +784,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   "xwayland-satellite"
   "helvum"
   "pavucontrol"
+  "hicolor-icon-theme"
 #+end_src
 
 #+begin_src scheme :noweb-ref home-service
@@ -965,23 +968,31 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   						       (list (spec->pkg "krita"))))))
 #+end_src
 
+**** Element
+#+begin_src scheme :noweb-ref home-service
+(simple-service 'element-desktop
+  		home-files-service-type
+  		`((".local/share/applications/element-desktop.desktop"
+		   ,(computed-substitution-with-inputs "element-desktop.desktop"
+  						       (local-file "../files/desktop/element-desktop.desktop")
+  						       (list (spec->pkg "element-desktop"))))))
+#+end_src
+
 **** Flatpak
 #+begin_src scheme :noweb-ref home-service
 (let ((desktop-files '("org.mapeditor.Tiled.desktop"
-                       "org.kde.digikam.desktop"
-                       "org.localsend.localsend_app.desktop"
-                       "com.calibre_ebook.calibre.desktop"
-                       "com.orama_interactive.Pixelorama.desktop"
-                       "com.qq.QQ.desktop")))
+		       "org.kde.digikam.desktop"
+		       "org.localsend.localsend_app.desktop"
+		       "com.calibre_ebook.calibre.desktop"
+		       "com.orama_interactive.Pixelorama.desktop"
+		       "com.qq.QQ.desktop")))
   (simple-service 'flatpak-desktop
                   home-files-service-type
-                  (map (lambda (desktop-file)
-                         (list (string-append ".local/share/applications/" desktop-file)
-                               (local-file (string-append "../files/desktop/" desktop-file))))
-                       desktop-files)))
+		  `(,@(map (lambda (desktop-file)
+                             `(,(string-append ".local/share/applications/" desktop-file)
+			       ,(local-file (string-append %this-dir "/../files/desktop/" desktop-file))))
+			   desktop-files))))
 #+end_src
-
-
 
 
 * 程序开发
@@ -1041,11 +1052,10 @@ pkg-config这个包似乎有bug，装上会导致nheko等一堆程序找不到�
 #+end_src
 
 * 通讯
-** Element
+** Jami
 #+begin_src scheme :noweb-ref package
-  "element-desktop"
+  "jami"
 #+end_src
-
 
 * 多媒体
 ** mpv
@@ -1053,10 +1063,29 @@ pkg-config这个包似乎有bug，装上会导致nheko等一堆程序找不到�
   "mpv"
 #+end_src
 
-** obs
+** Obs
 #+begin_src scheme :noweb-ref package
   "obs"
 #+end_src
+
+** V4L2
+#+begin_src scheme :noweb-ref package
+  "v4l-utils"
+#+end_src
+
+#+begin_src scheme :noweb-ref transformation
+(nonguix-transformation-linux)
+
+(lambda (os)
+  (operating-system
+   (inherit os)      
+   (kernel-arguments
+    (cons* "v4l2loopback.devices=1"
+  	 "v4l2loopback.exclusive_caps=1"
+  	 "v4l2loopback.card_label=Virtual Camera"
+           (operating-system-user-kernel-arguments os)))))
+#+end_src
+
 
 ** Kodi
 #+begin_src scheme :noweb-ref package
@@ -1128,6 +1157,10 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
 
 *** SingBox
 八音盒软件
+#+begin_src scheme :noweb-ref module
+((chiko services networking) #:prefix chiko:)
+#+end_src
+
 #+begin_src scheme :noweb-ref package
 "sing-box"
 #+end_src
@@ -1145,68 +1178,12 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
             (sing-box-listener #$output)))))
 #+end_src
 
-**** 权限
-#+begin_src scheme :noweb-ref privileged-program
-  (privileged-program
-    (program (file-append (spec->pkg "sing-box") "/bin/sing-box"))
-    (capabilities "cap_net_admin,cap_net_bind_service,cap_net_raw+ep"))
-#+end_src
-
 **** 服务
 #+begin_src scheme :noweb-ref service
-  (simple-service 'sing-box-service
-  		shepherd-root-service-type
-  		(list
-  		 (let ((config %sing-box-config-file))
-  		   (shepherd-service
-  		    (documentation "Run sing-box singing listener.")
-  		    (provision '(sing-box))
-  		    (requirement '(networking))
-  		    (respawn-limit 100)
-  		    (respawn-delay 20)
-  		    (start #~(make-forkexec-constructor
-  			      (list "/run/privileged/bin/sing-box" "run" "-c" #$config)
-                                #:log-file "/var/log/sing-box.log"
-                                #:supplementary-groups '("netdev")
-    		                #:user "singbox"
-  			      #:resource-limits '((nofile 100000 100000))))
-  		    (stop #~(make-kill-destructor))))))
+(service chiko:sing-box-service-type
+  	 (chiko:sing-box-configuration
+  	  (sing-box (spec->pkg "sing-box"))
+  	  (config-file %sing-box-config-file)
+  	  (tproxy-nft-config-file (local-file "../files/config/singbox/singbox-tproxy.nft"))
+  	  (auto-start? #t)))
 #+end_src
-
-**** 透明唱片
-#+begin_src scheme :noweb-ref service
-(simple-service 'singbox-tcd
-		shepherd-root-service-type
-		(list
-		 (shepherd-service
-		  (documentation "运行一个SingBox TCD，透明唱片播放程序")
-		  (provision '(singbox-tcd sing-box-tcd))
-		  (requirement '(sing-box))
-		  (respawn? #f)
-		  (start #~(lambda _
-			     (let* ((ip #$(file-append (spec->pkg "iproute2") "/sbin/ip"))
-				    (st1 (system* ip "route" "add" "local" "default" "dev" "lo" "table" "100"))
-				    (st2 (system* ip "rule" "add" "fwmark" "1" "table" "100")))
-			       (and (map (lambda (st)
-					   (= 0 (status:exit-val st)))
-					 (list st1 st2))))))
-		  (stop #~(lambda _
-			    (let* ((ip #$(file-append (spec->pkg "iproute2") "/sbin/ip"))
-				   (st1 (system* ip "rule" "del" "fwmark" "1" "table" "100"))
-				   (st2 (system* ip "route" "del" "local" "default" "dev" "lo" "table" "100")))
-			      (and (map (lambda (st)
-					  (= 0 (status:exit-val st)))
-					(list st1 st2)))))))))
-#+end_src
-
-
-**** 用户态
-#+begin_src scheme :noweb-ref user
-  (user-account
-    (name "singbox")
-    (group "nogroup")
-    (system? #t)
-    (home-directory "/var/empty/"))
-#+end_src
-
-

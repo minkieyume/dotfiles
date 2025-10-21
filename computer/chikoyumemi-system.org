@@ -11,9 +11,9 @@
   (operating-system
    <<env>>
    (bootloader <<bootloader>>)
-   (initrd-modules (cons* <<initrd-module>> %base-initrd-modules))
-   (kernel-loadable-modules (specifications->packages '(<<kernel-loadable-module>>)))
-   (kernel-arguments (cons* <<kernel-argument>> %default-kernel-arguments))
+   (initrd-modules (append (list <<initrd-module>>) %base-initrd-modules))
+   (kernel-loadable-modules (specifications->packages (list <<kernel-loadable-module>>)))
+   (kernel-arguments (append (list <<kernel-argument>>)  %default-kernel-arguments))
    (privileged-programs (cons* <<privileged-program>> %default-privileged-programs))
    (users (cons* <<user>> %base-user-accounts))
    (groups (cons* <<group>> %base-groups))
@@ -34,21 +34,6 @@
   (timezone "Asia/Singapore")
   (keyboard-layout (keyboard-layout "us"))
   (host-name "chikoyumemi")
-#+end_src
-
-** 系统配置
-*** 内核参数
-#+begin_src scheme :noweb-ref kernel-argument
-  "i8042.reset"
-#+end_src
-
-*** 内核模块
-#+begin_src scheme :noweb-ref initrd-module
-  "dummy"
-#+end_src
-
-#+begin_src scheme :noweb-ref kernel-loadable-module
-  "v4l2loopback-linux-module"
 #+end_src
 
 ** 用户配置
@@ -154,6 +139,30 @@
            "modprobe.blacklist=pcspkr,nouveau"
 	   "nvidia_drm.modeset=1"
            (operating-system-user-kernel-arguments os)))))
+#+end_src
+
+*** 内核参数
+#+begin_src scheme :noweb-ref kernel-argument
+#+end_src
+
+*** 内核模块
+**** 初始化加载模块
+#+begin_src scheme :noweb-ref initrd-module
+#+end_src
+
+**** 可加载模块
+#+begin_src scheme :noweb-ref kernel-loadable-module
+  "v4l2loopback-linux-module"
+#+end_src
+
+**** 模块自动加载
+#+begin_src scheme :noweb-ref module
+(gnu services linux)
+#+end_src
+
+#+begin_src scheme :noweb-ref service
+(service kernel-module-loader-service-type
+	 '("uvcvideo" "videodev" "v4l2loopback"))
 #+end_src
 
 ** 驱动映射
@@ -689,7 +698,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   	 (syncthing-configuration (user "minkieyume")))
 #+end_src
 
-* 代理
+* 组网
 ** GNU Net
 #+begin_src scheme :noweb-ref package
   "gnunet"
@@ -788,6 +797,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   "xwayland-satellite"
   "helvum"
   "pavucontrol"
+  "hicolor-icon-theme"
 #+end_src
 
 #+begin_src scheme :noweb-ref home-service
@@ -968,7 +978,6 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   						       (local-file "../files/desktop/element-desktop.desktop")
   						       (list (spec->pkg "element-desktop"))))))
 #+end_src
-
 
 **** Flatpak
 #+begin_src scheme :noweb-ref home-service
@@ -1250,7 +1259,7 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
 *** SingBox
 八音盒软件
 #+begin_src scheme :noweb-ref module
-(chiko services networking)
+((chiko services networking) #:prefix chiko:)
 #+end_src
 
 #+begin_src scheme :noweb-ref package
@@ -1272,84 +1281,10 @@ See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
 
 **** 服务
 #+begin_src scheme :noweb-ref service
-(service sing-box-service-type
-  	 (sing-box-configuration
+(service chiko:sing-box-service-type
+  	 (chiko:sing-box-configuration
   	  (sing-box (spec->pkg "sing-box"))
   	  (config-file %sing-box-config-file)
   	  (tproxy-nft-config-file (local-file "../files/config/singbox/singbox-tproxy.nft"))
   	  (auto-start? #t)))
-#+end_src
-
-
-**** 权限
-#+begin_src scheme
-  (privileged-program
-    (program (file-append (spec->pkg "sing-box") "/bin/sing-box"))
-    (capabilities "cap_net_admin,cap_net_bind_service,cap_net_raw+ep"))
-#+end_src
-
-**** 服务
-#+begin_src scheme
-  (simple-service 'sing-box-service
-  		shepherd-root-service-type
-  		(list
-  		 (let ((config %sing-box-config-file))
-  		   (shepherd-service
-  		    (documentation "Run sing-box singing listener.")
-  		    (provision '(sing-box))
-  		    (requirement '(networking))
-  		    (respawn-limit 100)
-  		    (respawn-delay 20)
-  		    (start #~(make-forkexec-constructor
-  			      (list "/run/privileged/bin/sing-box" "run" "-c" #$config)
-                                #:log-file "/var/log/sing-box.log"
-                                #:supplementary-groups '("netdev")
-    		                #:user "singbox"
-  			      #:resource-limits '((nofile 100000 100000))))
-  		    (stop #~(make-kill-destructor))))))
-#+end_src
-
-**** 透明唱片
-#+begin_src scheme
-(simple-service 'singbox-tcd
-		shepherd-root-service-type
-		(list
-		 (shepherd-service
-		  (documentation "运行一个SingBox TCD，透明唱片播放程序")
-		  (provision '(singbox-tcd sing-box-tcd))
-		  (requirement '(sing-box))
-		  (respawn? #f)
-		  (start #~(lambda _
-			     (let* ((ip #$(file-append (spec->pkg "iproute2") "/sbin/ip"))
-				    (nft #$(file-append (spec->pkg "nftables") "/sbin/nft"))
-				    (ste (system* nft "add" "table" "inet" "sing-box"))
-				    (st0 (system* nft "-f" #$(local-file "../files/config/singbox/singbox-tproxy.nft")))
-				    (st1 (system* ip "route" "add" "local" "default" "dev" "lo" "table" "100"))
-				    (st2 (system* ip "rule" "add" "fwmark" "1" "table" "100"))
-				    (st3 (system* ip "-6" "route" "add" "local" "default" "dev" "lo" "table" "100"))
-				    (st4 (system* ip "-6" "rule" "add" "fwmark" "1" "table" "100")))
-			       (and (map (lambda (st)
-					   (= 0 (status:exit-val st)))
-					 (list ste st0 st1 st2 st3 st4))))))
-		  (stop #~(lambda _
-			    (let* ((ip #$(file-append (spec->pkg "iproute2") "/sbin/ip"))
-				   (nft #$(file-append (spec->pkg "nftables") "/sbin/nft"))
-				   (st0 (system* nft "delete" "table" "inet" "sing-box"))
-				   (st1 (system* ip "rule" "del" "fwmark" "1" "table" "100"))
-				   (st2 (system* ip "route" "del" "local" "default" "dev" "lo" "table" "100"))
-				   (st3 (system* ip "-6" "rule" "del" "fwmark" "1" "table" "100"))
-				   (st4 (system* ip "-6" "route" "del" "local" "default" "dev" "lo" "table" "100")))
-			      (and (map (lambda (st)
-					  (= 0 (status:exit-val st)))
-					(list st0 st1 st2 st3 st4)))))))))
-#+end_src
-
-
-**** 用户态
-#+begin_src scheme
-  (user-account
-    (name "singbox")
-    (group "nogroup")
-    (system? #t)
-    (home-directory "/var/empty/"))
 #+end_src
