@@ -1262,6 +1262,12 @@ Aider暂时没有包，需要用uvx安装。
   "hugo"
 #+end_src
 
+** 写作
+#+begin_src scheme :noweb-ref package
+  "texlive"
+  "texlive-pdflatexpicscale"
+#+end_src
+
 ** 绘画
 #+begin_src scheme :noweb-ref package
   "krita"

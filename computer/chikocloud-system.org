@@ -164,7 +164,7 @@
   		    (inherit config)
   		    (substitute-urls %chiko-substitute-urls)
   		    (channels %chiko-channels)
-		    (authorized-keys %chiko-authorized-keys)
+		      (authorized-keys %chiko-authorized-keys)
   		    (extra-options '("--cores=0"))))))))
 #+end_src
 
@@ -591,9 +591,9 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 #+end_src
 
 #+begin_src scheme :noweb-ref service
-(service synapse-service-type
-	 (synapse-configuration
-	  (server-name "chat.yumieko.com")))
+  ;; (service synapse-service-type
+  ;; 	 (synapse-configuration
+  ;; 	  (server-name "chat.yumieko.com")))
 #+end_src
 
 * 代理
