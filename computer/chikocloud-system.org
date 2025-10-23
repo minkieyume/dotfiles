@@ -154,17 +154,18 @@
 
 ** Guix配置
 #+begin_src scheme :noweb-ref transformation
-  (lambda (os)
-    (operating-system
-     (inherit os)
-     (services
-      (modify-services (operating-system-user-services os)
-  		     (guix-service-type
-  		      config => (guix-configuration
-  				 (inherit config)
-  				 (substitute-urls %chiko-substitute-urls)
-  				 (channels %chiko-channels)
-  				 (extra-options '("--cores=0"))))))))
+(lambda (os)
+  (operating-system
+    (inherit os)
+    (services
+     (modify-services (operating-system-user-services os)
+       (guix-service-type
+  	config => (guix-configuration
+  		    (inherit config)
+  		    (substitute-urls %chiko-substitute-urls)
+  		    (channels %chiko-channels)
+		    (authorized-keys %chiko-authorized-keys)
+  		    (extra-options '("--cores=0"))))))))
 #+end_src
 
 
@@ -450,18 +451,20 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
           (certificates
            (list
             (certificate-configuration
-             (domains '("littlewing.yumieko.com")))))))
+             (domains '("littlewing.yumieko.com")))
+	    (certificate-configuration
+             (domains '("chat.yumieko.com")))))))
 #+end_src
 
 ** Nginx
 用于转发网页代理
 #+begin_src scheme :noweb-ref service
-  (service nginx-service-type
+(service nginx-service-type
   	 (nginx-configuration
-  	  (extra-content "map $http_upgrade $connection_upgrade { default upgrade; '' close; }\nclient_max_body_size 500M;")
-  	  (server-blocks
-  	   (list
-              (nginx-server-configuration
+  	   (extra-content "map $http_upgrade $connection_upgrade { default upgrade; '' close; }\nclient_max_body_size 500M;")
+  	   (server-blocks
+  	    (list
+             (nginx-server-configuration
                (server-name '("littlewing.yumieko.com"))
                (listen '("443 ssl"))
                (ssl-certificate "/etc/certs/littlewing.yumieko.com/fullchain.pem")
@@ -469,33 +472,89 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
                (locations
                 (list
                  (nginx-location-configuration
-                  (uri "/")
-                  (body '("proxy_pass http://127.0.0.1:3000;"
-                          "proxy_http_version 1.1;"
-                          "proxy_redirect off;"
-                          "proxy_set_header Host $host;"
-                          "proxy_set_header X-Real-IP $remote_addr;"
-                          "proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;"
-                          "proxy_set_header X-Forwarded-Proto $scheme;"
-  			"proxy_read_timeout 3600s;"
-  			"proxy_send_timeout 3600s;"
-  			"keepalive_timeout 120s;"
-                          "proxy_set_header Upgrade $http_upgrade;"
-                          "proxy_set_header Connection $connection_upgrade;")))
-  	       (nginx-location-configuration
-  		(uri (nyapasu-ref 'ws-transport-path))
-  		(body '("proxy_redirect off;"
-  			"proxy_pass http://127.0.0.1:7890;"
-  			"proxy_http_version 1.1;"
-  			"proxy_set_header Host $host;"
-  			"proxy_set_header X-Real-IP $remote_addr;"
-  			"proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;"
-  			"proxy_set_header X-Forwarded-Proto $scheme;"
-  			"proxy_read_timeout 3600s;"
-  			"proxy_send_timeout 3600s;"
-  			"keepalive_timeout 120s;"
-  			"proxy_set_header Upgrade $http_upgrade;"
-  			"proxy_set_header Connection $connection_upgrade;"))))))))))
+                   (uri "/")
+                   (body '("proxy_pass http://127.0.0.1:3000;"
+                           "proxy_http_version 1.1;"
+                           "proxy_redirect off;"
+                           "proxy_set_header Host $host;"
+                           "proxy_set_header X-Real-IP $remote_addr;"
+                           "proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;"
+                           "proxy_set_header X-Forwarded-Proto $scheme;"
+  			   "proxy_read_timeout 3600s;"
+  			   "proxy_send_timeout 3600s;"
+  			   "keepalive_timeout 120s;"
+                           "proxy_set_header Upgrade $http_upgrade;"
+                           "proxy_set_header Connection $connection_upgrade;")))
+  		 (nginx-location-configuration
+  		   (uri (nyapasu-ref 'ws-transport-path))
+  		   (body '("proxy_redirect off;"
+  			   "proxy_pass http://127.0.0.1:7890;"
+  			   "proxy_http_version 1.1;"
+  			   "proxy_set_header Host $host;"
+  			   "proxy_set_header X-Real-IP $remote_addr;"
+  			   "proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;"
+  			   "proxy_set_header X-Forwarded-Proto $scheme;"
+  			   "proxy_read_timeout 3600s;"
+  			   "proxy_send_timeout 3600s;"
+  			   "keepalive_timeout 120s;"
+  			   "proxy_set_header Upgrade $http_upgrade;"
+  			   "proxy_set_header Connection $connection_upgrade;"))))))
+	     (nginx-server-configuration
+               (server-name '("chat.yumieko.com"))
+               (listen '("443 ssl"))
+	       (ssl-certificate "/etc/certs/chat.yumieko.com/fullchain.pem")
+               (ssl-certificate-key "/etc/certs/chat.yumieko.com/privkey.pem")
+               (locations
+                (list
+                 (nginx-location-configuration
+                   (uri "/")
+                   (body '("proxy_pass http://127.0.0.1:8008;"
+                           "proxy_http_version 1.1;"
+                           "proxy_redirect off;"
+                           "proxy_set_header Host $host;"
+                           "proxy_set_header X-Real-IP $remote_addr;"
+                           "proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;"
+                           "proxy_set_header X-Forwarded-Proto $scheme;"
+  			   "proxy_read_timeout 3600s;"
+  			   "proxy_send_timeout 3600s;"
+  			   "keepalive_timeout 120s;"
+                           "proxy_set_header Upgrade $http_upgrade;"
+                           "proxy_set_header Connection $connection_upgrade;")))
+  		 (nginx-location-configuration
+  		   (uri (nyapasu-ref 'ws-transport-path))
+  		   (body '("proxy_redirect off;"
+  			   "proxy_pass http://127.0.0.1:7890;"
+  			   "proxy_http_version 1.1;"
+  			   "proxy_set_header Host $host;"
+  			   "proxy_set_header X-Real-IP $remote_addr;"
+  			   "proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;"
+  			   "proxy_set_header X-Forwarded-Proto $scheme;"
+  			   "proxy_read_timeout 3600s;"
+  			   "proxy_send_timeout 3600s;"
+  			   "keepalive_timeout 120s;"
+  			   "proxy_set_header Upgrade $http_upgrade;"
+  			   "proxy_set_header Connection $connection_upgrade;"))))))
+	     (nginx-server-configuration
+               (server-name '("chat.yumieko.com"))
+               (listen '("8448 ssl"))
+               (ssl-certificate "/etc/certs/littlewing.yumieko.com/fullchain.pem")
+               (ssl-certificate-key "/etc/certs/littlewing.yumieko.com/privkey.pem")
+               (locations
+                (list
+                 (nginx-location-configuration
+                   (uri "/")
+                   (body '("proxy_pass http://127.0.0.1:8448;"
+                           "proxy_http_version 1.1;"
+                           "proxy_redirect off;"
+                           "proxy_set_header Host $host;"
+                           "proxy_set_header X-Real-IP $remote_addr;"
+                           "proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;"
+                           "proxy_set_header X-Forwarded-Proto $scheme;"
+  			   "proxy_read_timeout 3600s;"
+  			   "proxy_send_timeout 3600s;"
+  			   "keepalive_timeout 120s;"
+                           "proxy_set_header Upgrade $http_upgrade;"
+                           "proxy_set_header Connection $connection_upgrade;"))))))))))
 #+end_src
 
 ** Misskey
@@ -524,6 +583,17 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
              ("outgoingAddressFamily" . "dual")
              ("proxyRemoteFiles" . #t)
              ("signToActivityPubGet" . #t)))))
+#+end_src
+
+** Matrix
+#+begin_src scheme :noweb-ref module
+(chiko services matrix)
+#+end_src
+
+#+begin_src scheme :noweb-ref service
+(service synapse-service-type
+	 (synapse-configuration
+	  (server-name "chat.yumieko.com")))
 #+end_src
 
 * 代理
