@@ -563,8 +563,8 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 	     (nginx-server-configuration
                (server-name '("chat.yumieko.com"))
                (listen '("8448 ssl"))
-               (ssl-certificate "/etc/certs/littlewing.yumieko.com/fullchain.pem")
-               (ssl-certificate-key "/etc/certs/littlewing.yumieko.com/privkey.pem")
+               (ssl-certificate "/etc/certs/chat.yumieko.com/fullchain.pem")
+               (ssl-certificate-key "/etc/certs/chat.yumieko.com/privkey.pem")
                (locations
                 (list
                  (nginx-location-configuration
