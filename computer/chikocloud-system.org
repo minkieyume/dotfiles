@@ -273,7 +273,7 @@
     	   `(("minkieyume"
   	    ,%chiko-ssh-key)
 	     ("dreamtwi"
-	      ,(local-file "dreamtwi_PC_ed25519.pub"))
+	      ,(local-file "../files/keys/dreamtwi_PC_ed25519.pub"))
   	   ("deploy"
   	    ,%chiko-ssh-key)))))
 #+end_src
