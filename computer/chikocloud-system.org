@@ -533,10 +533,7 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
   			   "proxy_send_timeout 3600s;"
   			   "keepalive_timeout 120s;"
                            "proxy_set_header Upgrade $http_upgrade;"
-                           "proxy_set_header Connection $connection_upgrade;"
-			   "add_header 'Access-Control-Allow-Origin' '*' always;"
-			   "add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS' always;"
-			   "add_header 'Access-Control-Allow-Headers' 'Origin, X-Requested-With, Content-Type, Accept, Authorization' always;")))
+                           "proxy_set_header Connection $connection_upgrade;")))
 		 (nginx-location-configuration
 		   (uri "/.well-known/matrix/server")
 		   (body '("add_header Access-Control-Allow-Origin *;"
