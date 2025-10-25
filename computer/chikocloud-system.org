@@ -499,16 +499,6 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
   			   "keepalive_timeout 120s;"
                            "proxy_set_header Upgrade $http_upgrade;"
                            "proxy_set_header Connection $connection_upgrade;")))
-		 (nginx-location-configuration
-		   (uri "/.well-known/matrix/server")
-		   (body '("add_header Access-Control-Allow-Origin *;"
-			   "default_type application/json;"
-			   "return 200 '{\"m.server\": {\"base_url\": \"https://chat.yumieko.com:8448\"}}';")))
-		 (nginx-location-configuration
-		   (uri "/.well-known/matrix/client")
-		   (body '("add_header Access-Control-Allow-Origin *;"
-			   "default_type application/json;"
-			   "return 200 '{\"m.homeserver\": {\"base_url\": \"https://chat.yumieko.com\"}}';")))
   		 (nginx-location-configuration
   		   (uri (nyapasu-ref 'ws-transport-path))
   		   (body '("proxy_redirect off;"
@@ -544,6 +534,18 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
   			   "keepalive_timeout 120s;"
                            "proxy_set_header Upgrade $http_upgrade;"
                            "proxy_set_header Connection $connection_upgrade;")))
+		 (nginx-location-configuration
+		   (uri "/.well-known/matrix/server")
+		   (body '("add_header Access-Control-Allow-Origin *;"
+			   "add_header Access-Control-Allow-Methods 'GET, OPTIONS';"
+			   "default_type application/json;"
+			   "return 200 '{\"m.server\": {\"base_url\": \"chat.yumieko.com:443\"}}';")))
+		 (nginx-location-configuration
+		   (uri "/.well-known/matrix/client")
+		   (body '("add_header Access-Control-Allow-Origin *;"
+			   "add_header Access-Control-Allow-Methods 'GET, OPTIONS';"
+			   "default_type application/json;"
+			   "return 200 '{\"m.homeserver\": {\"base_url\": \"https://chat.yumieko.com\"}}';")))
   		 (nginx-location-configuration
   		   (uri (nyapasu-ref 'ws-transport-path))
   		   (body '("proxy_redirect off;"
@@ -557,28 +559,7 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
   			   "proxy_send_timeout 3600s;"
   			   "keepalive_timeout 120s;"
   			   "proxy_set_header Upgrade $http_upgrade;"
-  			   "proxy_set_header Connection $connection_upgrade;"))))))
-	     (nginx-server-configuration
-               (server-name '("chat.yumieko.com"))
-               (listen '("8448 ssl"))
-               (ssl-certificate "/etc/certs/chat.yumieko.com/fullchain.pem")
-               (ssl-certificate-key "/etc/certs/chat.yumieko.com/privkey.pem")
-               (locations
-                (list
-                 (nginx-location-configuration
-                   (uri "/")
-                   (body '("proxy_pass http://127.0.0.1:8008;"
-                           "proxy_http_version 1.1;"
-                           "proxy_redirect off;"
-                           "proxy_set_header Host $host;"
-                           "proxy_set_header X-Real-IP $remote_addr;"
-                           "proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;"
-                           "proxy_set_header X-Forwarded-Proto $scheme;"
-  			   "proxy_read_timeout 3600s;"
-  			   "proxy_send_timeout 3600s;"
-  			   "keepalive_timeout 120s;"
-                           "proxy_set_header Upgrade $http_upgrade;"
-                           "proxy_set_header Connection $connection_upgrade;"))))))))))
+  			   "proxy_set_header Connection $connection_upgrade;"))))))))))
 #+end_src
 
 ** Misskey
