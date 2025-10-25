@@ -58,6 +58,18 @@
     (supplementary-groups '("wheel" "netdev" "audio" "video")))
 #+end_src
 
+*** Dreamtwi
+#+begin_src scheme :noweb-ref user
+  (user-account
+    (name "dreamtwi")
+    (comment "Dreamtwi")
+    (group "users")
+    (password "$6$dreamtwi-best$a9/vb1nJ/rDiP3e7lP/T633w92o4Iekbc4UvDWKjGsIUCaWTqthtjnrbRhVzm.je8op8PSBVuANuQnkgONvEK1")
+    (shell (file-append (spec->pkg "fish") "/bin/fish"))
+    (home-directory "/home/dreamtwi")
+    (supplementary-groups '("wheel" "netdev" "audio" "video")))
+#+end_src
+
 *** Deploy
 #+begin_src scheme :noweb-ref user
   (user-account
@@ -259,8 +271,9 @@
     	  (permit-root-login #f)
     	  (authorized-keys
     	   `(("minkieyume"
-  	    ,%chiko-ssh-key
-    	      ,(local-file "../files/keys/niko_ssh_rsa.pub"))
+  	    ,%chiko-ssh-key)
+	     ("dreamtwi"
+	      ,(local-file "dreamtwi_PC_ed25519.pub"))
   	   ("deploy"
   	    ,%chiko-ssh-key)))))
 #+end_src
