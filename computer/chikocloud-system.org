@@ -480,7 +480,7 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
   	    (list
              (nginx-server-configuration
                (server-name '("littlewing.yumieko.com"))
-               (listen '("443 ssl"))
+               (listen '("443 ssl" "[::]:443 ssl"))
                (ssl-certificate "/etc/certs/littlewing.yumieko.com/fullchain.pem")
                (ssl-certificate-key "/etc/certs/littlewing.yumieko.com/privkey.pem")
                (locations
@@ -515,7 +515,7 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
   			   "proxy_set_header Connection $connection_upgrade;"))))))
 	     (nginx-server-configuration
                (server-name '("chat.yumieko.com"))
-               (listen '("443 ssl"))
+               (listen '("443 ssl" "[::]:443 ssl"))
 	       (ssl-certificate "/etc/certs/chat.yumieko.com/fullchain.pem")
                (ssl-certificate-key "/etc/certs/chat.yumieko.com/privkey.pem")
                (locations
@@ -562,7 +562,7 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
   			   "proxy_set_header Connection $connection_upgrade;"))))))
 	     (nginx-server-configuration
                (server-name '("chat.yumieko.com"))
-               (listen '("8448 ssl"))
+               (listen '("8448 ssl" "[::]:8448 ssl"))
                (ssl-certificate "/etc/certs/chat.yumieko.com/fullchain.pem")
                (ssl-certificate-key "/etc/certs/chat.yumieko.com/privkey.pem")
                (locations
