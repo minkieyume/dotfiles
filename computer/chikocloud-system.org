@@ -473,7 +473,18 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 ** Nginx
 用于转发网页代理
 #+begin_src scheme :noweb-ref service
-(service nginx-service-type
+(let ((proxy-confs '("proxy_http_version 1.1;"
+                     "proxy_redirect off;"
+                     "proxy_set_header Host $host;"
+                     "proxy_set_header X-Real-IP $remote_addr;"
+                     "proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;"
+                     "proxy_set_header X-Forwarded-Proto $scheme;"
+  		     "proxy_read_timeout 3600s;"
+  		     "proxy_send_timeout 3600s;"
+  		     "keepalive_timeout 120s;"
+                     "proxy_set_header Upgrade $http_upgrade;"
+                     "proxy_set_header Connection $connection_upgrade;")))
+  (service nginx-service-type
   	 (nginx-configuration
   	   (extra-content "map $http_upgrade $connection_upgrade { default upgrade; '' close; }\nclient_max_body_size 500M;")
   	   (server-blocks
@@ -487,32 +498,12 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
                 (list
                  (nginx-location-configuration
                    (uri "/")
-                   (body '("proxy_pass http://127.0.0.1:3000;"
-                           "proxy_http_version 1.1;"
-                           "proxy_redirect off;"
-                           "proxy_set_header Host $host;"
-                           "proxy_set_header X-Real-IP $remote_addr;"
-                           "proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;"
-                           "proxy_set_header X-Forwarded-Proto $scheme;"
-  			   "proxy_read_timeout 3600s;"
-  			   "proxy_send_timeout 3600s;"
-  			   "keepalive_timeout 120s;"
-                           "proxy_set_header Upgrade $http_upgrade;"
-                           "proxy_set_header Connection $connection_upgrade;")))
+                   (body `("proxy_pass http://127.0.0.1:3000;"
+			   ,@proxy-confs)))
   		 (nginx-location-configuration
   		   (uri (nyapasu-ref 'ws-transport-path))
-  		   (body '("proxy_redirect off;"
-  			   "proxy_pass http://127.0.0.1:7890;"
-  			   "proxy_http_version 1.1;"
-  			   "proxy_set_header Host $host;"
-  			   "proxy_set_header X-Real-IP $remote_addr;"
-  			   "proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;"
-  			   "proxy_set_header X-Forwarded-Proto $scheme;"
-  			   "proxy_read_timeout 3600s;"
-  			   "proxy_send_timeout 3600s;"
-  			   "keepalive_timeout 120s;"
-  			   "proxy_set_header Upgrade $http_upgrade;"
-  			   "proxy_set_header Connection $connection_upgrade;"))))))
+  		   (body `("proxy_pass http://127.0.0.1:7890;"
+			   ,@proxy-confs))))))
 	     (nginx-server-configuration
                (server-name '("chat.yumieko.com"))
                (listen '("443 ssl" "[::]:443 ssl"))
@@ -522,18 +513,16 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
                 (list
                  (nginx-location-configuration
                    (uri "/")
-                   (body '("proxy_pass http://127.0.0.1:8008;"
-                           "proxy_http_version 1.1;"
-                           "proxy_redirect off;"
-                           "proxy_set_header Host $host;"
-                           "proxy_set_header X-Real-IP $remote_addr;"
-                           "proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;"
-                           "proxy_set_header X-Forwarded-Proto $scheme;"
-  			   "proxy_read_timeout 3600s;"
-  			   "proxy_send_timeout 3600s;"
-  			   "keepalive_timeout 120s;"
-                           "proxy_set_header Upgrade $http_upgrade;"
-                           "proxy_set_header Connection $connection_upgrade;")))
+                   (body `("proxy_pass http://127.0.0.1:8008;"
+			   ,@proxy-confs)))
+		 (nginx-location-configuration
+                   (uri "/_matrix")
+                   (body `("proxy_pass http://127.0.0.1:8008;"
+			   ,@proxy-confs
+			   "add_header 'Access-Control-Allow-Origin' '*' always;"
+			   "add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, OPTIONS' always;"
+			   "add_header 'Access-Control-Allow-Headers' 'Origin, X-Requested-With, Content-Type, Accept, Authorization' always;"
+			   "if ($request_method = OPTIONS) { return 204; }")))
 		 (nginx-location-configuration
 		   (uri "/.well-known/matrix/server")
 		   (body '("add_header Access-Control-Allow-Origin *;"
@@ -548,18 +537,8 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 			   "return 200 '{\"m.homeserver\": {\"base_url\": \"https://chat.yumieko.com\"}}';")))
   		 (nginx-location-configuration
   		   (uri (nyapasu-ref 'ws-transport-path))
-  		   (body '("proxy_redirect off;"
-  			   "proxy_pass http://127.0.0.1:7890;"
-  			   "proxy_http_version 1.1;"
-  			   "proxy_set_header Host $host;"
-  			   "proxy_set_header X-Real-IP $remote_addr;"
-  			   "proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;"
-  			   "proxy_set_header X-Forwarded-Proto $scheme;"
-  			   "proxy_read_timeout 3600s;"
-  			   "proxy_send_timeout 3600s;"
-  			   "keepalive_timeout 120s;"
-  			   "proxy_set_header Upgrade $http_upgrade;"
-  			   "proxy_set_header Connection $connection_upgrade;"))))))
+  		   (body '("proxy_pass http://127.0.0.1:7890;"
+			   ,@proxy-confs))))))
 	     (nginx-server-configuration
                (server-name '("chat.yumieko.com"))
                (listen '("8448 ssl" "[::]:8448 ssl"))
@@ -570,17 +549,7 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
                  (nginx-location-configuration
                    (uri "/")
                    (body '("proxy_pass http://127.0.0.1:8008;"
-                           "proxy_http_version 1.1;"
-                           "proxy_redirect off;"
-                           "proxy_set_header Host $host;"
-                           "proxy_set_header X-Real-IP $remote_addr;"
-                           "proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;"
-                           "proxy_set_header X-Forwarded-Proto $scheme;"
-  			   "proxy_read_timeout 3600s;"
-  			   "proxy_send_timeout 3600s;"
-  			   "keepalive_timeout 120s;"
-                           "proxy_set_header Upgrade $http_upgrade;"
-                           "proxy_set_header Connection $connection_upgrade;"))))))))))
+			   ,@proxy-confs)))))))))))
 #+end_src
 
 ** Misskey
