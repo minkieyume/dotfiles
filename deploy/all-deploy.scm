@@ -7,7 +7,7 @@
     (environment managed-host-environment-type)
     (configuration (machine-ssh-configuration
 		     (host-name "chikocloud")
-		     (build-locally? #t)
+		     (build-locally? #f)
 		     (system "x86_64-linux")
 		     (user "deploy")
 		     (host-key "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBgcERFKrdhXOyA280PozUv8yrHOPqPGN+X4XhRn5EE8")

@@ -500,12 +500,12 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
                            "proxy_set_header Upgrade $http_upgrade;"
                            "proxy_set_header Connection $connection_upgrade;")))
 		 (nginx-location-configuration
-		   (uri "/.well-known/matrix/client")
+		   (uri "/.well-known/matrix/server")
 		   (body '("add_header Access-Control-Allow-Origin *;"
 			   "default_type application/json;"
 			   "return 200 '{\"m.server\": {\"base_url\": \"https://chat.yumieko.com:8448\"}}';")))
 		 (nginx-location-configuration
-		   (uri "/.well-known/matrix/server")
+		   (uri "/.well-known/matrix/client")
 		   (body '("add_header Access-Control-Allow-Origin *;"
 			   "default_type application/json;"
 			   "return 200 '{\"m.homeserver\": {\"base_url\": \"https://chat.yumieko.com\"}}';")))
