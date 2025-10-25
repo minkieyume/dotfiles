@@ -559,7 +559,28 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
   			   "proxy_send_timeout 3600s;"
   			   "keepalive_timeout 120s;"
   			   "proxy_set_header Upgrade $http_upgrade;"
-  			   "proxy_set_header Connection $connection_upgrade;"))))))))))
+  			   "proxy_set_header Connection $connection_upgrade;"))))))
+	     (nginx-server-configuration
+               (server-name '("chat.yumieko.com"))
+               (listen '("8448 ssl"))
+               (ssl-certificate "/etc/certs/littlewing.yumieko.com/fullchain.pem")
+               (ssl-certificate-key "/etc/certs/littlewing.yumieko.com/privkey.pem")
+               (locations
+                (list
+                 (nginx-location-configuration
+                   (uri "/")
+                   (body '("proxy_pass http://127.0.0.1:8008;"
+                           "proxy_http_version 1.1;"
+                           "proxy_redirect off;"
+                           "proxy_set_header Host $host;"
+                           "proxy_set_header X-Real-IP $remote_addr;"
+                           "proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;"
+                           "proxy_set_header X-Forwarded-Proto $scheme;"
+  			   "proxy_read_timeout 3600s;"
+  			   "proxy_send_timeout 3600s;"
+  			   "keepalive_timeout 120s;"
+                           "proxy_set_header Upgrade $http_upgrade;"
+                           "proxy_set_header Connection $connection_upgrade;"))))))))))
 #+end_src
 
 ** Misskey
