@@ -542,8 +542,7 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 		   (nginx-location-configuration
                      (uri "/_matrix/media")
                      (body `("proxy_pass http://127.0.0.1:8008;"
-			     ,@proxy-confs
-			     ,@cors-headers)))
+			     ,@proxy-confs)))
 		   (nginx-location-configuration
 		     (uri "/.well-known/matrix/server")
 		     (body `("add_header Access-Control-Allow-Origin *;"
