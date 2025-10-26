@@ -261,7 +261,7 @@ OVH装了guix后有IPV6无法访问的问题，所以需要配置IPV6网关解�
   (auto-start? #t)
   (one-shot? #t)
   (start #~(lambda _
-  	     (let* ((ip #$(file-append iproute "/sbin/ip"))
+  	     (let* ((ip #$(file-append (spec->pkg "iproute2") "/sbin/ip"))
 		    (gateway "2001:41d0:601:1100::1")
 		    (interface "eth0")
   		    (st (system* ip "-6" "route" "add" "default" "via" gateway "dev" interface "onlink")))
