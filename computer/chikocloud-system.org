@@ -253,7 +253,7 @@ ip -6 route add default via 2001:41d0:601:1100::1 dev eth0
 *** 配置IPV6网关
 OVH装了guix后有IPV6无法访问的问题，所以需要配置IPV6网关解决这个问题。
 #+begin_src scheme :noweb-ref service
-(simple-servicce 'set-gateway
+(simple-service 'set-gateway
 		 shepherd-root-service-type
 		 (list
 		  (shepherd-service
