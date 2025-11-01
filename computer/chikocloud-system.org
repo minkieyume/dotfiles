@@ -233,10 +233,10 @@
 #+begin_src scheme :noweb-ref fail2ban-jails
 (fail2ban-jail-configuration
  (name "synapse")
- (enabled #t)
+ (enabled? #t)
  (max-retry 5)
- (findtime "10m")
- (bantime "1h")
+ (find-time "10m")
+ (ban-time "1h")
  (log-path "/var/log/synapse/homeserver.log"))
 #+end_src
 
@@ -246,8 +246,7 @@
 		`(("fail2ban/filter.d/synapse.conf" ,(plain-file "synapse-fail2ban-filter.conf"
 								 (string-join
 								  '("[Definition]"
-								    "failregex = ^.*synapse\.access\.http\.\d+\s+-\s+\d+\s+-\s+INFO\s+-\s+\S+\s+-\s+<HOST>\s+-\s+\d+\s+-\s+\S+\s+Processed request:.*\s403\s+\"POST\s+/_matrix/client/v3/login.*"
-								    "failregex = ^.*SynapseError: 403 - Invalid username or password.*$"
+								    "failregex = ^.*synapse\\.access\\.http\\.\\d+\\s+-\\s+\\d+\\s+-\\s+INFO\\s+-\\s+\\S+\\s+-\\s+<HOST>\\s+-\\s+\\d+\\s+-\\s+\\S+\\s+Processed request:.*\\s403\\s+\\\"POST\\s+/_matrix/client/v3/login.*"
 								    "ignoreregex =")
 								  "\n")))))
 #+end_src
