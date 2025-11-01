@@ -216,6 +216,42 @@
             (pam-limits-entry "*" 'both 'nofile 100000)))
 #+end_src
 
+** 安全防护
+#+begin_src scheme :noweb-ref module
+(gnu services security)
+#+end_src
+
+*** Fail2Ban
+#+begin_src scheme :noweb-ref service :noweb yes :noweb-prefix no
+(service fail2ban-service-type
+         (fail2ban-configuration
+          (extra-jails
+           (list <<fail2ban-jails>>))))
+#+end_src
+
+**** Synapse
+#+begin_src scheme :noweb-ref fail2ban-jails
+(fail2ban-jail-configuration
+ (name "synapse")
+ (enabled #t)
+ (max-retry 5)
+ (findtime "10m")
+ (bantime "1h")
+ (log-path "/var/log/synapse/homeserver.log"))
+#+end_src
+
+#+begin_src scheme :noweb-ref service
+(simple-service 'synapse-fail2ban-filter
+		etc-service-type
+		`(("fail2ban/filter.d/synapse.conf" ,(plain-file "synapse-fail2ban-filter.conf"
+								 (string-join
+								  '("[Definition]"
+								    "failregex = ^.*synapse\.access\.http\.\d+\s+-\s+\d+\s+-\s+INFO\s+-\s+\S+\s+-\s+<HOST>\s+-\s+\d+\s+-\s+\S+\s+Processed request:.*\s403\s+\"POST\s+/_matrix/client/v3/login.*"
+								    "failregex = ^.*SynapseError: 403 - Invalid username or password.*$"
+								    "ignoreregex =")
+								  "\n")))))
+#+end_src
+
 ** 网络模块
 #+begin_src scheme :noweb-ref module
   (gnu services networking)
