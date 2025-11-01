@@ -237,7 +237,7 @@
  (max-retry 5)
  (find-time "10m")
  (ban-time "1h")
- (log-path "/var/log/synapse/homeserver.log"))
+ (log-path '("/var/log/synapse/homeserver.log")))
 #+end_src
 
 #+begin_src scheme :noweb-ref service
