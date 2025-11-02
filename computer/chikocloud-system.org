@@ -711,6 +711,7 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 * 容器
 #+begin_src scheme :noweb-ref module
   (gnu services docker)
+  (gnu services containers)
 #+end_src
 
 #+begin_src scheme :noweb-ref service
@@ -721,6 +722,12 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
   (service docker-service-type
     (docker-configuration
       (enable-iptables? #f)))
+#+end_src
+
+#+begin_src scheme :noweb-ref service
+(service oci-service-type
+	 (oci-configuration
+	  (runtime 'podman)))
 #+end_src
 
 * 进程管理
