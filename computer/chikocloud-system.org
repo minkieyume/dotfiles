@@ -15,6 +15,7 @@
    (initrd-modules (cons* <<initrd-module>> %base-initrd-modules))
    (privileged-programs (cons* <<privileged-program>> %default-privileged-programs))
    (users (cons* <<user>> %base-user-accounts))
+   (groups (cons* <<group>> %base-groups))
    (services (cons* <<service>> %base-services))
    (mapped-devices (list <<mapped-device>>))
    (file-systems (append <<filesystems>> %base-file-systems))
@@ -722,6 +723,12 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
   (service docker-service-type
     (docker-configuration
       (enable-iptables? #f)))
+#+end_src
+
+** OCI
+#+begin_src scheme :noweb-ref group
+(user-group
+  (name "cgroup"))
 #+end_src
 
 #+begin_src scheme :noweb-ref service
