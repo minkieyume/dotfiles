@@ -720,9 +720,10 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 #+end_src
 
 #+begin_src scheme :noweb-ref service
-  (service docker-service-type
-    (docker-configuration
-      (enable-iptables? #f)))
+(service docker-service-type
+	 (docker-configuration
+	   (enable-iptables? #f)
+	   (config-file (local-file "../files/config/chiko_cloud/docker.json"))))
 #+end_src
 
 * 进程管理
