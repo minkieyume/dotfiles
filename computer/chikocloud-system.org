@@ -511,6 +511,7 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
   (gnu services web)
   (gnu services certbot)
   (rosenthal services web)
+  (chiko services web)
 #+end_src
 
 ** Certbot
