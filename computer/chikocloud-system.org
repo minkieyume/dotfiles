@@ -236,6 +236,8 @@
  (name "synapse")
  (enabled? #t)
  (max-retry 5)
+ (filter (fail2ban-jail-filter-configuration
+	   "synapse"))
  (find-time "10m")
  (ban-time "1h")
  (log-path '("/var/log/synapse/homeserver.log")))
