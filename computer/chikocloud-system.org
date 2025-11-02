@@ -715,6 +715,10 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
   (gnu services containers)
 #+end_src
 
+#+begin_src scheme :noweb-ref package
+"fuse-overlayfs"
+#+end_src
+
 #+begin_src scheme :noweb-ref service
   (service containerd-service-type)
 #+end_src

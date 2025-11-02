@@ -1,1 +1,4 @@
-{}
+{
+    "storage-driver": "overlay2",
+    "storage-opts": ["overlay2.use_udev_events=false"]
+}
