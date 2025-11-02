@@ -725,18 +725,6 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
       (enable-iptables? #f)))
 #+end_src
 
-** OCI
-#+begin_src scheme :noweb-ref group
-(user-group
-  (name "cgroup"))
-#+end_src
-
-#+begin_src scheme :noweb-ref service
-(service oci-service-type
-	 (oci-configuration
-	  (runtime 'podman)))
-#+end_src
-
 * 进程管理
 #+begin_src scheme :noweb-ref module
   (gnu services dbus)
