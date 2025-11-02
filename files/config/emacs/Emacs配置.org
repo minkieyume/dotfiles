@@ -816,15 +816,26 @@ Ekg是方便快速整理灵感和笔记的笔记插件。
 #+end_src
 
 * 终端优化
+** 系统终端
+#+begin_src emacs-lisp :noweb-ref config
+(defun open-foot-terminal-here ()
+  "Open foot terminal in current directory."
+  (interactive)
+  (let ((dir (expand-file-name default-directory)))
+    (start-process "foot" nil "foot" "--working-directory" dir)))
+
+(global-set-key (kbd "C-c t") #'open-foot-terminal-here)
+#+END_SRC
+
 ** Eat
 Emacs的终端模拟器。
 #+begin_src emacs-lisp :noweb-ref config
-  (use-package eat
-    :hook
-    (eshell-load . eat-eshell-mode)
-    (eshell-load . eat-eshell-visual-command-mode)
-    :bind
-    ("C-c t" . eat))
+  ;; (use-package eat
+  ;;   :hook
+  ;;   (eshell-load . eat-eshell-mode)
+  ;;   (eshell-load . eat-eshell-visual-command-mode)
+  ;;   :bind
+  ;;   ("C-c t" . eat))
 #+END_SRC
 
 ** Eshell

@@ -1023,6 +1023,10 @@ pkg-config这个包似乎有bug，装上会导致nheko等一堆程序找不到�
   "scons"
 #+end_src
 
+#+begin_src scheme :noweb-ref package
+  "mingw-w64-x86_64"
+#+end_src
+
 ** C/Cpp
 #+begin_src scheme :noweb-ref package
   "gcc-toolchain"

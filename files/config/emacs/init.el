@@ -539,12 +539,19 @@
             (dired parent-dir)
           (message "当前目录没有上一级目录！")))
     (message "当前缓冲区不是 Dirvish 或 Dired 模式。")))
-(use-package eat
-  :hook
-  (eshell-load . eat-eshell-mode)
-  (eshell-load . eat-eshell-visual-command-mode)
-  :bind
-  ("C-c t" . eat))
+(defun open-foot-terminal-here ()
+  "Open foot terminal in current directory."
+  (interactive)
+  (let ((dir (expand-file-name default-directory)))
+    (start-process "foot" nil "foot" "--working-directory" dir)))
+
+(global-set-key (kbd "C-c t") #'open-foot-terminal-here)
+;; (use-package eat
+;;   :hook
+;;   (eshell-load . eat-eshell-mode)
+;;   (eshell-load . eat-eshell-visual-command-mode)
+;;   :bind
+;;   ("C-c t" . eat))
 (use-package eshell-syncthing-highlighting
   :after eshell-mode
   :config
