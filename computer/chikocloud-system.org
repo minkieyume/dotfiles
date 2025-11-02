@@ -532,7 +532,7 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 
 ** Nginx
 用于转发网页代理
-#+begin_src scheme :noweb-ref service
+#+begin_src scheme :noweb-ref service :noweb yes :noweb-prefix no
 (let ((proxy-confs (list "proxy_http_version 1.1;"
 			 "proxy_redirect off;"
 			 "proxy_set_header Host $host;"
@@ -551,60 +551,86 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
   	   (nginx-configuration
   	     (extra-content "map $http_upgrade $connection_upgrade { default upgrade; '' close; }\nclient_max_body_size 500M;")
   	     (server-blocks
-  	      (list
-               (nginx-server-configuration
-		 (server-name '("littlewing.yumieko.com"))
-		 (listen '("443 ssl" "[::]:443 ssl"))
-		 (ssl-certificate "/etc/certs/littlewing.yumieko.com/fullchain.pem")
-		 (ssl-certificate-key "/etc/certs/littlewing.yumieko.com/privkey.pem")
-		 (locations
-                  (list
-                   (nginx-location-configuration
-                     (uri "/")
-                     (body `("proxy_pass http://127.0.0.1:3000;"
-			     ,@proxy-confs)))
-  		   (nginx-location-configuration
-  		     (uri (nyapasu-ref 'ws-transport-path))
-  		     (body `("proxy_pass http://127.0.0.1:7890;"
-			     ,@proxy-confs))))))
-	       (nginx-server-configuration
-		 (server-name '("chat.yumieko.com"))
-		 (listen '("443 ssl" "[::]:443 ssl"))
-		 (ssl-certificate "/etc/certs/chat.yumieko.com/fullchain.pem")
-		 (ssl-certificate-key "/etc/certs/chat.yumieko.com/privkey.pem")
-		 (locations
-                  (list
-                   (nginx-location-configuration
-                     (uri "/")
-                     (body `("proxy_pass http://127.0.0.1:8008;"
-			     ,@proxy-confs)))
-		   (nginx-location-configuration
-                     (uri "/_matrix/media")
-                     (body `("proxy_pass http://127.0.0.1:8008;"
-			     ,@proxy-confs)))
-		   (nginx-location-configuration
-		     (uri "/.well-known/matrix/server")
-		     (body `("add_header Access-Control-Allow-Origin *;"
-			     "add_header Access-Control-Allow-Methods 'GET, OPTIONS';"
-			     "default_type application/json;"
-			     "return 200 '{\"m.server\": {\"base_url\": \"chat.yumieko.com:443\"}}';")))
-		   (nginx-location-configuration
-		     (uri "/.well-known/matrix/client")
-		     (body `("add_header Access-Control-Allow-Origin *;"
-			     "add_header Access-Control-Allow-Methods 'GET, OPTIONS';"
-			     "default_type application/json;"
-			     "return 200 '{\"m.homeserver\": {\"base_url\": \"https://chat.yumieko.com\"}}';"))))))
-	       (nginx-server-configuration
-		 (server-name '("chat.yumieko.com"))
-		 (listen '("8448 ssl" "[::]:8448 ssl"))
-		 (ssl-certificate "/etc/certs/chat.yumieko.com/fullchain.pem")
-		 (ssl-certificate-key "/etc/certs/chat.yumieko.com/privkey.pem")
-		 (locations
-                  (list
-                   (nginx-location-configuration
-                     (uri "/")
-                     (body `("proxy_pass http://127.0.0.1:8008;"
-			     ,@proxy-confs)))))))))))
+  	      (list <<nginx-server>>)))))
+#+end_src
+
+*** 雏翼同好会
+#+begin_src scheme :noweb-ref nginx-server
+(nginx-server-configuration
+  (server-name '("littlewing.yumieko.com"))
+  (listen '("443 ssl" "[::]:443 ssl"))
+  (ssl-certificate "/etc/certs/littlewing.yumieko.com/fullchain.pem")
+  (ssl-certificate-key "/etc/certs/littlewing.yumieko.com/privkey.pem")
+  (locations
+   (list
+    (nginx-location-configuration
+      (uri "/")
+      (body `("proxy_pass http://127.0.0.1:3000;"
+	      ,@proxy-confs)))
+    (nginx-location-configuration
+      (uri (nyapasu-ref 'ws-transport-path))
+      (body `("proxy_pass http://127.0.0.1:7890;"
+	      ,@proxy-confs))))))  
+#+end_src
+
+*** Matrix服务器
+#+begin_src scheme :noweb-ref nginx-server
+(nginx-server-configuration
+  (server-name '("chat.yumieko.com"))
+  (listen '("443 ssl" "[::]:443 ssl"))
+  (ssl-certificate "/etc/certs/chat.yumieko.com/fullchain.pem")
+  (ssl-certificate-key "/etc/certs/chat.yumieko.com/privkey.pem")
+  (locations
+   (list
+    (nginx-location-configuration
+      (uri "/")
+      (body `("proxy_pass http://127.0.0.1:8008;"
+	      ,@proxy-confs)))
+    (nginx-location-configuration
+      (uri "/_matrix/media")
+      (body `("proxy_pass http://127.0.0.1:8008;"
+	      ,@proxy-confs)))
+    (nginx-location-configuration
+      (uri "/.well-known/matrix/server")
+      (body `("add_header Access-Control-Allow-Origin *;"
+	      "add_header Access-Control-Allow-Methods 'GET, OPTIONS';"
+	      "default_type application/json;"
+	      "return 200 '{\"m.server\": {\"base_url\": \"chat.yumieko.com:443\"}}';")))
+    (nginx-location-configuration
+      (uri "/.well-known/matrix/client")
+      (body `("add_header Access-Control-Allow-Origin *;"
+	      "add_header Access-Control-Allow-Methods 'GET, OPTIONS';"
+	      "default_type application/json;"
+	      "return 200 '{\"m.homeserver\": {\"base_url\": \"https://chat.yumieko.com\"}}';"))))))
+#+end_src
+
+#+begin_src scheme :noweb-ref nginx-server
+(nginx-server-configuration
+  (server-name '("chat.yumieko.com"))
+  (listen '("8448 ssl" "[::]:8448 ssl"))
+  (ssl-certificate "/etc/certs/chat.yumieko.com/fullchain.pem")
+  (ssl-certificate-key "/etc/certs/chat.yumieko.com/privkey.pem")
+  (locations
+   (list
+    (nginx-location-configuration
+      (uri "/")
+      (body `("proxy_pass http://127.0.0.1:8008;"
+	      ,@proxy-confs))))))
+#+end_src
+
+*** Email服务器
+#+begin_src scheme :noweb-ref nginx-server
+(nginx-server-configuration
+  (server-name '("mail.yumieko.com"))
+  (listen '("443 ssl" "[::]:443 ssl"))
+  (ssl-certificate "/etc/certs/mail.yumieko.com/fullchain.pem")
+  (ssl-certificate-key "/etc/certs/mail.yumieko.com/privkey.pem")
+  (locations
+   (list
+    (nginx-location-configuration
+      (uri "/")
+      (body `("proxy_pass http://127.0.0.1:8080;"
+	      ,@proxy-confs))))))
 #+end_src
 
 ** Misskey
