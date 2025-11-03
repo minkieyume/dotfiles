@@ -1318,3 +1318,10 @@ Aider暂时没有包，需要用uvx安装。
   	  (tproxy-nft-config-file (local-file "../files/config/singbox/singbox-tproxy.nft"))
   	  (auto-start? #t)))
 #+end_src
+
+* 会计
+#+begin_src scheme :noweb-ref package
+"gnucash"
+"gnucash:doc"
+"gnucash:python"
+#+end_src
