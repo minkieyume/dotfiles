@@ -29,6 +29,7 @@ define RESERVED_IP6 = {
 define RESERVED_PORT = {
     3478,
     5349,
+    4001,
     53317
 }
 
@@ -80,10 +81,11 @@ add chain inet sing-box output {
     tcp dport $RESERVED_PORT return
     udp dport $RESERVED_PORT return
 
-    # 排除 sing-box 用户发出的流量
+    # 排除特定流量
     oifname "lo" return
     oifname "tailscale0" return
     meta skuid singbox return
+    meta skuid ipfs return
     meta mark & 0x1 != 0 return
     
     # 排除dns外的所有内网请求。
