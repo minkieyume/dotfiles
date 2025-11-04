@@ -685,7 +685,7 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 (service docker-mailserver-service-type
   	 (docker-mailserver-configuration
 	  (hostname "mail.yumieko.com")
-	  (ssl-cert-path "/etc/certs/mail.yumieko.com")
+	  (ssl-cert-path "/etc/certs/mail.yumieko.com/")
   	  (ports `(("8443" . "443")
 		   ("8080" . "8080")
 		   ("25" . "25")
