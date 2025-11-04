@@ -882,4 +882,6 @@ Emacs的终端模拟器。
 (setq mm-text-html-renderer 'shr
       gnus-default-charset 'utf-8
       mm-coding-system-priorities '(utf-8 gbk gb2312))
+
+(setq message-default-mail-headers "")
 #+END_SRC
