@@ -1000,6 +1000,21 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 			   desktop-files))))
 #+end_src
 
+
+*** MIME
+#+begin_src scheme :noweb-ref home-service :noweb yes :noweb-prefix no
+(simple-service 'default-mimes
+  		home-xdg-configuration-files-service-type
+  		`(("mimeapps.list"
+		   ,(plain-file "mimeapps.list" (string-join '("[Default Applications]" <<mime>>) "\n")))))
+#+end_src
+
+#+begin_src scheme :noweb-ref mime
+"x-scheme-handler/mailto=emacsclient.desktop"
+"inode/directory=emacsclient.desktop"
+"text/plain=emacsclient.desktop"
+#+end_src
+
 ** librewolf
 #+begin_src scheme :noweb-ref package
   "librewolf"

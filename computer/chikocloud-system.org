@@ -686,6 +686,8 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
     	 (docker-mailserver-configuration
   	  (hostname "mail.yumieko.com")
   	  (ssl-cert-path "/etc/letsencrypt")
+	  (use-rspamd? #t)
+	  (rspamd-extenal-redis? #t)
     	  (ports `(("8443" . "443")
   		   ("8080" . "8080")
   		   ("25" . "25")
@@ -700,11 +702,10 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
   			 ("SSL_CERT_PATH" . "/certs/live/mail.yumieko.com/fullchain.pem")
   			 ("SSL_KEY_PATH" . "/certs/live/mail.yumieko.com/privkey.pem")
   			 ("ENABLE_LDAP" . "0")
-  			 ("ENABLE_CLAMAV" . "0")
+			 ("ENABLE_CLAMAV" . "1")
   			 ("ENABLE_SPAMASSASSIN" . "0")
-  			 ("ENABLE_FAIL2BAN" . "0")
-  			 ("ENABLE_POSTGREY" . "0")			 
-  			 ("ONE_DIR" . "1")
+  			 ("ENABLE_FAIL2BAN" . "0")  			 
+			 ("ONE_DIR" . "1")
   			 ("DMS_DEBUG" . "0")))))
 #+end_src
 

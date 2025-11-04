@@ -559,29 +559,27 @@
 (when (and (executable-find "$$bin/fish$$")
                  (require 'fish-completion nil t))
         (global-fish-completion-mode))
-(require 'oauth2)
-(setq user-mail-address "minkieyume@gmail.com"
+(setq user-mail-address "chiko@yumieko.com"
       user-full-name "MinkieChiko")
 
 (setq gnus-select-method
-      '(nnimap "gmail"
-               (nnimap-address "imap.gmail.com")
+      '(nnimap "chiko"
+               (nnimap-address "mail.yumieko.com")
 	       (nnimap-inbox "INBOX")
 	       (nnimap-expunge t)
                (nnimap-server-port 993)
                (nnimap-stream ssl)
-	       (nnimap-authenticator xoauth2)))
+	       (nnimap-authenticator plain)))
 
 (setq gnus-default-method gnus-select-method)
 
 (setq gnus-secondary-select-methods nil)
 
 (setq message-send-mail-function 'smtpmail-send-it
-      smtpmail-smtp-server "smtp.gmail.com"
+      smtpmail-smtp-server "mail.yumieko.com"
       smtpmail-smtp-service 587
       smtpmail-stream-type 'ssl
-      gnus-ignored-newsgroups "^to\\.\\|^[0-9. ]+\\( \\|$\\)\\|^[\"]\"[#'()]"
-      smtpmail-auth-supported '(xoauth2))
+      gnus-ignored-newsgroups "^to\\.\\|^[0-9. ]+\\( \\|$\\)\\|^[\"]\"[#'()]")
 
 (setq mm-text-html-renderer 'shr
       gnus-default-charset 'utf-8
