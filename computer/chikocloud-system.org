@@ -676,10 +676,11 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 	  (postgresql-password-file "/var/lib/synapse/ppasu")))
 #+end_src
 
-** StalWart
+** Email
 #+begin_src scheme :noweb-ref service
-(service stalwart-service-type
-  	 (stalwart-configuration
+(service docker-mailserver-service-type
+  	 (docker-mailserver-configuration
+	  (hostname "mail.yumieko.com")
   	  (ports `(("8443" . "443")
 		   ("8080" . "8080")
 		   ("25" . "25")
