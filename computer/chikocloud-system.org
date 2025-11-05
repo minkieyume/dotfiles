@@ -522,23 +522,23 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 
 ** Postgresql
 #+begin_src scheme :noweb-ref service
-  (service postgresql-service-type
-    (postgresql-configuration
-      (postgresql (spec->pkg "postgresql@15"))
-      (allow-login? #t)
-      (config-file (postgresql-config-file
-		     (log-destination "stderr")
-		     (hba-file
-		      (plain-file "pg_hba.conf"
-				  (string-join
-				   (list ""
-					 "local	all	all			trust"
-					 "host	all	all	127.0.0.1/32 	md5"
-					 "host	all	all	::1/128 	md5"
-					 "host  all     all     172.17.0.0/16   md5")
-				   "\n")))
-		     (extra-config
-		      '(("listen_addresses"           "'*'")))))))
+(service postgresql-service-type
+	 (postgresql-configuration
+	   (postgresql (spec->pkg "postgresql@15"))
+	   (allow-login? #t)
+	   (config-file (postgresql-config-file
+			  (log-destination "stderr")
+			  (hba-file
+			   (plain-file "pg_hba.conf"
+				       (string-join
+					(list ""
+					      "local	all	all			trust"
+					      "host	all	all	127.0.0.1/32 	md5"
+					      "host	all	all	::1/128 	md5"
+					      "host  all     all     172.17.0.0/16   md5")
+					"\n")))
+			  (extra-config
+			   '(("listen_addresses"           "*")))))))
 #+end_src
 
 ** Redis
