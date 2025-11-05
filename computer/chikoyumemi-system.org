@@ -53,7 +53,7 @@
    (group "users")
    (shell (file-append (spec->pkg "fish") "/bin/fish"))
    (home-directory "/home/minkieyume")
-   (supplementary-groups '("wheel" "netdev" "audio" "video" "yumemi")))
+   (supplementary-groups '("wheel" "netdev" "audio" "video" "yumemi" "docker")))
 #+end_src
 
 #+begin_src scheme :noweb-ref group
