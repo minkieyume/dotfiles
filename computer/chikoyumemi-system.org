@@ -412,7 +412,9 @@ GVFS是一个能将网络目录挂载为本地虚拟文件系统，且对本地�
     	   `(("minkieyume"
   	    ,%chiko-ssh-key)
   	   ("deploy"
-    	      ,%chiko-ssh-key)))))
+    	      ,%chiko-ssh-key)))
+	  (accepted-environment
+	   '("LANG" "LC_*" "TZ" "PYTHONIOENCODING" "TERM" "COLORTERM"))))
 #+end_src
 
 ** Mcron

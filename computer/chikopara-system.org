@@ -353,7 +353,9 @@
     	   `(("minkieyume"
   	    ,%chiko-ssh-key)
   	   ("deploy"
-    	      ,%chiko-ssh-key)))))
+    	      ,%chiko-ssh-key)))
+	  (accepted-environment
+	   '("LANG" "LC_*" "TZ" "PYTHONIOENCODING" "TERM" "COLORTERM"))))
 #+end_src
 
 ** Mcron
