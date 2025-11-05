@@ -787,8 +787,15 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 	 (etherpad-configuration
 	  (uid 5001)
 	  (gid 5001)
-	  (plugins '("ep_comments_page" "ep_author_neat" "ep_markdown" "ep_padlist2" "ep_headings2"))
+	  (environment `(("ADMIN_PASSWORD" . ,(nyapasu-ref 'etherpad-admin))
+			 ("USER_PASSWORD" . ,(nyapasu-ref 'etherpad-user))
+			 ("REQUIRE_AUTHENTICATION" . "true")))
 	  (db-pass (nyapasu-ref 'eltherpaddb))))
+#+end_src
+
+重构时插件参数配置，该参数用于本地重构docker仓库时快速添加插件。
+#+begin_src conf
+ETHERPAD_PLUGINS="ep_comments_page ep_author_neat ep_markdown ep_padlist2 ep_headings2 ep_auth_session"
 #+end_src
 
 * 代理
