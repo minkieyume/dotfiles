@@ -57,12 +57,13 @@
       (("rule_set" . "geosite-private"))
       (("rule_set" . "geosite-cn"))
       (("port" . #(3478)))
+      (("user" . #("ipfs")))
       (("domain_suffix" . "neboer.site"))
       (("domain_suffix" . #("vps-50015373.vps.ovh.net")))
       (("ip_cidr" . #("51.83.132.203/32" "2001:41d0:601:1100::592a/128")))
       (("domain_suffix" . #("syncthing.net" "discovery-announce-v4.syncthing.net")))
       (("domain_suffix" . #("lan" "local" "localhost")))
-      (("domain_suffix" . "yumieko.com"))
+      (("domain_suffix" . "yumieko.com"))      
       (("domain_suffix" . #("frp-add.com" "frp-pet.com" "frp-fit.com")))))
 
   (define %tailscale-rules
