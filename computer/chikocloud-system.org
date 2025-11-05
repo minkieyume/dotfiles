@@ -785,6 +785,8 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 #+begin_src scheme :noweb-ref service
 (service etherpad-service-type
 	 (etherpad-configuration
+	  (uid 5001)
+	  (gid 5001)
 	  (db-pass (nyapasu-ref 'eltherpaddb))))
 #+end_src
 
