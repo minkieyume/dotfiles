@@ -545,15 +545,19 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 #+begin_src scheme :noweb-ref service
 (service certbot-service-type
          (certbot-configuration
-          (email "sign@yumieko.com")
-          (certificates
-           (list
-            (certificate-configuration
-             (domains '("littlewing.yumieko.com")))
-	    (certificate-configuration
-             (domains '("chat.yumieko.com")))
-	    (certificate-configuration
-	     (domains '("mail.yumieko.com")))))))
+           (email "sign@yumieko.com")
+           (certificates
+            (list
+             (certificate-configuration
+              (domains '("littlewing.yumieko.com")))
+	     (certificate-configuration
+              (domains '("chat.yumieko.com")))
+	     (certificate-configuration
+	      (domains '("mail.yumieko.com")))
+	     (certificate-configuration
+	      (domains '("dimension.yumieko.com")))
+	     (certificate-configuration
+	      (domains '("etherpad.yumieko.com")))))))
 #+end_src
 
 ** Nginx
@@ -596,10 +600,11 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
     (nginx-location-configuration
       (uri (nyapasu-ref 'ws-transport-path))
       (body `("proxy_pass http://127.0.0.1:7890;"
-	      ,@proxy-confs))))))  
+	      ,@proxy-confs))))))
 #+end_src
 
 *** Matrix服务器
+**** 主服务
 #+begin_src scheme :noweb-ref nginx-server
 (nginx-server-configuration
   (server-name '("chat.yumieko.com"))
@@ -641,6 +646,36 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
     (nginx-location-configuration
       (uri "/")
       (body `("proxy_pass http://127.0.0.1:8008;"
+	      ,@proxy-confs))))))
+#+end_src
+
+**** Matrix Dimension
+#+begin_src scheme :noweb-ref nginx-server
+(nginx-server-configuration
+  (server-name '("dimension.yumieko.com"))
+  (listen '("443 ssl" "[::]:443 ssl"))
+  (ssl-certificate "/etc/certs/dimension.yumieko.com/fullchain.pem")
+  (ssl-certificate-key "/etc/certs/dimension.yumieko.com/privkey.pem")
+  (locations
+   (list
+    (nginx-location-configuration
+      (uri "/")
+      (body `("proxy_pass http://127.0.0.1:8184;"
+	      ,@proxy-confs))))))
+#+end_src
+
+*** Etherpad服务器
+#+begin_src scheme :noweb-ref nginx-server
+(nginx-server-configuration
+  (server-name '("etherpad.yumieko.com"))
+  (listen '("443 ssl" "[::]:443 ssl"))
+  (ssl-certificate "/etc/certs/etherpad.yumieko.com/fullchain.pem")
+  (ssl-certificate-key "/etc/certs/etherpad.yumieko.com/privkey.pem")
+  (locations
+   (list
+    (nginx-location-configuration
+      (uri "/")
+      (body `("proxy_pass http://127.0.0.1:9001;"
 	      ,@proxy-confs))))))
 #+end_src
 
