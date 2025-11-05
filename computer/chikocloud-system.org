@@ -789,7 +789,8 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 	  (gid 5001)
 	  (environment `(("ADMIN_PASSWORD" . ,(nyapasu-ref 'etherpad-admin))
 			 ("USER_PASSWORD" . ,(nyapasu-ref 'etherpad-user))
-			 ("REQUIRE_AUTHENTICATION" . "true")))
+			 ("REQUIRE_AUTHENTICATION" . "true")
+			 ("REQUIRE_AUTHORIZATION" . "true")))
 	  (db-pass (nyapasu-ref 'eltherpaddb))))
 #+end_src
 
