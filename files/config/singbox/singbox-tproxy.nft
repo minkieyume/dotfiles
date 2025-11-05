@@ -85,7 +85,6 @@ add chain inet sing-box output {
     oifname "lo" return
     oifname "tailscale0" return
     meta skuid singbox return
-    meta skuid ipfs return
     meta mark & 0x1 != 0 return
     
     # 排除dns外的所有内网请求。
