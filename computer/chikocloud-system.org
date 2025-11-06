@@ -567,7 +567,9 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 	     (certificate-configuration
               (domains '("chat.yumieko.com")))
 	     (certificate-configuration
-	      (domains '("mail.yumieko.com")))))))
+	      (domains '("mail.yumieko.com")))
+	     (certbot-configuration
+	       (domains '("etherpad.yumieko.com")))))))
 #+end_src
 
 ** Nginx
@@ -674,25 +676,19 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 	  "proxy_pass http://127.0.0.1:8184/;")))
 #+end_src
 
-**** Etherpad
-#+begin_src scheme :noweb-ref matrix-location
-(nginx-location-configuration
-      (uri "/etherpad/")
-      (body `(,@proxy-confs
-	      "proxy_pass http://chikocloud:19001/;")))
-#+end_src
-
 *** Etherpad服务器
 #+begin_src scheme :noweb-ref nginx-server
 (nginx-server-configuration
-  (server-name '("chikocloud"))
-  (listen '("19001" "[::]:19001"))
+  (server-name '("etherpad.yumieko.com"))
+  (listen '("443 ssl" "[::]:443 ssl"))
+  (ssl-certificate "/etc/certs/etherpad.yumieko.com/fullchain.pem")
+  (ssl-certificate-key "/etc/certs/etherpad.yumieko.com/privkey.pem")
   (locations
    (list
     (nginx-location-configuration
       (uri "/")
       (body `(,@proxy-confs
-	      "proxy_pass http://127.0.0.1:9001/;"))))))
+	      "proxy_pass http://127.0.0.1:9001;"))))))
 #+end_src
 
 *** Email服务器
