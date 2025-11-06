@@ -569,7 +569,7 @@
 	       (nnimap-expunge t)
                (nnimap-server-port 993)
                (nnimap-stream ssl)
-	       (nnimap-authenticator plain)))
+	       (nnimap-authenticator login)))
 
 (setq gnus-default-method gnus-select-method)
 
@@ -578,9 +578,11 @@
 (setq message-send-mail-function 'smtpmail-send-it
       smtpmail-smtp-server "mail.yumieko.com"
       smtpmail-smtp-service 587
-      smtpmail-stream-type 'ssl
+      smtpmail-stream-type 'starttls
       gnus-ignored-newsgroups "^to\\.\\|^[0-9. ]+\\( \\|$\\)\\|^[\"]\"[#'()]")
 
 (setq mm-text-html-renderer 'shr
       gnus-default-charset 'utf-8
       mm-coding-system-priorities '(utf-8 gbk gb2312))
+
+(setq message-default-mail-headers "")

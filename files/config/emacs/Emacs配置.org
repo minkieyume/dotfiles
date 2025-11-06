@@ -857,11 +857,11 @@ Emacs的终端模拟器。
 * 通讯
 ** 电子邮件
 #+begin_src emacs-lisp :noweb-ref config
-(setq user-mail-address "chiko@yumieko.com"
-      user-full-name "MinkieChiko")
+(setq user-mail-address "minkieyume@yumieko.com"
+      user-full-name "MinkieYume")
 
 (setq gnus-select-method
-      '(nnimap "chiko"
+      '(nnimap "minkieyume"
                (nnimap-address "mail.yumieko.com")
 	       (nnimap-inbox "INBOX")
 	       (nnimap-expunge t)
