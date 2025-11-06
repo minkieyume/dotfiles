@@ -692,7 +692,7 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
     (nginx-location-configuration
       (uri "/")
       (body `(,@proxy-confs
-	      "proxy_pass http://127.0.0.1:9001;"))))))
+	      "proxy_pass http://127.0.0.1:9001/;"))))))
 #+end_src
 
 *** Email服务器
