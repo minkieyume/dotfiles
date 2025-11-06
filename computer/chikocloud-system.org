@@ -568,7 +568,7 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
               (domains '("chat.yumieko.com")))
 	     (certificate-configuration
 	      (domains '("mail.yumieko.com")))
-	     (certbot-configuration
+	     (certificate-configuration
 	       (domains '("etherpad.yumieko.com")))))))
 #+end_src
 
