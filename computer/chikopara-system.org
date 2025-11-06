@@ -553,31 +553,18 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+end_src
 
 #+begin_src scheme :noweb-ref service :noweb yes :noweb-prefix no
-  (service cuirass-service-type
-    (cuirass-configuration
-      ;; 6 hours
-      (interval (* 6 3600))
-      (parameters
-       (plain-file "cuirass-parameters"
-         (call-with-output-string
-           (lambda (port)
-             (write
-              '(begin
-                 (%cuirass-url "https://ci.guix.moe"))
-              port)))))
-      (remote-server
-       (cuirass-remote-server-configuration
-         (trigger-url "http://localhost:49637")
-         (publish? #f)))
-      (port 17732)
-      (specifications #~(list <<cuirass-spec>>))))
+(service cuirass-service-type
+	 (cuirass-configuration
+	   (interval (* 6 3600))
+	   (port 8081)
+	   (specifications #~(list <<cuirass-spec>>))))
 #+end_src
 
 #+begin_src scheme :noweb-ref cuirass-spec
 (specification
- (name 'chiko-guix-channel)
- (build '(channels ))
- (channels %chiko-channels))
+ (name 'chikochannel)
+ (build '(channels chikochannel))
+ (channels #$%chiko-channels))
 #+end_src
 
 * 网页
