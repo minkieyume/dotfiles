@@ -656,8 +656,8 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
    (list
     (nginx-location-configuration
       (uri "/")
-      (body `("proxy_pass http://127.0.0.1:8008;"
-	      ,@proxy-confs))))))
+      (body `(,@proxy-confs
+  	      "proxy_pass http://127.0.0.1:8008;"))))))
 #+end_src
 
 **** Matrix Dimension
@@ -669,7 +669,7 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 #+end_src
 
 *** Etherpad服务器
-#+begin_src scheme :noweb-ref nginx-server
+#+begin_src scheme :noweb-ref matrix-location
 (nginx-location-configuration
       (uri "/etherpad")
       (body `(,@proxy-confs
