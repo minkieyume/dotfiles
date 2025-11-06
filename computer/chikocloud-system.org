@@ -579,9 +579,9 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 			 "proxy_set_header X-Real-IP $remote_addr;"
 			 "proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;"
 			 "proxy_set_header X-Forwarded-Proto $scheme;"
-  			 "proxy_read_timeout 3600s;"
-  			 "proxy_send_timeout 3600s;"
-  			 "keepalive_timeout 120s;"
+  		       "proxy_read_timeout 3600s;"
+  		       "proxy_send_timeout 3600s;"
+  		       "keepalive_timeout 120s;"
 			 "proxy_set_header Upgrade $http_upgrade;"
 			 "proxy_set_header Connection $connection_upgrade;"
 			 "proxy_buffering on;"
@@ -674,12 +674,25 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 	  "proxy_pass http://127.0.0.1:8184/;")))
 #+end_src
 
-*** Etherpad服务器
+**** Etherpad
 #+begin_src scheme :noweb-ref matrix-location
 (nginx-location-configuration
       (uri "/etherpad/")
       (body `(,@proxy-confs
-	      "proxy_pass http://127.0.0.1:9001/;")))
+	      "proxy_pass http://chikocloud:19001;")))
+#+end_src
+
+*** Etherpad服务器
+#+begin_src scheme :noweb-ref nginx-server
+(nginx-server-configuration
+  (server-name '("chikocloud"))
+  (listen '("19001" "[::]:19001"))
+  (locations
+   (list
+    (nginx-location-configuration
+      (uri "/")
+      (body `(,@proxy-confs
+	      "proxy_pass http://127.0.0.1:9001;"))))))
 #+end_src
 
 *** Email服务器
