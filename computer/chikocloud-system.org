@@ -567,11 +567,7 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 	     (certificate-configuration
               (domains '("chat.yumieko.com")))
 	     (certificate-configuration
-	      (domains '("mail.yumieko.com")))
-	     (certificate-configuration
-	      (domains '("dimension.yumieko.com")))
-	     (certificate-configuration
-	      (domains '("etherpad.yumieko.com")))))))
+	      (domains '("mail.yumieko.com")))))))
 #+end_src
 
 ** Nginx
@@ -609,17 +605,17 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
    (list
     (nginx-location-configuration
       (uri "/")
-      (body `("proxy_pass http://127.0.0.1:3000;"
-	      ,@proxy-confs)))
+      (body `(,@proxy-confs
+	      "proxy_pass http://127.0.0.1:3000;")))
     (nginx-location-configuration
       (uri (nyapasu-ref 'ws-transport-path))
-      (body `("proxy_pass http://127.0.0.1:7890;"
-	      ,@proxy-confs))))))
+      (body `(,@proxy-confs
+	      "proxy_pass http://127.0.0.1:7890;"))))))
 #+end_src
 
 *** Matrix服务器
 **** 主服务
-#+begin_src scheme :noweb-ref nginx-server
+#+begin_src scheme :noweb-ref nginx-server :noweb yes :noweb-prefix no
 (nginx-server-configuration
   (server-name '("chat.yumieko.com"))
   (listen '("443 ssl" "[::]:443 ssl"))
@@ -629,12 +625,12 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
    (list
     (nginx-location-configuration
       (uri "/")
-      (body `("proxy_pass http://127.0.0.1:8008;"
-	      ,@proxy-confs)))
+      (body `(,@proxy-confs
+	      "proxy_pass http://127.0.0.1:8008;")))
     (nginx-location-configuration
       (uri "/_matrix/media")
-      (body `("proxy_pass http://127.0.0.1:8008;"
-	      ,@proxy-confs)))
+      (body `(,@proxy-confs
+	      "proxy_pass http://127.0.0.1:8008;")))
     (nginx-location-configuration
       (uri "/.well-known/matrix/server")
       (body `("add_header Access-Control-Allow-Origin *;"
@@ -646,7 +642,8 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
       (body `("add_header Access-Control-Allow-Origin *;"
 	      "add_header Access-Control-Allow-Methods 'GET, OPTIONS';"
 	      "default_type application/json;"
-	      "return 200 '{\"m.homeserver\": {\"base_url\": \"https://chat.yumieko.com\"}}';"))))))
+	      "return 200 '{\"m.homeserver\": {\"base_url\": \"https://chat.yumieko.com\"}}';")))
+    <<marix-location>>)))
 #+end_src
 
 #+begin_src scheme :noweb-ref nginx-server
@@ -664,33 +661,19 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 #+end_src
 
 **** Matrix Dimension
-#+begin_src scheme :noweb-ref nginx-server
-(nginx-server-configuration
-  (server-name '("dimension.yumieko.com"))
-  (listen '("443 ssl" "[::]:443 ssl"))
-  (ssl-certificate "/etc/certs/dimension.yumieko.com/fullchain.pem")
-  (ssl-certificate-key "/etc/certs/dimension.yumieko.com/privkey.pem")
-  (locations
-   (list
-    (nginx-location-configuration
-      (uri "/")
-      (body `("proxy_pass http://127.0.0.1:8184;"
-	      ,@proxy-confs))))))
+#+begin_src scheme :noweb-ref marix-location
+(nginx-location-configuration
+  (uri "/demension")
+  (body `(,@proxy-confs
+	  "proxy_pass http://127.0.0.1:8184;")))
 #+end_src
 
 *** Etherpad服务器
 #+begin_src scheme :noweb-ref nginx-server
-(nginx-server-configuration
-  (server-name '("etherpad.yumieko.com"))
-  (listen '("443 ssl" "[::]:443 ssl"))
-  (ssl-certificate "/etc/certs/etherpad.yumieko.com/fullchain.pem")
-  (ssl-certificate-key "/etc/certs/etherpad.yumieko.com/privkey.pem")
-  (locations
-   (list
-    (nginx-location-configuration
-      (uri "/")
-      (body `("proxy_pass http://127.0.0.1:9001;"
-	      ,@proxy-confs))))))
+(nginx-location-configuration
+      (uri "/etherpad")
+      (body `(,@proxy-confs
+	      "proxy_pass http://127.0.0.1:9001;")))
 #+end_src
 
 *** Email服务器
@@ -791,7 +774,9 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 	  (environment `(("ADMIN_PASSWORD" . ,(nyapasu-ref 'etherpad-admin))
 			 ("USER_PASSWORD" . ,(nyapasu-ref 'etherpad-user))
 			 ("REQUIRE_AUTHENTICATION" . "true")
-			 ("REQUIRE_AUTHORIZATION" . "true")))
+			 ("REQUIRE_AUTHORIZATION" . "true")
+			 ("TRUST_PROXY" . "true")
+			 ("EP__ep_comments_page__highlightSelectedText" . "true")))
 	  (db-pass (nyapasu-ref 'eltherpaddb))))
 #+end_src
 
