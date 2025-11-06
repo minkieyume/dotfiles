@@ -643,7 +643,7 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 	      "add_header Access-Control-Allow-Methods 'GET, OPTIONS';"
 	      "default_type application/json;"
 	      "return 200 '{\"m.homeserver\": {\"base_url\": \"https://chat.yumieko.com\"}}';")))
-    <<marix-location>>)))
+    <<matrix-location>>)))
 #+end_src
 
 #+begin_src scheme :noweb-ref nginx-server
@@ -661,19 +661,19 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 #+end_src
 
 **** Matrix Dimension
-#+begin_src scheme :noweb-ref marix-location
+#+begin_src scheme :noweb-ref matrix-location
 (nginx-location-configuration
-  (uri "/demension/")
+  (uri "/demension")
   (body `(,@proxy-confs
-	  "proxy_pass http://127.0.0.1:8184/;")))
+	  "proxy_pass http://127.0.0.1:8184;")))
 #+end_src
 
 *** Etherpad服务器
 #+begin_src scheme :noweb-ref matrix-location
 (nginx-location-configuration
-      (uri "/etherpad/")
+      (uri "/etherpad")
       (body `(,@proxy-confs
-	      "proxy_pass http://127.0.0.1:9001/;")))
+	      "proxy_pass http://127.0.0.1:9001;")))
 #+end_src
 
 *** Email服务器
