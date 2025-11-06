@@ -559,11 +559,11 @@
 (when (and (executable-find "$$bin/fish$$")
                  (require 'fish-completion nil t))
         (global-fish-completion-mode))
-(setq user-mail-address "chiko@yumieko.com"
-      user-full-name "MinkieChiko")
+(setq user-mail-address "minkieyume@yumieko.com"
+      user-full-name "MinkieYume")
 
 (setq gnus-select-method
-      '(nnimap "chiko"
+      '(nnimap "minkieyume"
                (nnimap-address "mail.yumieko.com")
 	       (nnimap-inbox "INBOX")
 	       (nnimap-expunge t)
