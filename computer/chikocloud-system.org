@@ -569,7 +569,7 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 	     (certificate-configuration
 	      (domains '("mail.yumieko.com")))
 	     (certificate-configuration
-	       (domains '("etherpad.yumieko.com")))))))
+	      (domains '("etherpad.yumieko.com")))))))
 #+end_src
 
 ** Nginx
@@ -783,9 +783,10 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 #+begin_src scheme :noweb-ref service
 (service etherpad-service-type
 	 (etherpad-configuration
-	  (etherpad "minkieyume/etherpad:latest")
+	  (etherpad "etherpad/etherpad:latest")
 	  (uid 5001)
 	  (gid 5001)
+	  (plugins '("ep_comments_page" "ep_author_neat" "ep_markdown" "ep_padlist2" "ep_headings2" "ep_headerauth"))
 	  (environment `(("ADMIN_PASSWORD" . ,(nyapasu-ref 'etherpad-admin))
 			 ("USER_PASSWORD" . ,(nyapasu-ref 'etherpad-user))
 			 ("REQUIRE_AUTHENTICATION" . "true")
@@ -795,9 +796,17 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 	  (db-pass (nyapasu-ref 'eltherpaddb))))
 #+end_src
 
-重构时插件参数配置，该参数用于本地重构docker仓库时快速添加插件。
+构建命令
 #+begin_src conf
-ETHERPAD_PLUGINS="ep_comments_page ep_author_neat ep_markdown ep_padlist2 ep_headings2 ep_headerauth"
+  docker \
+  build \
+  --build-arg ETHERPAD_PLUGINS="ep_comments_page ep_author_neat ep_markdown ep_padlist2 ep_headings2 ep_headerauth" \
+  -t minkieyume/etherpad .
+#+end_src
+
+DockerFile文件尾部添加修复命令：
+#+begin_src fish
+RUN ln -s src/node_modules node_modules
 #+end_src
 
 * 代理
