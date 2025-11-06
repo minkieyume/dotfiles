@@ -663,7 +663,7 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 **** Matrix Dimension
 #+begin_src scheme :noweb-ref marix-location
 (nginx-location-configuration
-  (uri "/demension")
+  (uri "/demension/")
   (body `(,@proxy-confs
 	  "proxy_pass http://127.0.0.1:8184;")))
 #+end_src
@@ -671,7 +671,7 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 *** Etherpad服务器
 #+begin_src scheme :noweb-ref matrix-location
 (nginx-location-configuration
-      (uri "/etherpad")
+      (uri "/etherpad/")
       (body `(,@proxy-confs
 	      "proxy_pass http://127.0.0.1:9001;")))
 #+end_src
@@ -782,7 +782,7 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 
 重构时插件参数配置，该参数用于本地重构docker仓库时快速添加插件。
 #+begin_src conf
-ETHERPAD_PLUGINS="ep_comments_page ep_author_neat ep_markdown ep_padlist2 ep_headings2 ep_auth_session"
+ETHERPAD_PLUGINS="ep_comments_page ep_author_neat ep_markdown ep_padlist2 ep_headings2 ep_headerauth"
 #+end_src
 
 * 代理
