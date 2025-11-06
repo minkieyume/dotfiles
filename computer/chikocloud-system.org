@@ -663,17 +663,17 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 **** Matrix Dimension
 #+begin_src scheme :noweb-ref matrix-location
 (nginx-location-configuration
-  (uri "/demension")
+  (uri "/demension/")
   (body `(,@proxy-confs
-	  "proxy_pass http://127.0.0.1:8184;")))
+	  "proxy_pass http://127.0.0.1:8184/;")))
 #+end_src
 
 *** Etherpad服务器
 #+begin_src scheme :noweb-ref matrix-location
 (nginx-location-configuration
-      (uri "/etherpad")
+      (uri "/etherpad/")
       (body `(,@proxy-confs
-	      "proxy_pass http://127.0.0.1:9001;")))
+	      "proxy_pass http://127.0.0.1:9001/;")))
 #+end_src
 
 *** Email服务器
