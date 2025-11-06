@@ -679,7 +679,7 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 (nginx-location-configuration
       (uri "/etherpad/")
       (body `(,@proxy-confs
-	      "proxy_pass http://chikocloud:19001;")))
+	      "proxy_pass http://chikocloud:19001/;")))
 #+end_src
 
 *** Etherpad服务器
