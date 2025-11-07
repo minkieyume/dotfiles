@@ -823,8 +823,8 @@ RUN ln -s src/node_modules node_modules
 #+begin_src scheme :noweb-ref service
 (service hedgedoc-service-type
 	 (hedgedoc-configuration
-	  (uid 5219)
-	  (gid 5219)
+	  (uid 991)
+	  (gid 991)
 	  (port 3012)
 	  (db-pass (nyapasu-ref 'hedgedoc-db-pass))
 	  (postgresql-password-file "/etc/secret/postgres/hedgedoc")
