@@ -827,7 +827,8 @@ RUN ln -s src/node_modules node_modules
 	  (gid 5219)
 	  (port 3012)
 	  (db-pass (nyapasu-ref 'hedgedoc-db-pass))
-	  (postgresql-password-file "/etc/secret/postgres/hedgedoc")))
+	  (postgresql-password-file "/etc/secret/postgres/hedgedoc")
+	  (hostname "localhost")))
 #+end_src
 
 * 代理
