@@ -234,11 +234,11 @@
 (service fail2ban-service-type
          (fail2ban-configuration
           (jails
-           (list <<fail2ban-jails>>))))
+           (list <<fail2ban-jail>>))))
 #+end_src
 
 **** Synapse
-#+begin_src scheme :noweb-ref fail2ban-jails
+#+begin_src scheme :noweb-ref fail2ban-jail
 (fail2ban-jail-configuration
   (name "synapse")
   (enabled? #t)
@@ -248,6 +248,22 @@
   (find-time "10m")
   (ban-time "1h")
   (log-path '("/var/log/synapse/homeserver.log")))
+#+end_src
+
+#+begin_src scheme :noweb-ref service
+  (simple-service 'synapse-fail2ban-jail
+                  etc-service-type
+                  `(("fail2ban/jail.d/synapse.conf"
+                     ,(plain-file "synapse-jail.conf"
+                                  (string-join
+                                   '("[synapse]"
+                                     "enabled = true"
+                                     "filter = synapse"
+                                     "logpath = /var/log/synapse/homeserver.log"
+                                     "maxretry = 5"
+                                     "findtime = 10m"
+                                     "bantime = 1h")
+                                   "\n")))))
 #+end_src
 
 #+begin_src scheme :noweb-ref service
@@ -828,7 +844,7 @@ RUN ln -s src/node_modules node_modules
 	  (port 3012)
 	  (db-pass (nyapasu-ref 'hedgedoc-db-pass))
 	  (postgresql-password-file "/etc/secret/postgres/hedgedoc")
-	  (hostname "localhost")))
+	  (hostname "doc.yumieko.com")))
 #+end_src
 
 * 代理
