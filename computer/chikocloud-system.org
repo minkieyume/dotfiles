@@ -106,6 +106,13 @@
   (load "../secret/nyapasu.scm")
 #+end_src
 
+#+begin_src scheme :noweb-ref service
+(simple-service 'postgres-pass-file
+		etc-service-type
+		`(("secret/postgres/hedgedoc" ,(plain-file "hedgedoc-db-password.txt"
+							   (nyapasu-ref 'hedgedoc-db-pass)))))
+#+end_src
+
 ** 基础包
 一些基础包
 #+begin_src scheme :noweb-ref module
@@ -780,7 +787,7 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 #+end_src
 
 ** Etherpad
-#+begin_src scheme :noweb-ref service
+#+begin_src scheme
 (service etherpad-service-type
 	 (etherpad-configuration
 	  (etherpad "etherpad/etherpad:latest")
@@ -809,6 +816,19 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 DockerFile文件尾部添加修复命令：
 #+begin_src fish
 RUN ln -s src/node_modules node_modules
+#+end_src
+
+
+** HedgeDoc
+#+begin_src scheme :noweb-ref service
+(service hedgedoc-service-type
+	 (hedgedoc-configuration
+	  (uid 5219)
+	  (gid 5219)
+	  (port 3012)
+	  (db-pass (nyapasu-ref 'hedgedoc-db-pass))
+	  (postgresql-password-file "/etc/secret/postgres/hedgedoc")
+	  (hostname "doc.yumieko.com")))
 #+end_src
 
 * 代理
