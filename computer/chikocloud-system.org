@@ -233,7 +233,7 @@
 #+begin_src scheme :noweb-ref service :noweb yes :noweb-prefix no
 (service fail2ban-service-type
          (fail2ban-configuration
-          (extra-jails
+          (jails
            (list <<fail2ban-jails>>))))
 #+end_src
 
