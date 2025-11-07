@@ -552,7 +552,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   (gnu services cuirass)
 #+end_src
 
-#+begin_src scheme :noweb-ref service :noweb yes :noweb-prefix no
+#+begin_src scheme :noweb yes :noweb-prefix no
 (service cuirass-service-type
 	 (cuirass-configuration
 	   (interval (* 6 3600))
@@ -560,7 +560,7 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 	   (specifications #~(list <<cuirass-spec>>))))
 #+end_src
 
-#+begin_src scheme :noweb-ref cuirass-spec
+#+begin_src scheme
 (specification
  (name 'chikochannel)
  (build '(channels chikochannel))

@@ -682,6 +682,14 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 "kubo"
 #+end_src
 
+#+begin_src scheme :noweb-ref service
+(service ipfs-service-type
+         (ipfs-configuration
+	   (package (spec->pkg "kubo"))
+           (gateway "/ip4/0.0.0.0/tcp/8880")
+           (api "/ip4/0.0.0.0/tcp/5001")))
+#+end_src
+
 ** 解压
 #+begin_src scheme :noweb-ref package
   "unzip"
