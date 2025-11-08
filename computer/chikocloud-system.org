@@ -620,7 +620,8 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 			  "add_header 'Access-Control-Allow-Headers' 'Origin, X-Requested-With, Content-Type, Accept, Authorization' always;")))
   (service nginx-service-type
   	   (nginx-configuration
-  	     (extra-content "map $http_upgrade $connection_upgrade { default upgrade; '' close; }\nclient_max_body_size 500M;")
+  	     (extra-content (string-append "map $http_upgrade $connection_upgrade { default upgrade; '' close; }\nclient_max_body_size 500M;"
+			      "limit_req_zone $binary_remote_addr zone=appcreate:10m rate=10r/m;"))
   	     (server-blocks
   	      (list <<nginx-server>>)))))
 #+end_src
@@ -639,9 +640,14 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
       (body `(,@proxy-confs
 	      "proxy_pass http://127.0.0.1:3000;")))
     (nginx-location-configuration
-      (uri (nyapasu-ref 'ws-transport-path))
-      (body `(,@proxy-confs
-	      "proxy_pass http://127.0.0.1:7890;"))))))
+     (uri "/api/app/create")
+     (body `(,@proxy-confs
+	     "limit_req zone=appcreate burst=5 nodelay;"
+	     "proxy_pass http://127.0.0.1:3000;")))
+    (nginx-location-configuration
+     (uri (nyapasu-ref 'ws-transport-path))
+     (body `(,@proxy-confs
+	     "proxy_pass http://127.0.0.1:7890;"))))))
 #+end_src
 
 *** Matrix服务器
@@ -711,12 +717,15 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
     (nginx-location-configuration
       (uri "/")
       (body `(,@proxy-confs
-	      "proxy_pass http://127.0.0.1:3012;")))
-    (nginx-location-configuration
-      (uri "/oauth-client")
-      (body `("alias /etc/www/hedgedoc/oauth-client;"
-	      "index client.html;"
-	      "try_files $uri $uri/ =404;"))))))
+	      "proxy_pass http://127.0.0.1:3012;"))))))
+#+end_src
+
+#+begin_src scheme
+  (nginx-location-configuration
+   (uri "/oauth-client")
+   (body `("alias /etc/www/hedgedoc/oauth-client;"
+  	 "index client.html;"
+  	 "try_files $uri $uri/ =404;")))
 #+end_src
 
 #+begin_src scheme :noweb-ref service
@@ -868,8 +877,8 @@ RUN ln -s src/node_modules node_modules
   	     ("CMD_OAUTH2_USER_PROFILE_ID_ATTR" . "id")
   	     ("CMD_OAUTH2_TOKEN_URL" . "https://littlewing.yumieko.com/oauth/token")
   	     ("CMD_OAUTH2_AUTHORIZATION_URL" . "https://littlewing.yumieko.com/oauth/authorize")
-  	     ("CMD_OAUTH2_CLIENT_ID" . "https://doc.yumieko.com/oauth-client/client.html")
-  	     ("CMD_OAUTH2_CLIENT_SECRET" . "dummy")
+  	     ("CMD_OAUTH2_CLIENT_ID" . ,(nyapasu-ref 'hedgedoc-misskey-client-id))
+  	     ("CMD_OAUTH2_CLIENT_SECRET" . ,(nyapasu-ref 'hedgedoc-misskey-client-secret))
   	     ("CMD_OAUTH2_PROVIDERNAME" . "Misskey")
   	     ("CMD_OAUTH2_SCOPE" . "read:account")))))
 #+end_src
