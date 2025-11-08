@@ -857,6 +857,8 @@ RUN ln -s src/node_modules node_modules
 	  (hostname "doc.yumieko.com")
 	  (environment
 	   `(("CMD_EMAIL" . "false")
+	     ("CMD_ALLOW_ANONYMOUS" . "false")
+	     ("CMD_PROTOCOL_USESSL" . "true")
 	     ("CMD_SESSION_SECRET" . ,(nyapasu-ref 'hedgedoc-session-secret))
 	     ("CMD_OAUTH2_USER_PROFILE_URL" . "https://littlewing.yumieko.com/api/i")
 	     ("CMD_OAUTH2_USER_PROFILE_USERNAME_ATTR" . "username")
