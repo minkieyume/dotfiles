@@ -1283,6 +1283,11 @@ Aider暂时没有包，需要用uvx安装。
 			   "uvx" "--from" "aider-chat" "aider")
 		     (cdr (command-line)))))))
 #+end_src
+* 运维
+** 域名工具
+#+begin_src scheme :noweb-ref package
+  "cloudflare-cli"
+#+end_src
 
 * 创作
 ** 游戏开发
