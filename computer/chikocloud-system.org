@@ -870,7 +870,9 @@ RUN ln -s src/node_modules node_modules
 	     ("CMD_OAUTH2_AUTHORIZATION_URL" . "https://littlewing.yumieko.com/oauth/authorize")
 	     ("CMD_OAUTH2_CLIENT_ID" . "https://doc.yumieko.com/oauth-client/client.html")
 	     ("CMD_OAUTH2_PROVIDERNAME" . "Misskey")
-	     ("CMD_OAUTH2_SCOPE" . "read:account")))))
+	     ("CMD_OAUTH2_SCOPE" . "read:account")
+	     ("CMD_OAUTH2_ROLES_CLAIM" . "roles")
+	     ("CMD_OAUTH2_ACCESS_ROLE" . "role/studio")))))
 #+end_src
 
 * 代理
