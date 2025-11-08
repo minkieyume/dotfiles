@@ -112,7 +112,7 @@
 		`(("secret/postgres/hedgedoc" ,(plain-file "hedgedoc-db-password.txt"
 							   (nyapasu-ref 'hedgedoc-db-pass)))
 		  ("secret/postgres/etherpad" ,(plain-file "etherpad-db-password.txt"
-							     (nyapasu-ref 'etherpad-db-pass)))
+							     (nyapasu-ref 'eltherpaddb)))
 		  ("secret/postgres/authentik" ,(plain-file "authentik-db-password.txt"
 							       (nyapasu-ref 'authentik-db-pass)))))
 #+end_src
