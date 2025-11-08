@@ -757,12 +757,6 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 	      "try_files $uri $uri/ =404;"))))))
 #+end_src
 
-#+begin_src scheme :noweb-ref service
-(simple-service 'misskey-auth
-		etc-service-type
-		`(("www/hedgedoc/oauth-client/client.html" ,(local-file "../files/www/hedgedoc/oauth-client.html"))))
-#+end_src
-
 *** Email服务器
 #+begin_src scheme :noweb-ref nginx-server
 (nginx-server-configuration
