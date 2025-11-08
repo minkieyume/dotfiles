@@ -857,7 +857,6 @@ RUN ln -s src/node_modules node_modules
   	  (hostname "doc.yumieko.com")
   	  (environment
   	   `(("CMD_EMAIL" . "false")
-  	     ("CMD_AUTH_METHODS" . "oauth2")
   	     ("CMD_ALLOW_ANONYMOUS" . "false")
   	     ("CMD_PROTOCOL_USESSL" . "true")
   	     ("CMD_SESSION_SECRET" . ,(nyapasu-ref 'hedgedoc-session-secret))
@@ -871,9 +870,7 @@ RUN ln -s src/node_modules node_modules
   	     ("CMD_OAUTH2_CLIENT_ID" . "https://doc.yumieko.com/oauth-client/client.html")
   	     ("CMD_OAUTH2_CLIENT_SECRET" . "dummy")
   	     ("CMD_OAUTH2_PROVIDERNAME" . "Misskey")
-  	     ("CMD_OAUTH2_SCOPE" . "read:account")
-  	     ("CMD_OAUTH2_ROLES_CLAIM" . "roles")
-  	     ("CMD_OAUTH2_ACCESS_ROLE" . "role/studio")))))
+  	     ("CMD_OAUTH2_SCOPE" . "read:account")))))
 #+end_src
 
 * 代理
