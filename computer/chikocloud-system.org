@@ -856,7 +856,7 @@ RUN ln -s src/node_modules node_modules
 	  (postgresql-password-file "/etc/secret/postgres/hedgedoc")
 	  (hostname "doc.yumieko.com")
 	  (environment
-	   `(("CMD_OAUTH2_ENABLED" . "true")
+	   `(("CMD_EMAIL" . "false")
 	     ("CMD_OAUTH2_USER_PROFILE_URL" . "https://littlewing.yumieko.com/api/i")
 	     ("CMD_OAUTH2_USER_PROFILE_USERNAME_ATTR" . "username")
 	     ("CMD_OAUTH2_USER_PROFILE_DISPLAY_NAME_ATTR" . "name")
