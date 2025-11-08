@@ -714,8 +714,9 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 	      "proxy_pass http://127.0.0.1:3012;")))
     (nginx-location-configuration
       (uri "/oauth-client/")
-      (body `("root /etc/www/hedgedoc/oauth-client;"
-	      "index client.html;"))))))
+      (body `("alias /etc/www/hedgedoc/oauth-client;"
+	      "index client.html;"
+	      "try_files $uri $uri/ =404;"))))))
 #+end_src
 
 #+begin_src scheme :noweb-ref service
