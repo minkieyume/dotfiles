@@ -110,7 +110,11 @@
 (simple-service 'postgres-pass-file
 		etc-service-type
 		`(("secret/postgres/hedgedoc" ,(plain-file "hedgedoc-db-password.txt"
-							   (nyapasu-ref 'hedgedoc-db-pass)))))
+							   (nyapasu-ref 'hedgedoc-db-pass)))
+		  ("secret/postgres/etherpad" ,(plain-file "etherpad-db-password.txt"
+							     (nyapasu-ref 'etherpad-db-pass)))
+		  ("secret/postgres/authentik" ,(plain-file "authentik-db-password.txt"
+							       (nyapasu-ref 'authentik-db-pass)))))
 #+end_src
 
 ** 基础包
@@ -878,6 +882,17 @@ RUN ln -s src/node_modules node_modules
   	     ("CMD_OAUTH2_CLIENT_SECRET" . "")
   	     ("CMD_OAUTH2_PROVIDERNAME" . "Misskey")
   	     ("CMD_OAUTH2_SCOPE" . "read:account")))))
+#+end_src
+
+** Authentic
+#+begin_src scheme :noweb-ref service
+(service authentik-service-type
+         (authentik-configuration
+          (secret-key (nyapasu-ref 'authentic-secret-key))
+          (postgresql-password-file "/etc/secret/postgres/authentik")
+          (db-password (nyapasu-ref 'authentik-db-pass))
+          (http-port 9000)
+          (https-port 9443)))
 #+end_src
 
 * 代理
