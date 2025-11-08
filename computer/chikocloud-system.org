@@ -596,7 +596,9 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 	     (certificate-configuration
 	      (domains '("mail.yumieko.com")))
 	     (certificate-configuration
-	      (domains '("doc.yumieko.com")))))))
+	      (domains '("doc.yumieko.com")))
+	     (certificate-configuration
+	      (domains '("auth.yumieko.com")))))))
 #+end_src
 
 ** Nginx
@@ -731,6 +733,32 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 
 #+begin_src scheme :noweb-ref service
 (simple-service 'hedgedoc-oauth
+		etc-service-type
+		`(("www/hedgedoc/oauth-client/client.html" ,(local-file "../files/www/hedgedoc/oauth-client.html"))))
+#+end_src
+
+*** Authentik服务器
+#+begin_src scheme :noweb-ref nginx-server
+(nginx-server-configuration
+  (server-name '("auth.yumieko.com"))
+  (listen '("443 ssl" "[::]:443 ssl"))
+  (ssl-certificate "/etc/certs/auth.yumieko.com/fullchain.pem")
+  (ssl-certificate-key "/etc/certs/auth.yumieko.com/privkey.pem")
+  (locations
+   (list
+    (nginx-location-configuration
+      (uri "/")
+      (body `(,@proxy-confs
+	      "proxy_pass http://127.0.0.1:9000;")))
+    (nginx-location-configuration
+      (uri "/misskey-auth")
+      (body `("alias /etc/www/hedgedoc/oauth-client;"
+	      "index client.html;"
+	      "try_files $uri $uri/ =404;"))))))
+#+end_src
+
+#+begin_src scheme :noweb-ref service
+(simple-service 'misskey-auth
 		etc-service-type
 		`(("www/hedgedoc/oauth-client/client.html" ,(local-file "../files/www/hedgedoc/oauth-client.html"))))
 #+end_src
