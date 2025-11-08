@@ -752,9 +752,15 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 	      "proxy_pass http://127.0.0.1:9000;")))
     (nginx-location-configuration
       (uri "/misskey-auth")
-      (body `("alias /etc/www/hedgedoc/oauth-client;"
+      (body `("alias /etc/www/authentik/misskey-auth;"
 	      "index client.html;"
 	      "try_files $uri $uri/ =404;"))))))
+#+end_src
+
+#+begin_src scheme :noweb-ref service
+(simple-service 'authentik-misskeyauth
+		etc-service-type
+		`(("www/authentik/misskey-auth/client.html" ,(local-file "../files/www/authentik/oauth-client.html"))))
 #+end_src
 
 *** Email服务器
