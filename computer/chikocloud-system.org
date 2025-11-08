@@ -857,6 +857,7 @@ RUN ln -s src/node_modules node_modules
 	  (hostname "doc.yumieko.com")
 	  (environment
 	   `(("CMD_EMAIL" . "false")
+	     ("CMD_AUTH_METHODS" . "oauth2")
 	     ("CMD_ALLOW_ANONYMOUS" . "false")
 	     ("CMD_PROTOCOL_USESSL" . "true")
 	     ("CMD_SESSION_SECRET" . ,(nyapasu-ref 'hedgedoc-session-secret))
