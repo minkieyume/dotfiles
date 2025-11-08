@@ -848,31 +848,32 @@ RUN ln -s src/node_modules node_modules
 ** HedgeDoc
 #+begin_src scheme :noweb-ref service
 (service hedgedoc-service-type
-	 (hedgedoc-configuration
-	  (uid 911)
-	  (gid 911)
-	  (port 3012)
-	  (db-pass (nyapasu-ref 'hedgedoc-db-pass))
-	  (postgresql-password-file "/etc/secret/postgres/hedgedoc")
-	  (hostname "doc.yumieko.com")
-	  (environment
-	   `(("CMD_EMAIL" . "false")
-	     ("CMD_AUTH_METHODS" . "oauth2")
-	     ("CMD_ALLOW_ANONYMOUS" . "false")
-	     ("CMD_PROTOCOL_USESSL" . "true")
-	     ("CMD_SESSION_SECRET" . ,(nyapasu-ref 'hedgedoc-session-secret))
-	     ("CMD_OAUTH2_USER_PROFILE_URL" . "https://littlewing.yumieko.com/api/i")
-	     ("CMD_OAUTH2_USER_PROFILE_USERNAME_ATTR" . "username")
-	     ("CMD_OAUTH2_USER_PROFILE_DISPLAY_NAME_ATTR" . "name")
-	     ("CMD_OAUTH2_USER_PROFILE_EMAIL_ATTR" . "email")
-	     ("CMD_OAUTH2_USER_PROFILE_ID_ATTR" . "id")
-	     ("CMD_OAUTH2_TOKEN_URL" . "https://littlewing.yumieko.com/oauth/token")
-	     ("CMD_OAUTH2_AUTHORIZATION_URL" . "https://littlewing.yumieko.com/oauth/authorize")
-	     ("CMD_OAUTH2_CLIENT_ID" . "https://doc.yumieko.com/oauth-client/client.html")
-	     ("CMD_OAUTH2_PROVIDERNAME" . "Misskey")
-	     ("CMD_OAUTH2_SCOPE" . "read:account")
-	     ("CMD_OAUTH2_ROLES_CLAIM" . "roles")
-	     ("CMD_OAUTH2_ACCESS_ROLE" . "role/studio")))))
+  	 (hedgedoc-configuration
+  	  (uid 911)
+  	  (gid 911)
+  	  (port 3012)
+  	  (db-pass (nyapasu-ref 'hedgedoc-db-pass))
+  	  (postgresql-password-file "/etc/secret/postgres/hedgedoc")
+  	  (hostname "doc.yumieko.com")
+  	  (environment
+  	   `(("CMD_EMAIL" . "false")
+  	     ("CMD_AUTH_METHODS" . "oauth2")
+  	     ("CMD_ALLOW_ANONYMOUS" . "false")
+  	     ("CMD_PROTOCOL_USESSL" . "true")
+  	     ("CMD_SESSION_SECRET" . ,(nyapasu-ref 'hedgedoc-session-secret))
+  	     ("CMD_OAUTH2_USER_PROFILE_URL" . "https://littlewing.yumieko.com/api/i")
+  	     ("CMD_OAUTH2_USER_PROFILE_USERNAME_ATTR" . "username")
+  	     ("CMD_OAUTH2_USER_PROFILE_DISPLAY_NAME_ATTR" . "name")
+  	     ("CMD_OAUTH2_USER_PROFILE_EMAIL_ATTR" . "email")
+  	     ("CMD_OAUTH2_USER_PROFILE_ID_ATTR" . "id")
+  	     ("CMD_OAUTH2_TOKEN_URL" . "https://littlewing.yumieko.com/oauth/token")
+  	     ("CMD_OAUTH2_AUTHORIZATION_URL" . "https://littlewing.yumieko.com/oauth/authorize")
+  	     ("CMD_OAUTH2_CLIENT_ID" . "https://doc.yumieko.com/oauth-client/client.html")
+  	     ("CMD_OAUTH2_CLIENT_SECRET" . "dummy")
+  	     ("CMD_OAUTH2_PROVIDERNAME" . "Misskey")
+  	     ("CMD_OAUTH2_SCOPE" . "read:account")
+  	     ("CMD_OAUTH2_ROLES_CLAIM" . "roles")
+  	     ("CMD_OAUTH2_ACCESS_ROLE" . "role/studio")))))
 #+end_src
 
 * 代理
