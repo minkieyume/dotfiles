@@ -860,6 +860,8 @@ Emacs的终端模拟器。
 (setq user-mail-address "minkieyume@yumieko.com"
       user-full-name "MinkieYume")
 
+(setq gnus-get-new-mail t)
+
 (setq gnus-select-method
       '(nnimap "minkieyume"
                (nnimap-address "mail.yumieko.com")
@@ -884,4 +886,10 @@ Emacs的终端模拟器。
       mm-coding-system-priorities '(utf-8 gbk gb2312))
 
 (setq message-default-mail-headers "")
+
+(setq gnus-parameters
+      '((".*"
+         (gnus-use-scoring nil)
+         (display . all)
+         (gnus-show-threads t))))
 #+END_SRC

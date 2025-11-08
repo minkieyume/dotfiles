@@ -711,7 +711,17 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
     (nginx-location-configuration
       (uri "/")
       (body `(,@proxy-confs
-	      "proxy_pass http://127.0.0.1:3012;"))))))
+	      "proxy_pass http://127.0.0.1:3012;")))
+    (nginx-location-configuration
+      (uri "/oauth-client")
+      (body `("root www/hedgedoc/oauth-client;"
+	      "index client.html;"))))))
+#+end_src
+
+#+begin_src scheme :noweb-ref nginx-server
+(simple-service 'postgres-pass-file
+		etc-service-type
+		`(("www/hedgedoc/oauth-client/client.html" ,(local-file "../files/www/hedgedoc/oauth-client.html"))))
 #+end_src
 
 *** Email服务器
@@ -844,7 +854,19 @@ RUN ln -s src/node_modules node_modules
 	  (port 3012)
 	  (db-pass (nyapasu-ref 'hedgedoc-db-pass))
 	  (postgresql-password-file "/etc/secret/postgres/hedgedoc")
-	  (hostname "doc.yumieko.com")))
+	  (hostname "doc.yumieko.com")
+	  (environment
+	   `(("CMD_OAUTH2_ENABLED" . "true")
+	     ("CMD_OAUTH2_USER_PROFILE_URL" . "https://littlewing.yumieko.com/api/i")
+	     ("CMD_OAUTH2_USER_PROFILE_USERNAME_ATTR" . "username")
+	     ("CMD_OAUTH2_USER_PROFILE_DISPLAY_NAME_ATTR" . "name")
+	     ("CMD_OAUTH2_USER_PROFILE_EMAIL_ATTR" . "email")
+	     ("CMD_OAUTH2_USER_PROFILE_ID_ATTR" . "id")
+	     ("CMD_OAUTH2_TOKEN_URL" . "https://littlewing.yumieko.com/oauth/token")
+	     ("CMD_OAUTH2_AUTHORIZATION_URL" . "https://littlewing.yumieko.com/oauth/authorize")
+	     ("CMD_OAUTH2_CLIENT_ID" . "https://doc.yumieko.com/oauth-client/client.html")
+	     ("CMD_OAUTH2_PROVIDERNAME" . "Misskey")
+	     ("CMD_OAUTH2_SCOPE" . "read:account")))))
 #+end_src
 
 * 代理
