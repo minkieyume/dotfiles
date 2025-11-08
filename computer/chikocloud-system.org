@@ -718,8 +718,8 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 	      "index client.html;"))))))
 #+end_src
 
-#+begin_src scheme :noweb-ref nginx-server
-(simple-service 'postgres-pass-file
+#+begin_src scheme :noweb-ref service
+(simple-service 'hedgedoc-oauth
 		etc-service-type
 		`(("www/hedgedoc/oauth-client/client.html" ,(local-file "../files/www/hedgedoc/oauth-client.html"))))
 #+end_src
