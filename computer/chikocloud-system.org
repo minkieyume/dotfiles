@@ -888,7 +888,7 @@ RUN ln -s src/node_modules node_modules
 #+begin_src scheme :noweb-ref service
 (service authentik-service-type
          (authentik-configuration
-          (secret-key (nyapasu-ref 'authentic-secret-key))
+          (secret-key (nyapasu-ref 'authentik-secret-key))
           (postgresql-password-file "/etc/secret/postgres/authentik")
           (db-password (nyapasu-ref 'authentik-db-pass))
           (http-port 9000)
