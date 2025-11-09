@@ -870,10 +870,10 @@ RUN ln -s src/node_modules node_modules
   	  (hostname "doc.yumieko.com")
   	  (environment
   	   `(("CMD_EMAIL" . "true")
-	     ("CMD_ALLOW_EMAIL_REGISTER" . "true")
-	     ("CMD_ALLOW_FREEURL" . "true")
+	       ("CMD_ALLOW_EMAIL_REGISTER" . "true")
+	       ("CMD_ALLOW_FREEURL" . "true")
 	       ("CMD_REQUIRE_FREEURL_AUTHENTICATION" . "true")
-	       ("CMD_DEFAULT_PERMISSION" . "private")
+	       ("CMD_DEFAULT_PERMISSION" . "editable")
   	     ("CMD_ALLOW_ANONYMOUS" . "false")
   	     ("CMD_PROTOCOL_USESSL" . "true")
   	     ("CMD_SESSION_SECRET" . ,(nyapasu-ref 'hedgedoc-session-secret))
