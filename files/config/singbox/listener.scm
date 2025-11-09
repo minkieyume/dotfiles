@@ -59,6 +59,7 @@
       (("port" . #(3478)))
       (("user" . #("ipfs")))
       (("domain_suffix" . "neboer.site"))
+      (("doamin_suffix" . #("gnu.org")))
       (("domain_suffix" . #("vps-50015373.vps.ovh.net")))
       (("ip_cidr" . #("51.83.132.203/32" "2001:41d0:601:1100::592a/128")))
       (("domain_suffix" . #("syncthing.net" "discovery-announce-v4.syncthing.net")))

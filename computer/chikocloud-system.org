@@ -477,7 +477,7 @@ fish，开箱即用的终端解释器。
   (job "0 2 * * *" "rsync -avz --timeout=30 /var/lib/misskey/files rsync://100.119.107.8/backup/misskey")
   (job "0 2 * * *" "rsync -avz --timeout=30 /var/lib/synapse rsync://100.119.107.8/backup")
   (job "0 2 * * *" "rsync -avz --timeout=30 /var/lib/docker-mailserver rsync://100.119.107.8/backup")
-  (job "0 2 * * *" "rsync -avz --timeout=30 /var/lib/etherpad rsync://100.119.107.8/backup")  
+  (job "0 2 * * *" "rsync -avz --timeout=30 /var/lib/etherpad rsync://100.119.107.8/backup")
 #+end_src
 
 ** GPG

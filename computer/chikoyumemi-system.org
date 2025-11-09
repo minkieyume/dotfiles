@@ -703,6 +703,24 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
   "keepassxc-browser-icecat"
 #+end_src
 
+** 电子邮箱
+#+begin_src scheme :noweb-ref package
+  "mu"
+  "isync"
+#+end_src
+
+#+begin_src scheme :noweb-ref mcron-job
+(job '(next-minute (range 0 60 3))
+     "mbsync -a > /tmp/mbsync.log 2>&1")
+#+end_src
+
+#+begin_src scheme :noweb-ref home-service
+(simple-service 'isync-service
+  		home-files-service-type 
+  		`((".mbsyncrc"
+  		   ,(local-file "../files/config/mbsyncrc.conf"))))
+#+end_src
+
 * 备份
 ** Syncthing
 #+begin_src scheme :noweb-ref module
@@ -1283,6 +1301,7 @@ Aider暂时没有包，需要用uvx安装。
 			   "uvx" "--from" "aider-chat" "aider")
 		     (cdr (command-line)))))))
 #+end_src
+
 * 运维
 ** 域名工具
 #+begin_src scheme :noweb-ref package
