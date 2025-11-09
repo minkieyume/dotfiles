@@ -737,32 +737,6 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 		`(("www/hedgedoc/oauth-client/client.html" ,(local-file "../files/www/hedgedoc/oauth-client.html"))))
 #+end_src
 
-*** Authentik服务器
-#+begin_src scheme :noweb-ref nginx-server
-(nginx-server-configuration
-  (server-name '("auth.yumieko.com"))
-  (listen '("443 ssl" "[::]:443 ssl"))
-  (ssl-certificate "/etc/certs/auth.yumieko.com/fullchain.pem")
-  (ssl-certificate-key "/etc/certs/auth.yumieko.com/privkey.pem")
-  (locations
-   (list
-    (nginx-location-configuration
-      (uri "/")
-      (body `(,@proxy-confs
-	      "proxy_pass http://127.0.0.1:9000;")))
-    (nginx-location-configuration
-      (uri "/misskey-auth")
-      (body `("alias /etc/www/authentik/misskey-auth;"
-	      "index client.html;"
-	      "try_files $uri $uri/ =404;"))))))
-#+end_src
-
-#+begin_src scheme :noweb-ref service
-(simple-service 'authentik-misskeyauth
-		etc-service-type
-		`(("www/authentik/misskey-auth/client.html" ,(local-file "../files/www/authentik/oauth-client.html"))))
-#+end_src
-
 *** Email服务器
 #+begin_src scheme :noweb-ref nginx-server
 (nginx-server-configuration
@@ -910,17 +884,6 @@ RUN ln -s src/node_modules node_modules
   	     ("CMD_OAUTH2_CLIENT_SECRET" . "")
   	     ("CMD_OAUTH2_PROVIDERNAME" . "Misskey")
   	     ("CMD_OAUTH2_SCOPE" . "read:account")))))
-#+end_src
-
-** Authentic
-#+begin_src scheme :noweb-ref service
-(service authentik-service-type
-         (authentik-configuration
-          (secret-key (nyapasu-ref 'authentik-secret-key))
-          (postgresql-password-file "/etc/secret/postgres/authentik")
-          (db-password (nyapasu-ref 'authentik-db-pass))
-          (http-port 9000)
-          (https-port 9443)))
 #+end_src
 
 * 代理
