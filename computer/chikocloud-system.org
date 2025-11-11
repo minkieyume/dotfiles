@@ -598,7 +598,9 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 	     (certificate-configuration
 	      (domains '("doc.yumieko.com")))
 	     (certificate-configuration
-	      (domains '("auth.yumieko.com")))))))
+	      (domains '("auth.yumieko.com")))
+	     (certificate-configuration
+	      (domains '("vcs.yumieko.com")))))))
 #+end_src
 
 ** Nginx
@@ -629,7 +631,9 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
   	     (extra-content (string-append "map $http_upgrade $connection_upgrade { default upgrade; '' close; }\nclient_max_body_size 500M;"
 			      "limit_req_zone $binary_remote_addr zone=appcreate:10m rate=10r/m;"))
   	     (server-blocks
-  	      (list <<nginx-server>>)))))
+  	      (list <<nginx-server>>))
+	     (upstream-blocks
+	      (list <<nginx-upstream>>)))))
 #+end_src
 
 *** 雏翼同好会
@@ -750,6 +754,44 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
       (uri "/")
       (body `("proxy_pass http://127.0.0.1:8080;"
 	      ,@proxy-confs))))))
+#+end_src
+
+*** Forgejo服务器
+**** 正常服务
+#+begin_src scheme :noweb-ref nginx-server
+(nginx-server-configuration
+  (server-name '("vcs.yumieko.com"))
+  (listen '("443 ssl" "[::]:443 ssl"))
+  (ssl-certificate "/etc/certs/vcs.yumieko.com/fullchain.pem")
+  (ssl-certificate-key "/etc/certs/vcs.yumieko.com/privkey.pem")
+  (locations
+   (list
+    (nginx-location-configuration
+      (uri "/")
+      (body `("proxy_pass http://100.119.107.8:3020;"
+	      ,@proxy-confs))))))
+#+end_src
+
+**** SSH代理
+#+begin_src scheme :noweb-ref nginx-upstream
+(nginx-upstream-configuration
+ (name "forgejo_ssh")
+ (servers "100.119.107.8:2222"))
+#+end_src
+
+#+begin_src scheme :noweb-ref nginx-server
+(nginx-server-configuration
+  (server-name '("vcs.yumieko.com"))
+  (listen '("2222" "[::]:2222"))
+  (ssl-certificate "/etc/certs/vcs.yumieko.com/fullchain.pem")
+  (ssl-certificate-key "/etc/certs/vcs.yumieko.com/privkey.pem")
+  (locations
+   (list
+    (nginx-location-configuration
+      (uri "/")
+      (body `("proxy_pass forgejo_ssh;"
+	      "proxy_timeout 10m;"
+	      "proxy_connect_timeout 10s;"))))))
 #+end_src
 
 ** Misskey

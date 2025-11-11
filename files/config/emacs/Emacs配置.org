@@ -257,11 +257,19 @@ mcp是AI与外界互动的接口库。
 ("filesystem" . (:command "npx" :args ("-y" "@modelcontextprotocol/server-filesystem" "~/Develop/")))
 #+end_src
 
-
 **** Godot-MCP
 #+begin_src emacs-lisp :noweb-ref mcp-servers
 ("godot" . (:command "npx" :args ("godot-mcp") :env (:DEBUG "true"
 						     :GODOT_PATH "$$bin/godot$$")))
+#+end_src
+
+**** Git MCP Server
+#+begin_src emacs-lisp :noweb-ref mcp-servers
+("git" . (:command "npx" :args ("@cyanheads/git-mcp-server@latest") :env (:MCP_TRANSPORT_TYPE "stdio"
+									  :MCP_LOG_LEVEL "info"
+									  :GIT_SIGN_COMMITS "true"
+									  :GIT_BASE_DIR "~/Develop"
+									  :LOGS_DIR "~/Develop/.logs/git-mcp-server")))
 #+end_src
 
 ** Ellama
@@ -495,7 +503,7 @@ Ekg是方便快速整理灵感和笔记的笔记插件。
   	
   	("p" "程序进度"
   	 alltodo ""
-           ((org-agenda-files '("~/Creator/ProgramDevelop/emacs/llm-index/todo.org")))
+           ((org-agenda-files '("~/Develop/GameDevelop/夜之城传说/游戏档案/琪可编程.org")))
   	 (org-agenda-use-tag-inheritance t))
   	
   	("h" "折腾进度"
@@ -855,8 +863,45 @@ Emacs的终端模拟器。
 #+END_SRC
 
 * 通讯
-** 电子邮件
-#+begin_src emacs-lisp :noweb-ref config
+** Email
+*** Mu4e
+#+begin_src emacs-lisp config
+(use-package mu4e
+  :bind ("C-c m" . mu4e)
+  :custom
+  (mu4e-maildir "~/.mail/minkieyume")
+  (mu4e-get-mail-command "mbsync -a")
+  (mu4e-sent-folder  "/minkieyume/Sent")
+  (mu4e-drafts-folder "/minkieyume/Drafts")
+  (mu4e-trash-folder  "/minkieyume/Trash")
+  (mu4e-update-interval 300)
+  (mu4e-index-update-in-background t)
+  (mu4e-compose-signature-auto-include nil))
+#+end_src
+
+*** SMTP
+#+begin_src emacs-lisp config
+(setq user-mail-address "minkieyume@yumieko.com"
+      user-full-name "MinkieYume"
+      message-send-mail-function 'smtpmail-send-it
+      smtpmail-smtp-server "mail.yumieko.com"
+      smtpmail-smtp-service 587
+      smtpmail-stream-type 'starttls
+      message-default-mail-headers ""
+      mu4e-view-prefer-html t
+      mu4e-html2text-command 'mu4e-shr2text
+      mu4e-view-html-commands '("librewolf"))
+#+end_src
+
+** Message
+*** Html
+#+begin_src emacs-lisp config
+(setq mm-text-html-renderer 'shr
+      mm-coding-system-priorities '(utf-8 gbk gb2312))
+#+END_SRC
+
+*** Gnus
+#+begin_src emacs-lisp
 (setq user-mail-address "minkieyume@yumieko.com"
       user-full-name "MinkieYume")
 

@@ -138,7 +138,12 @@
 	     ("curl" . (:command "npx" :args ("-y" "@mcp-get-community/server-curl")))
 	     ("filesystem" . (:command "npx" :args ("-y" "@modelcontextprotocol/server-filesystem" "~/Develop/")))
 	     ("godot" . (:command "npx" :args ("godot-mcp") :env (:DEBUG "true"
-	     						     :GODOT_PATH "$$bin/godot$$")))))
+	     						     :GODOT_PATH "$$bin/godot$$")))
+	     ("git" . (:command "npx" :args ("@cyanheads/git-mcp-server@latest") :env (:MCP_TRANSPORT_TYPE "stdio"
+	     									  :MCP_LOG_LEVEL "info"
+	     									  :GIT_SIGN_COMMITS "true"
+	     									  :GIT_BASE_DIR "~/Develop"
+	     									  :LOGS_DIR "~/Develop/.logs/git-mcp-server")))))
   :config (require 'mcp-hub)
   :hook (after-init . mcp-hub-start-all-server))
 (use-package ellama
@@ -559,30 +564,3 @@
 (when (and (executable-find "$$bin/fish$$")
                  (require 'fish-completion nil t))
         (global-fish-completion-mode))
-(setq user-mail-address "minkieyume@yumieko.com"
-      user-full-name "MinkieYume")
-
-(setq gnus-select-method
-      '(nnimap "minkieyume"
-               (nnimap-address "mail.yumieko.com")
-	       (nnimap-inbox "INBOX")
-	       (nnimap-expunge t)
-               (nnimap-server-port 993)
-               (nnimap-stream ssl)
-	       (nnimap-authenticator login)))
-
-(setq gnus-default-method gnus-select-method)
-
-(setq gnus-secondary-select-methods nil)
-
-(setq message-send-mail-function 'smtpmail-send-it
-      smtpmail-smtp-server "mail.yumieko.com"
-      smtpmail-smtp-service 587
-      smtpmail-stream-type 'starttls
-      gnus-ignored-newsgroups "^to\\.\\|^[0-9. ]+\\( \\|$\\)\\|^[\"]\"[#'()]")
-
-(setq mm-text-html-renderer 'shr
-      gnus-default-charset 'utf-8
-      mm-coding-system-priorities '(utf-8 gbk gb2312))
-
-(setq message-default-mail-headers "")

@@ -91,6 +91,13 @@
   (load "../secret/nyapasu.scm")
 #+end_src
 
+#+begin_src scheme :noweb-ref service
+(simple-service 'postgres-pass-file
+		etc-service-type
+		`(("secret/postgres/forgejo" ,(plain-file "forgejo-db-password.txt"
+							   (nyapasu-ref 'forgejo-db)))))
+#+end_src
+
 ** 基础包
 一些基础包
 #+begin_src scheme :noweb-ref module
@@ -131,7 +138,6 @@
           "zswap.max_pool_percent=90"
           "modprobe.blacklist=pcspkr"
           (operating-system-user-kernel-arguments os)))))
-
 #+end_src
 
 ** 驱动映射
@@ -752,6 +758,73 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 	   (package (spec->pkg "kubo"))
            (gateway "/ip4/0.0.0.0/tcp/8880")
            (api "/ip4/0.0.0.0/tcp/5001")))
+#+end_src
+
+** 代码托管
+#+begin_src scheme :noweb-ref service
+(service forgejo-service-type
+	 (forgejo-configuration
+	   (postgresql-password-file "/run/secrets/postgres/forgejo")
+	   (config
+	    `((#f
+               ("APP_NAME" . "LittlewingStudio VCS")
+               ("RUN_USER" . "forgejo")
+               ("WORK_PATH" . "/var/lib/forgejo")
+               ("RUN_MODE" . "prod"))
+	      ("server"
+	       ("DOMAIN" . "vcs.yumieko.com")
+	       ("HTTP_PORT" . "3020")
+	       ("ROOT_URL" . "https://vcs.yumieko.com/")
+	       ("PROTOCOL" . "http")
+	       ("DISABLE_SSH" . "false")
+	       ("SSH_PORT" . "2222")
+	       ("START_SSH_SERVER" . "true"))
+              ("database"
+               ("DB_TYPE" . "postgres")
+               ("HOST" . "127.0.0.1:5432")
+               ("NAME" . "forgejo")
+               ("USER" . "forgejo")
+               ("PASSWD" . ,(nyapasu-ref 'forgejo-db))
+               ("SSL_MODE" . "disable")
+               ("LOG_SQL" . "false"))
+              ("ui"
+               ("AMBIGUOUS_UNICODE_DETECTION" . "false"))
+              ("repository"
+               ("ROOT" . "/var/lib/forgejo/data/forgejo-repositories")
+               ("PREFERRED_LICENSES" . "GPL-3.0-or-later")
+               ("ENABLE_PUSH_CREATE_USER" . "true")
+               ("ENABLE_PUSH_CREATE_ORG" . "true")
+               ("DEFAULT_REPO_UNITS" . "repo.code,repo.releases,repo.issues,repo.pulls")
+               ("DEFAULT_BRANCH" . "main")
+               ("DISABLE_DOWNLOAD_SOURCE_ARCHIVES" . "true"))
+              ("lfs"
+               ("PATH" . "/var/lib/forgejo/data/lfs"))
+              ("service"
+               ("REGISTER_EMAIL_CONFIRM" . "true")
+               ("ENABLE_NOTIFY_MAIL" . "true")
+               ("DISABLE_REGISTRATION" . "true")
+               ("ALLOW_ONLY_EXTERNAL_REGISTRATION" . "false")
+               ("ENABLE_CAPTCHA" . "false")
+               ("REQUIRE_SIGNIN_VIEW" . "false")
+               ("DEFAULT_KEEP_EMAIL_PRIVATE" . "true")
+               ("DEFAULT_ALLOW_CREATE_ORGANIZATION" . "true")
+               ("DEFAULT_ENABLE_TIMETRACKING" . "true")
+               ("NO_REPLY_ADDRESS" . "noreply.localhost"))
+              ("openid"
+               ("ENABLE_OPENID_SIGNIN" . "false")
+               ("ENABLE_OPENID_SIGNUP" . "false"))
+              ("cron.update_checker"
+               ("ENABLED" . "false"))
+              ("session"
+               ("PROVIDER" . "file"))
+              ("log"
+               ("MODE" . "file")
+               ("LEVEL" . "info")
+               ("ROOT_PATH" . "/var/log/forgejo"))
+              ("repository.pull-request"
+               ("DEFAULT_MERGE_STYLE" . "rebase"))
+              ("repository.signing"
+               ("DEFAULT_TRUST_MODEL" . "committer"))))))
 #+end_src
 
 ** Navidrome
