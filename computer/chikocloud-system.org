@@ -779,7 +779,7 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
  (servers (list "100.119.107.8:2222")))
 #+end_src
 
-#+begin_src scheme :noweb-ref nginx-server
+#+begin_src scheme
 (nginx-server-configuration
   (server-name '("vcs.yumieko.com"))
   (listen '("2222" "[::]:2222"))
