@@ -776,7 +776,7 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 #+begin_src scheme :noweb-ref nginx-upstream
 (nginx-upstream-configuration
  (name "forgejo_ssh")
- (servers "100.119.107.8:2222"))
+ (servers (list "100.119.107.8:2222")))
 #+end_src
 
 #+begin_src scheme :noweb-ref nginx-server
