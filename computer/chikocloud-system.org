@@ -633,7 +633,12 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
   	     (server-blocks
   	      (list <<nginx-server>>))
 	     (upstream-blocks
-	      (list <<nginx-upstream>>)))))
+	      (list <<nginx-upstream>>))
+	     (stream (nginx-stream-configuration
+		      (upstream-blocks
+		       (list <<nginx-stream-upstream>>))
+		      (server-blocks
+		       (list <<nginx-stream-server>>)))))))
 #+end_src
 
 *** 雏翼同好会
@@ -773,18 +778,16 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 #+end_src
 
 **** SSH代理
-#+begin_src scheme :noweb-ref nginx-upstream
+#+begin_src scheme :noweb-ref nginx-stream-upstream
 (nginx-upstream-configuration
  (name "forgejo_ssh")
  (servers (list "100.119.107.8:2222")))
 #+end_src
 
-#+begin_src scheme
+#+begin_src scheme :noweb-ref nginx-stream-server
 (nginx-server-configuration
   (server-name '("vcs.yumieko.com"))
   (listen '("2222" "[::]:2222"))
-  (ssl-certificate "/etc/certs/vcs.yumieko.com/fullchain.pem")
-  (ssl-certificate-key "/etc/certs/vcs.yumieko.com/privkey.pem")
   (locations
    (list
     (nginx-location-configuration
