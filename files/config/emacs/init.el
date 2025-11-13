@@ -327,7 +327,7 @@
 	
 	("p" "程序进度"
 	 alltodo ""
-         ((org-agenda-files '("~/Creator/ProgramDevelop/emacs/llm-index/todo.org")))
+         ((org-agenda-files '("~/Develop/GameDevelop/夜之城传说/游戏档案/琪可编程.org")))
 	 (org-agenda-use-tag-inheritance t))
 	
 	("h" "折腾进度"
@@ -564,3 +564,26 @@
 (when (and (executable-find "$$bin/fish$$")
                  (require 'fish-completion nil t))
         (global-fish-completion-mode))
+(use-package mu4e
+  :bind ("C-c m" . mu4e)
+  :custom
+  (mu4e-maildir "~/.mail/minkieyume")
+  (mu4e-get-mail-command "mbsync -a")
+  (mu4e-sent-folder  "/minkieyume/Sent")
+  (mu4e-drafts-folder "/minkieyume/Drafts")
+  (mu4e-trash-folder  "/minkieyume/Trash")
+  (mu4e-update-interval 300)
+  (mu4e-index-update-in-background t)
+  (mu4e-compose-signature-auto-include nil))
+(setq user-mail-address "minkieyume@yumieko.com"
+      user-full-name "MinkieYume"
+      message-send-mail-function 'smtpmail-send-it
+      smtpmail-smtp-server "mail.yumieko.com"
+      smtpmail-smtp-service 587
+      smtpmail-stream-type 'starttls
+      message-default-mail-headers ""
+      mu4e-view-prefer-html t
+      mu4e-html2text-command 'mu4e-shr2text
+      mu4e-view-html-commands '("librewolf"))
+(setq mm-text-html-renderer 'shr
+      mm-coding-system-priorities '(utf-8 gbk gb2312))

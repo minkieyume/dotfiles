@@ -578,7 +578,7 @@ fish，开箱即用的终端解释器。
     								     "fd"
 								     "mpv"
 								     "ffmpegthumbnailer"
-								     "p7zip"
+								     "7zip"
 								     "imagemagick"
 								     "godot"
 								     "mediainfo"
@@ -1081,12 +1081,26 @@ pkg-config这个包似乎有bug，装上会导致nheko等一堆程序找不到�
   "ccls"
 #+end_src
 
+#+begin_src scheme
+(define cc-wrapper
+  (program-file
+   "cc-wrapper"
+   #~(begin
+       (apply execl (cons #$(file-append (spec->pkg "gcc-toolchain") "/bin/gcc") (command-line))))))
+#+end_src
+
+#+begin_src scheme
+(simple-service 'cc-wrapper
+		home-files-service-type
+		`((".local/bin/cc" ,cc-wrapper)))
+#+end_src
+
 ** Rust
 #+begin_src scheme :noweb-ref package
   "rust"
-  "rust-analyzer"
   "rust:tools"
   "rust:cargo"
+  "rust-analyzer"
 #+end_src
 
 ** Zig

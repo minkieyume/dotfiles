@@ -93,6 +93,7 @@
       (("ip_cidr" . #("2600:1f18::/32")))
       (("domain_suffix" . "boiledscript.com"))
       (("domain_suffix" . "freedesktop.org"))
+      (("domain_suffix" . "allthemusic.info"))
       (("inbound" . "proxy_in"))))
 
   (define %proxy-ips
