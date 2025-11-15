@@ -2,6 +2,7 @@
 (load-file (expand-file-name ".init-themes.el" user-emacs-directory))
 (require 'init-theme)
 
+
 ;;更好的默认配置
 (global-display-line-numbers-mode 1)
 (global-visual-line-mode 1)
@@ -123,6 +124,10 @@
   (projectile-discover-projects-in-search-path)
   :bind-keymap
   ("C-c p" . projectile-command-map))
+(use-package inheritenv)
+(use-package direnv
+  :config
+  (direnv-mode))
 (use-package llm)
 (use-package vecdb
   :config
@@ -373,14 +378,8 @@
   :mode "\\.rs\\'"
   :init
   (setq rust-mode-treesitter-derive t)
-  :hook((rust-mode . eglot-ensure)
-	(rust-mode . (lambda () (setq indent-tabs-mode nil)))
+  :hook((rust-mode . (lambda () (setq indent-tabs-mode nil)))
 	(rust-mode . (lambda () (prettify-symbols-mode)))))
-;; (use-package cargo
-;;   :straight t
-;;   :hook(rust-mode . cargo-minor-mode)
-;;   :config
-;;   (define-key cargo-minor-mode-command-map (kbd "C-r") #'cargo-run-eshell))
 (defun cargo-run-eshell ()
   "在另一个窗口智能打开 *cargo-eshell*，并运行 cargo run。"
   (interactive)
@@ -402,6 +401,16 @@
       (eshell-send-eof-to-process)
       (insert "cargo run")
       (eshell-send-input))))
+(use-package rustic
+  :after (rust-mode)
+  :custom
+  (rustic-cargo-use-last-stored-arguments t)
+  (rustic-format-on-save nil)
+  (rustic-analyzer-command '("rust-analyzer"))
+  (rustic-lsp-client 'eglot)
+  :config
+  (remove-hook 'rust-mode-hook #'copilot-mode)
+  (remove-hook 'rust-ts-mode-hook #'copilot-mode))
 (use-package scheme-mode
   :mode "\\.neko\\'")
 
@@ -430,7 +439,8 @@
 (use-package treesit
   :config (setq treesit-font-lock-level 4)
   :init
-  (setq treesit-extra-load-path '("~/.treesitter/gdscript")))
+  (setq treesit-extra-load-path '("~/.treesitter/gdscript"
+				  "/run/current-system/profile/lib/tree-sitter/")))
 (use-package magit
 	     :config
 	     (with-eval-after-load 'git-commit

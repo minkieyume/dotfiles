@@ -2,11 +2,12 @@
 
 * 基础配置
 #+begin_src emacs-lisp :tangle init.el :noweb yes :noweb-prefix no
-  (add-to-list 'load-path "~/emacs-lisp/")  
-  (load-file (expand-file-name ".init-themes.el" user-emacs-directory))
-  (require 'init-theme)
+(add-to-list 'load-path "~/emacs-lisp/")  
+(load-file (expand-file-name ".init-themes.el" user-emacs-directory))
+(require 'init-theme)
+<<require>>
 
-  <<config>>
+<<config>>
 #+end_src
 
 * 编辑器优化
@@ -213,6 +214,17 @@ Company的前端（已禁用）
     (projectile-discover-projects-in-search-path)
     :bind-keymap
     ("C-c p" . projectile-command-map))
+#+end_src
+
+** Direnv
+#+begin_src emacs-lisp :noweb-ref config
+(use-package inheritenv)
+#+end_src
+
+#+begin_src emacs-lisp :noweb-ref config
+(use-package direnv
+  :config
+  (direnv-mode))
 #+end_src
 
 * AI辅助
@@ -566,24 +578,19 @@ Ekg是方便快速整理灵感和笔记的笔记插件。
     (setq gdscript-eglot-version 4.4))
 #+end_src
 
-** Rust Mode
+** Rust
 *** Rust Mode
 #+begin_src emacs-lisp :noweb-ref config
   (use-package rust-mode
     :mode "\\.rs\\'"
     :init
     (setq rust-mode-treesitter-derive t)
-    :hook((rust-mode . eglot-ensure)
-  	(rust-mode . (lambda () (setq indent-tabs-mode nil)))
+    :hook((rust-mode . (lambda () (setq indent-tabs-mode nil)))
   	(rust-mode . (lambda () (prettify-symbols-mode)))))
 #+end_src
 
-#+begin_src emacs-lisp :noweb-ref eglot-server-programs
-  `(rust-mode . ("$$bin/rust-analyzer$$"))
-#+end_src
-
 *** Cargo
-#+begin_src emacs-lisp :noweb-ref config
+#+begin_src emacs-lisp
   ;; (use-package cargo
   ;;   :straight t
   ;;   :hook(rust-mode . cargo-minor-mode)
@@ -614,6 +621,25 @@ Ekg是方便快速整理灵感和笔记的笔记插件。
         (eshell-send-eof-to-process)
         (insert "cargo run")
         (eshell-send-input))))
+#+end_src
+
+*** Rustic
+#+begin_src emacs-lisp :noweb-ref config
+(use-package rustic
+  :after (rust-mode)
+  :custom
+  (rustic-cargo-use-last-stored-arguments t)
+  (rustic-format-on-save nil)
+  (rustic-analyzer-command '("rust-analyzer"))
+  (rustic-lsp-client 'eglot)
+  :config
+  (remove-hook 'rust-mode-hook #'copilot-mode)
+  (remove-hook 'rust-ts-mode-hook #'copilot-mode))
+#+end_src
+
+*** Treesitter
+#+begin_src emacs-lisp :noweb-ref eglot-server-programs
+  `(rust-mode . ("rust-analyzer"))
 #+end_src
 
 ** Scheme
@@ -667,7 +693,8 @@ Ekg是方便快速整理灵感和笔记的笔记插件。
   (use-package treesit
     :config (setq treesit-font-lock-level 4)
     :init
-    (setq treesit-extra-load-path '("~/.treesitter/gdscript")))
+    (setq treesit-extra-load-path '("~/.treesitter/gdscript"
+  				  "/run/current-system/profile/lib/tree-sitter/")))
 #+end_src
 
 * 工具

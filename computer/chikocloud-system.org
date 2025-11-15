@@ -915,7 +915,7 @@ RUN ln -s src/node_modules node_modules
   	  (hostname "doc.yumieko.com")
   	  (environment
   	   `(("CMD_EMAIL" . "true")
-	       ("CMD_ALLOW_EMAIL_REGISTER" . "true")
+	       ("CMD_ALLOW_EMAIL_REGISTER" . "false")
 	       ("CMD_ALLOW_FREEURL" . "true")
 	       ("CMD_REQUIRE_FREEURL_AUTHENTICATION" . "true")
 	       ("CMD_DEFAULT_PERMISSION" . "editable")

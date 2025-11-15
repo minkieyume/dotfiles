@@ -486,11 +486,15 @@ fish，开箱即用的终端解释器。
   "emacs-gdscript-mode"
   "emacs-yaml-mode"
   "emacs-rust-mode"
+  "emacs-rustic"
   "emacs-racket-mode"
   "emacs-geiser"
   "emacs-geiser-guile"
   "emacs-plantuml-mode"
   "emacs-scribble-mode"
+  "emacs-inheritenv"
+  "emacs-direnv"
+  "emacs-envrc"
 
   ;;编辑器优化
   "emacs-company"
@@ -523,6 +527,7 @@ fish，开箱即用的终端解释器。
   "emacs-ox-hugo"
   "emacs-org-download"
   "emacs-oauth2"
+  "emacs-inheritenv"
 
   ;;AI集成
   "emacs-llm"
@@ -556,9 +561,8 @@ fish，开箱即用的终端解释器。
   "emacs-spacemacs-theme"
 
   ;;外部依赖
-  "tree-sitter"
-  "tree-sitter-racket"
   "plantuml"
+  "pandoc"
 #+end_src
 
 #+begin_src scheme :noweb-ref home-service
@@ -573,7 +577,6 @@ fish，开箱即用的终端解释器。
 							(specs->pkgs "ccls"
       								     "fish"
       								     "python-lsp-server"
-      								     "rust-analyzer"
       								     "zig-zls"
     								     "fd"
 								     "mpv"
@@ -1060,8 +1063,23 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+end_src
 
 * 程序开发
-** 开发库
+** 项目管理
+*** Direnv
+用于根据目录自动匹配env环境的工具。
 #+begin_src scheme :noweb-ref package
+  "direnv"
+#+end_src
+
+为Fish添加direnv支持：
+#+begin_src scheme :noweb-ref home-service
+  (simple-service 'gtk-settings-new
+  		home-xdg-configuration-files-service-type
+  		`(("fish/conf.d/direnv.fish"
+  		   ,(plain-file "direnv.fish" "direnv hook fish | source"))))
+#+end_src
+
+** 开发库
+#+begin_src scheme
   "linux-libre-headers"
 #+end_src
 
@@ -1071,7 +1089,7 @@ pkg-config这个包似乎有bug，装上会导致nheko等一堆程序找不到�
   "scons"
 #+end_src
 
-#+begin_src scheme :noweb-ref package
+#+begin_src scheme
   "mingw-w64-x86_64"
 #+end_src
 
@@ -1081,26 +1099,23 @@ pkg-config这个包似乎有bug，装上会导致nheko等一堆程序找不到�
   "ccls"
 #+end_src
 
-#+begin_src scheme
-(define cc-wrapper
-  (program-file
-   "cc-wrapper"
-   #~(begin
-       (apply execl (cons #$(file-append (spec->pkg "gcc-toolchain") "/bin/gcc") (command-line))))))
-#+end_src
-
-#+begin_src scheme
+#+begin_src scheme :noweb-ref home-service
 (simple-service 'cc-wrapper
 		home-files-service-type
-		`((".local/bin/cc" ,cc-wrapper)))
+		`((".local/bin/cc" ,(symlink-to (file-append (spec->pkg "gcc-toolchain") "/bin/gcc")))))
 #+end_src
 
 ** Rust
-#+begin_src scheme :noweb-ref package
-  "rust"
-  "rust:tools"
-  "rust:cargo"
-  "rust-analyzer"
+#+begin_src scheme :noweb-ref module
+  (rustup build toolchain)
+#+end_src
+
+#+begin_src scheme :noweb-ref program
+(rustup "stable"
+	#:components
+	(list "cargo" "rustc" "rustfmt" "rust-std"
+	      "rust-src" "clippy" "miri" "rust-analyzer"
+	      "rust-mingw"))
 #+end_src
 
 ** Zig
@@ -1121,15 +1136,10 @@ pkg-config这个包似乎有bug，装上会导致nheko等一堆程序找不到�
 pipx install uv
 #+end_src
 
-安装patchelf包：
-#+begin_src scheme :noweb-ref package
-"patchelf"
-#+end_src
-
-然后使用patchelf命令来修复路径问题：
+然后patchelf命令来修复路径问题：
 #+begin_src shell
-patchelf --set-interpreter /gnu/store/py9r4p4jp2pa1jaagbcvw35d79j5kcg5-glibc-2.41/lib/ld-linux-x86-64.so.2 ./uv
-patchelf --set-interpreter /gnu/store/py9r4p4jp2pa1jaagbcvw35d79j5kcg5-glibc-2.41/lib/ld-linux-x86-64.so.2 ./uvx
+guix shell patchelf -- patchelf --set-interpreter /gnu/store/py9r4p4jp2pa1jaagbcvw35d79j5kcg5-glibc-2.41/lib/ld-linux-x86-64.so.2 ./uv
+guix shell patchelf -- patchelf --set-interpreter /gnu/store/py9r4p4jp2pa1jaagbcvw35d79j5kcg5-glibc-2.41/lib/ld-linux-x86-64.so.2 ./uvx
 #+end_src
 
 然后，在.local/bin中写下列shell脚本：
@@ -1157,20 +1167,71 @@ exec /home/minkieyume/.local/share/pipx/venvs/uv/bin/uvx "$@"
   ("UV_INDEX_URL" . "https://pypi.tuna.tsinghua.edu.cn/simple")
 #+end_src
 
+** CommonLisp
+#+begin_src scheme :noweb-ref package
+  "sbcl"
+#+end_src
+
 ** Racket
 #+begin_src scheme :noweb-ref package
   "racket"
+  "r-s7"
+#+end_src
+
+** Clojure
+#+begin_src scheme :noweb-ref package
+  "clojure"
 #+end_src
 
 ** Scheme
+*** S7
 #+begin_src scheme :noweb-ref package
-  "chibi-scheme"
+  "s7"
+#+end_src
+
+*** Chicken
+#+begin_src scheme :noweb-ref package
+  "s7"
 #+end_src
 
 *** Guile
 #+begin_src scheme :noweb-ref package
+  "guile"
+  "guile-ts"
   "guile-cairo"
 #+end_src
+
+** 辅助工具
+*** TreeSitter
+TreeSitter是内置正则的语法高亮解析引擎。
+#+begin_src scheme :noweb-ref package
+  "tree-sitter"
+  "tree-sitter-rust"
+  "tree-sitter-ron"
+  "tree-sitter-zig"
+  "tree-sitter-c"
+  "tree-sitter-json"
+  "tree-sitter-bash"
+  "tree-sitter-org"
+  "tree-sitter-markdown"
+  "tree-sitter-make"
+  "tree-sitter-cmake"
+  "tree-sitter-clojure"
+  "tree-sitter-xml"
+  "tree-sitter-ini"
+  "tree-sitter-html"
+  "tree-sitter-kotlin"
+  "tree-sitter-gitignore"
+  "tree-sitter-dockerfile"
+  "tree-sitter-yaml"
+  "tree-sitter-udev"
+  "tree-sitter-scheme"
+  "tree-sitter-python"
+  "tree-sitter-python-manifest"
+  "tree-sitter-racket"
+  "tree-sitter-plantuml"
+#+end_src
+
 
 * 包管理器
 ** Flatpak

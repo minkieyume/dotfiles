@@ -1,0 +1,3 @@
+#+TITLE: 在Guix上安装Animeko
+* 方法1：使用Chiko的Guix频道
+
