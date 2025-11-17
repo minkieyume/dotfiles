@@ -15,8 +15,13 @@
 		 (apply merge-config (cdr configs)))))
 
 (define (merge-cfg cfg1 cfg2)
-  (map (lambda (newcfg)
-	 (merge-cfg-line cfg1 newcfg)) cfg2))
+  (append (filter (lambda (line)
+		    (not (keycontain? cfg2 line))) cfg1)
+	  (map (lambda (newcfg)
+		 (merge-cfg-line cfg1 newcfg)) cfg2)))
+
+(define (keycontain? lst item)
+  (if (assq-ref lst (car item)) #t #f))
 
 (define (merge-cfg-line source line)
   (let ((val (assq-ref source (car line))))

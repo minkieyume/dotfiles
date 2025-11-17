@@ -11,7 +11,6 @@
 	     (chiko-modules loader dir-loader)
 	     (chiko-modules loader set-loader)
 	     (rosenthal)
-	     (gnu)
 	     (gnu system)
 	     (gnu home)
 	     (language tree-il))
@@ -20,7 +19,7 @@
 (define set1
   (cfgset
    (home-settings `((packages ((spec->pkg "emacs") (spec->pkg "ripgrep") (spec->pkg "git")))
-		    (services ())))
+		    (services ((service home-env-service)))))
    (home-envs `(("EDITOR" . "emacsclient")
 		("VISUAL" . "emacsclient")
 		("PAGER" . "less")))
@@ -33,7 +32,7 @@
 (define set2
   (cfgset
    (home-settings `((packages ((spec->pkg "guile")))
-		    (services ())))
+		    (services ((service file-sync-service)))))
    (home-envs `(("FLYER" . "HELP")))))
 
 (display (string-append (object->string (merge-sets set1 set2)) "\n"))

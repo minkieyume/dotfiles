@@ -29,7 +29,7 @@
 (display (object->string ssh-tests))
 
 (define home-test
-  (make-home ("chiko1") ((home-environment))))
+  (make-home-service ("chiko1") ((home-environment))))
 
 (display (object->string home-test))
 

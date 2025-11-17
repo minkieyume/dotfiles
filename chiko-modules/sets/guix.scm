@@ -9,19 +9,19 @@
   #:export (make-guix))
 
 (define (make-guix extra-options tmpdir)
-  (make-cfgset*
-   #:sys-transforms
-   (list (lambda (os)
-	   (operating-system
-	    (inherit os)
-	    (services
-	     (modify-services (operating-system-user-services os)
-  			      (guix-service-type
-  			       config => (guix-configuration
-					  (inherit config)
-					  (substitute-urls %default-channels)
-					  (channels %default-substitute-urls)
-					  (authorized-keys %default-authorized-keys)
-					  (discover? #t)
-					  (extra-options extra-options)
-					  (tmpdir tmpdir))))))))))
+  (cfgset
+   (sys-transforms
+    (list (lambda (os)
+	    (operating-system
+	      (inherit os)
+	      (services
+	       (modify-services (operating-system-user-services os)
+                 (guix-service-type
+  		config => (guix-configuration
+			      (inherit config)
+			      (substitute-urls %default-channels)
+			      (channels %default-substitute-urls)
+			      (authorized-keys %default-authorized-keys)
+			      (discover? #t)
+			      (extra-options extra-options)
+			      (tmpdir tmpdir)))))))))))

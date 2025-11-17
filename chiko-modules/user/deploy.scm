@@ -8,14 +8,16 @@
   #:use-module (gnu)
   #:use-module (gnu system)
   #:use-module (gnu system privilege)
+  #:use-module (rosenthal)
+  #:use-module (chiko-modules user)
   #:export (make-deploy))
 
 (define (make-deploy)
-  (make-nuser
+  (nuser
    (name "deploy")
    (account (user-account
-	     (name "deploy")
-	     (comment "Deploy")
-	     (group "users")
-	     (home-directory "/home/deploy")
-	     (supplementary-groups '("wheel"))))))
+	      (name "deploy")
+	      (comment "Deploy")
+	      (group "users")
+	      (home-directory "/home/deploy")
+	      (supplementary-groups '("wheel"))))))

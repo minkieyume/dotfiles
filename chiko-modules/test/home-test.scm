@@ -9,7 +9,6 @@
 
 (use-modules (chiko-modules home)
 	     (chiko-modules loader dir-loader)
-	     (gnu)
 	     (gnu system)
 	     (gnu home)
 	     (language tree-il))

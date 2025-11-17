@@ -8,14 +8,14 @@
   #:export (make-nvidia))
 
 (define (make-nvidia)
-  (make-cfgset*
-   #:sys-transforms
-   (list replace-mesa
-	 (nonguix-transformation-nvidia)
-	 (lambda (os)
-	   (operating-system
-	    (inherit os)      
-	    (kernel-arguments
-	     (cons* "modprobe.blacklist=pcspkr,nouveau"
-		    "nvidia_drm.modeset=1"
-		    (operating-system-user-kernel-arguments os))))))))
+  (cfgset
+   (sys-transforms
+    (list replace-mesa
+	  (nonguix-transformation-nvidia)
+	  (lambda (os)
+	    (operating-system
+	      (inherit os)      
+	      (kernel-arguments
+	       (cons* "modprobe.blacklist=pcspkr,nouveau"
+		      "nvidia_drm.modeset=1"
+		      (operating-system-user-kernel-arguments os)))))))))

@@ -8,11 +8,13 @@
   #:use-module (gnu)
   #:use-module (gnu system)
   #:use-module (gnu system privilege)
+  #:use-module (rosenthal)
+  #:use-module (chiko-modules user)
   #:export (make-root))
 
 (define (make-root)
-  (make-nuser
+  (nuser
    (name "root")
    (account (user-account
-	     (inherit %root-account)
-	     (password #f)))))
+	      (inherit %root-account)
+	      (password #f)))))

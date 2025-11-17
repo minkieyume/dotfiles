@@ -4,7 +4,6 @@
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 
 (define-module (chiko-modules system)
-  #:use-module (gnu)
   #:use-module (gnu system)
   #:use-module (gnu system privilege)
   #:use-module (srfi srfi-26)
@@ -21,9 +20,12 @@
   #:use-module (gnu services mcron)
   #:use-module (gnu services ssh)
   #:use-module (chiko services doas)
-  #:use-module (chiko-modules utils)
+  #:use-module (chiko-modules utils)  
+  #:use-module (chiko-modules sets)
+  #:use-module (chiko-modules loader secret-loader)
+  #:use-module (chiko-modules home)
+  #:use-module (chiko-modules user)
   #:export (make-system
-	    %default-doas-rules
 	    make-doas
 	    make-mcron
 	    make-ssh
@@ -45,9 +47,8 @@
 			       (package (spec->pkg "kubo"))
 			       (gateway "/ip4/0.0.0.0/tcp/8880")
 			       (api "/ip4/0.0.0.0/tcp/5001")))))
-    (packages ,(specifications->packages '("kubo" "unzip" "opendoas" "git" "openssl" "glances" "gnupg" "bind:utils"
-					   "rsync" "cryptsetup" "fish" "btop" "curl" "neofetch" "gnunet" "tcpdump")))))
-
+    (packages (list ,@(specifications->packages '("kubo" "unzip" "opendoas" "git" "openssl" "glances" "gnupg" "bind:utils"
+						  "rsync" "cryptsetup" "fish" "btop" "curl" "neofetch" "gnunet" "tcpdump"))))))
 (define %default-doas-rules
   (list
    (doas-rule
@@ -65,68 +66,102 @@
     (user "root")
     (options '("nopass")))))
 
-(define %default-ssh-allowed-env
-  (list "LANG" "LC_*" "TZ" "PYTHONIOENCODING" "TERM" "COLORTERM"))
-
-(define-syntax-rule (make-mcron mjobs ...)
-  (service mcron-service-type
-	   (mcron-configuration
-	     (jobs (list mjobs ...)))))
-
 (define %default-openssh-config
   '((password-authentication? #f)
     (permit-root-login #f)))
 
-(define* (make-ssh-config keys #:optional (envs %default-ssh-allowed-env))
-  (merge-config '() %default-openssh-config
-		`((authorized-keys ,(cons list keys))
-		  (accepted-environment ,(cons list envs)))))
+(define %default-ssh-allowed-env
+  (list "LANG" "LC_*" "TZ" "PYTHONIOENCODING" "TERM" "COLORTERM"))
 
-(define-syntax make-ssh
-  (lambda (stx)
-    (syntax-case stx ()
-      ((_ (keys ...))
-       (let* ((vkeys (syntax->datum #'(keys ...)))
-	      (merged (make-ssh-config vkeys)))
-	 (with-syntax (((final-config ...) (datum->syntax stx merged)))
-	   #'(service openssh-service-type
-		      (openssh-configuration
-			final-config ...)))))
+;; (define-syntax make-ssh
+;;   (lambda (stx)
+;;     (syntax-case stx ()
+;;       ((_ (keys ...))
+;;        (let* ((vkeys (syntax->datum #'(keys ...)))
+;; 	      (merged (make-ssh-config vkeys)))
+;; 	 (with-syntax (((final-config ...) (datum->syntax stx merged)))
+;; 	   #'(service openssh-service-type
+;; 		      (openssh-configuration
+;; 			final-config ...)))))
       
-      ((_ (keys ...) (allowed-environments ...))
-       (let* ((vkeys (syntax->datum #'(keys ...)))
-	      (venvs (syntax->datum #'(allowed-environments ...)))
-	      (merged (make-ssh-config vkeys venvs)))
-	 (with-syntax (((final-config ...) (datum->syntax stx merged)))
-	   #'(service openssh-service-type
-		      (openssh-configuration
-			final-config ...))))))))
+;;       ((_ (keys ...) (allowed-environments ...))
+;;        (let* ((vkeys (syntax->datum #'(keys ...)))
+;; 	      (venvs (syntax->datum #'(allowed-environments ...)))
+;; 	      (merged (make-ssh-config vkeys venvs)))
+;; 	 (with-syntax (((final-config ...) (datum->syntax stx merged)))
+;; 	   #'(service openssh-service-type
+;; 		      (openssh-configuration
+;; 			final-config ...))))))))
 
-(define-syntax-rule (make-home-service (users ...) (environments ...))
-  (service guix-home-service-type
-  	 (list (list users environments) ...)))
+;; (define-syntax-rule (make-home-service (users environments) ...)
+;;   (service guix-home-service-type
+;;   	 (list (list users environments) ...)))
 
-(define-syntax make-doas
-  (syntax-rules ()
-    ((_)
-     (service doas-service-type
-	      (doas-configuration
-	       (rules
-		%default-doas-rules))))
-    ((_ doas-rules ...)
-     (service doas-service-type
-	      (doas-configuration
-	       (rules
-		(list doas-rules ...)))))))
 
-(define-syntax make-system
-  (lambda (stx)
-    (syntax-case stx ()
-      ((_ (trans ...) (config ...))
-       (let* ((cfgs (syntax->datum #'(config ...)))
-	      (vcfgs (merge-config %default-config cfgs))
-	      (stx-cfgs (datum->syntax stx (filter valid-cfg? vcfgs))))
-	 (with-syntax (((config ...) stx-cfgs))
-	   #'((compose (lambda (x) x) trans ...)
-	      (operating-system
-		config ...))))))))
+
+;; (define-syntax make-doas
+;;   (syntax-rules ()
+;;     ((_)
+;;      (service doas-service-type
+;; 	      (doas-configuration
+;; 	       (rules
+;; 		%default-doas-rules))))
+;;     ((_ doas-rules ...)
+;;      (service doas-service-type
+;; 	      (doas-configuration
+;; 	       (rules
+;; 		(list doas-rules ...)))))))
+
+;; (define-syntax make-system
+;;   (lambda (stx)
+;;     (syntax-case stx ()
+;;       ((_ (trans ...) (config ...))
+;;        (let* ((cfgs (syntax->datum #'(config ...)))
+;; 	      (vcfgs (merge-config %default-config cfgs))
+;; 	      (stx-cfgs (datum->syntax stx (filter valid-cfg? vcfgs))))
+;; 	 (with-syntax (((config ...) stx-cfgs))
+;; 	   #'((compose (lambda (x) x) trans ...)
+;; 	      (operating-system
+;; 		config ...))))))))
+
+;; (define-syntax-rule (make-mcron mjobs ...)
+;;   (service mcron-service-type
+;; 	   (mcron-configuration
+;; 	     (jobs (list mjobs ...)))))
+
+(define* (make-ssh keys #:optional (envs %default-ssh-allowed-env))
+  `(service openss-service-type
+	    (openssh-configuration
+	      ,@(merge-config '() %default-openssh-config
+			      `((authorized-keys ,(cons list keys))
+				(accepted-environment ,(cons list envs)))))))
+
+(define (make-mcron . mjobs)
+  `(service mcron-service-type
+	    (mcron-configuration
+	      (jobs ,mjobs))))
+
+(define (make-home-service . home-services)
+  `(service guix-home-service-type
+	    ,home-services))
+
+(define (make-doas . rules)
+  `(service doas-service-type
+	    (doas-configuration
+	     (rules ,(if (null? rules)
+			 %default-doas-rules
+			 rules)))))
+
+(define (make-system set)
+  `((compose (lambda (x) x) ,@(cfgset-sys-transforms set))
+    (operating-system
+      ,@(merge-config %default-config
+		      `((users ,(apply nuser-accounts (cfgset-user-list set)))
+			(groups ,(apply nuser-groups (cfgset-user-list set)))
+			(services (make-mcron ,@(cfgset-mcron-jobs set))
+				  (make-doas ,@(cfgset-doas-rules set))
+				  (make-ssh %ssh-keys)
+				  (make-home-service ,@(map (lambda (name)
+							      `(,name
+								,(make-home set))) (apply nuser-make-home-names (cfgset-user-list set))))))
+		      (cfgset-sys-settings set)))))

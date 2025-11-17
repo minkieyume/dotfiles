@@ -9,30 +9,30 @@
   #:export (make-emacs))
 
 (define (make-emacs machine)
-  (make-cfgset*
-   #:home-settings `((packages %emacs-packages)
-		     (services ()))
-   #:home-envs `(("EDITOR" . "emacsclient")
-		 ("VISUAL" . "$EDITOR")
-		 ("ESHELL" . ,(file-append (spec->pkg "fish") "/bin/fish")))
-   #:home-configs
-   `(("emacs/init.el"
-      ,(computed-substitution-with-inputs "init.el"
-      					  (local-file (string-append %configdir "emacs/init.el"))
-					  (append
-					   (list (local-file (string-append %configdir "emacs") #:recursive? #t)
-						 (local-file (string-append %secretdir "epasu") #:recursive? #t))
-					   (specs->pkgs "ccls"
-      							"fish"
-      							"python-lsp-server"
-      							"zig-zls"
-    							"fd"
-							"mpv"
-							"ffmpegthumbnailer"
-							"7zip"
-							"imagemagick"
-							"godot"
-							"mediainfo"
-							"vips"))))
-     ("emacs/.init-themes.el"
-      ,(local-file (string-append %configdir machine "/init-theme.el"))))))
+  (cfgset
+   (home-settings `((packages %emacs-packages)
+		    (services ())))
+   (home-envs `(("EDITOR" . "emacsclient")
+		("VISUAL" . "$EDITOR")
+		("ESHELL" . ,(file-append (spec->pkg "fish") "/bin/fish"))))
+   (home-configs
+    `(("emacs/init.el"
+       ,(computed-substitution-with-inputs "init.el"
+      					   (local-file (string-append %configdir "emacs/init.el"))
+					   (append
+					    (list (local-file (string-append %configdir "emacs") #:recursive? #t)
+						  (local-file (string-append %secretdir "epasu") #:recursive? #t))
+					    (specs->pkgs "ccls"
+      							 "fish"
+      							 "python-lsp-server"
+      							 "zig-zls"
+    							 "fd"
+							 "mpv"
+							 "ffmpegthumbnailer"
+							 "7zip"
+							 "imagemagick"
+							 "godot"
+							 "mediainfo"
+							 "vips"))))
+      ("emacs/.init-themes.el"
+       ,(local-file (string-append %configdir machine "/init-theme.el")))))))
