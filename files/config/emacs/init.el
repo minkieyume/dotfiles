@@ -117,10 +117,10 @@
   :config
   (setq projectile-project-root-files-bottom-up (cons "Cargo.toml" projectile-project-root-files-bottom-up))
   (setq projectile-project-search-path '(("~/Creator/remote/程序开发/" . 3)
-					 ("~/Creator/remote/项目档案/" . 2)
-					 ("~/Develop/ProgramDevelop" . 2)
-					 ("~/Develop/GameDevelop" . 2)
-					 ("~/Develop/conlingue" . 2)))
+					 ("~/Creator/remote/项目档案/" . 3)
+					 ("~/Develop/ProgramDevelop" . 3)
+					 ("~/Develop/GameDevelop" . 3)
+					 ("~/Develop/conlingue" . 3)))
   (projectile-discover-projects-in-search-path)
   :bind-keymap
   ("C-c p" . projectile-command-map))

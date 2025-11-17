@@ -1,3 +1,8 @@
+;; -*- mode: scheme -*-
+;; SPDX-FileCopyrightText: 2023, 2024 Minkie Yume <minkieyume@yumieko.com>
+;;
+;; SPDX-License-Identifier: GPL-3.0-or-later
+
 (use-modules (srfi srfi-1)
 	     (srfi srfi-26)
 	     (ice-9 match)

@@ -10,6 +10,7 @@
 (gnu services networking)
 (gnu packages version-control)
 (chiko services doas)
+(gnu services mcron)
 (rosenthal services networking)
 (gnu services docker))
 
@@ -19,9 +20,11 @@
 (define (os-sys-app os)
   (operating-system
    (inherit os)
+   (sudoers-file
+  (plain-file "sudoers" "Defaults env_reset\ndeploy ALL=(ALL) NOPASSWD: ALL"))
    (initrd-modules (append (list ) (operating-system-initrd-modules os)))
    (kernel-loadable-modules (append (specifications->packages (list )) (operating-system-kernel-loadable-modules os)))
-   (kernel-arguments (append (list ) (operating-system-kernel-arguments os)))
+   (kernel-arguments (append (list ) (operating-system-user-kernel-arguments os)))
    (privileged-programs (append (list ) (operating-system-privileged-programs os)))
    (packages (append (list (spec->pkg "hello")) (specifications->packages (list "btop" "curl" "neofetch"
 "fish"
@@ -68,6 +71,9 @@
 	   (package (spec->pkg "kubo"))
            (gateway "/ip4/0.0.0.0/tcp/8880")
            (api "/ip4/0.0.0.0/tcp/5001")))
+(service mcron-service-type
+  (mcron-configuration
+    (jobs '())))
 (service tailscale-service-type)
 (service containerd-service-type)
 (service docker-service-type

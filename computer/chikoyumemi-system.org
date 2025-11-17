@@ -4,6 +4,7 @@
 琪可的笔记本配置。
 #+begin_src scheme :tangle ../reconfigure/chikoyumemi-system.scm :noweb yes :noweb-prefix no
 (load "../common.scm")
+(load "../application/system.scm")
 (use-modules <<module>>)
 
 <<define>>
@@ -23,7 +24,8 @@
    (file-systems (append <<filesystems>> %base-file-systems))
    (packages (append (specifications->packages '(<<package>>)) (list <<program>>) %base-packages))))
 
-((compose <<transformation>>)
+((compose <<application>>
+	  <<transformation>>)
  %os)
 #+end_src
 
@@ -168,6 +170,52 @@
 ** 驱动映射
 #+begin_src scheme :noweb-ref mapped-device
 #+end_src
+** 网络模块
+#+begin_src scheme :noweb-ref module
+(gnu services networking)
+#+end_src
+
+*** NetworkManager
+#+begin_src scheme :noweb-ref transformation
+(lambda (os)
+  (operating-system
+   (inherit os)
+   (services
+    (modify-services (operating-system-user-services os)
+  		     (network-manager-service-type
+  		      config => (network-manager-configuration
+  				 (inherit config)
+				 (dns "none")
+				 (extra-configuration-files
+  				  `(("wifi_rand_mac.conf"
+  				     ,(plain-file "wifi_rand_mac.conf" "\
+  # Generate a random MAC for each network connection and associate the two
+  # permanently.
+  [connection-mac-randomization]
+  ethernet.cloned-mac-address=stable
+  wifi.cloned-mac-address=stable\n"))
+  				    ("ip6-privacy.conf"
+  				     ,(plain-file "ip6-privacy.conf" "\
+  # Use IPv6 Privacy Extensions.
+  [connection]
+  ipv6.ip6-privacy=2\n"))))))))))
+#+end_src
+
+*** Nftables
+#+begin_src scheme :noweb-ref service
+  (service nftables-service-type
+  	 (nftables-configuration
+  	  (ruleset
+  	   (local-file "../files/config/chikoyumemi/nftables.conf"))))
+#+end_src
+
+
+*** Resolv配置
+#+begin_src scheme :noweb-ref service
+(simple-service 'resolv-service
+        	etc-service-type
+        	`(("resolv.conf" ,(plain-file "resolv.conf" "search tailb8a678.ts.net lan\nnameserver 192.168.8.1\nnameserver 8.8.8.8\nnameserver 1.1.1.1"))))
+#+end_src
 
 ** 文件系统
 这是被“挂载”的文件系统列表。
@@ -283,6 +331,11 @@ GVFS是一个能将网络目录挂载为本地虚拟文件系统，且对本地�
   				 (tmpdir "/mnt/yumemi/@Build")))))))
 #+end_src
 
+** 应用扩展
+#+begin_src scheme :noweb-ref application
+os-sys-app
+#+end_src
+
 * Chiko Yumemi Home
 #+begin_src scheme :noweb yes :noweb-ref module
   (gnu home services)
@@ -291,16 +344,22 @@ GVFS是一个能将网络目录挂载为本地虚拟文件系统，且对本地�
 #+end_src
 
 ** Home服务
-#+begin_src scheme :noweb yes :noweb-prefix no :noweb-ref service
-(service guix-home-service-type
-  	 `(("minkieyume" ,(home-environment
-  			   (services (cons* <<home-service>> %rosenthal-desktop-home-services))))))
+#+begin_src scheme :noweb-ref define
+(load "../home/minkieyume-home-pc.scm")
 #+end_src
 
-#+begin_src scheme :noweb yes :noweb-ref home-service
-  (service home-dotfiles-service-type
-  	 (home-dotfiles-configuration
-  	  (directories '("../files/config/dotfiles"))))
+#+begin_src scheme :noweb yes :noweb-prefix no :noweb-ref service
+(service guix-home-service-type
+    	 `(("minkieyume" ,((compose <<home-transformation>>)
+  			   minkieyume-home-pc))))
+#+end_src
+
+添加服务：
+#+begin_src scheme :noweb yes :noweb-prefix no :noweb-ref home-transformation
+(lambda (home)
+  (home-environment
+    (inherit home)
+    (services (append (list <<home-service>>) (home-environment-services home)))))
 #+end_src
 
 #+begin_src scheme :noweb-ref home-service
@@ -322,81 +381,12 @@ GVFS是一个能将网络目录挂载为本地虚拟文件系统，且对本地�
 
 ** 环境变量
 #+begin_src scheme :noweb yes :noweb-ref home-service :noweb-prefix no
-  (simple-service 'extra-environment-variables
-      home-environment-variables-service-type
-    `(<<home-environment-variable>>))
+(simple-service 'extra-environment-variables
+  		home-environment-variables-service-type
+  		`(<<home-environment-variable>>))
 #+end_src
-
 
 * 基础服务
-** 登陆管理
-#+begin_src scheme :noweb-ref service
-  (service pam-limits-service-type
-  	 (list
-            (pam-limits-entry "*" 'both 'nofile 100000)))
-#+end_src
-
-** 网络模块
-#+begin_src scheme :noweb-ref module
-  (gnu services networking)
-#+end_src
-
-*** 系统网络
-#+begin_src scheme :noweb-ref service
-  ;; https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes
-  (simple-service 'udp-buffer-size
-    sysctl-service-type
-    '(("net.core.rmem_max" . "7500000")
-       ("net.core.wmem_max" . "7500000")))
-  (simple-service 'ip-forward
-    sysctl-service-type
-    '(("net.ipv4.ip_forward" . "1")
-       ("net.ipv6.conf.all.forwarding" . "1")))
-#+end_src
-
-*** NetworkManager
-#+begin_src scheme :noweb-ref transformation
-(lambda (os)
-  (operating-system
-   (inherit os)
-   (services
-    (modify-services (operating-system-user-services os)
-  		     (network-manager-service-type
-  		      config => (network-manager-configuration
-  				 (inherit config)
-				 (dns "none")
-				 (extra-configuration-files
-  				  `(("wifi_rand_mac.conf"
-  				     ,(plain-file "wifi_rand_mac.conf" "\
-  # Generate a random MAC for each network connection and associate the two
-  # permanently.
-  [connection-mac-randomization]
-  ethernet.cloned-mac-address=stable
-  wifi.cloned-mac-address=stable\n"))
-  				    ("ip6-privacy.conf"
-  				     ,(plain-file "ip6-privacy.conf" "\
-  # Use IPv6 Privacy Extensions.
-  [connection]
-  ipv6.ip6-privacy=2\n"))))))))))
-#+end_src
-
-*** Nftables
-#+begin_src scheme :noweb-ref service
-  (service nftables-service-type
-  	 (nftables-configuration
-  	  (ruleset
-  	   (local-file "../files/config/chikoyumemi/nftables.conf"))))
-#+end_src
-
-
-*** Resolv配置
-#+begin_src scheme :noweb-ref service
-(simple-service 'resolv-service
-        	etc-service-type
-        	`(("resolv.conf" ,(plain-file "resolv.conf" "search tailb8a678.ts.net lan\nnameserver 192.168.8.1\nnameserver 8.8.8.8\nnameserver 1.1.1.1"))))
-#+end_src
-
-
 ** OpenSSH
 #+begin_src scheme :noweb-ref module
   (gnu services ssh)
@@ -420,245 +410,31 @@ GVFS是一个能将网络目录挂载为本地虚拟文件系统，且对本地�
 ** Mcron
 Mcron是guix用于管理计划任务的服务，类似crontab。
 #+begin_src scheme :noweb-ref module
-  (gnu services mcron)
+(gnu services mcron)
 #+end_src
 
 mcron的服务，值得注意的是，jobs的参数必须要用quote括起来，因为里面是一个传递给mcron的(job xxxx)的表达式，这个表达式不能在guix编译时运行。
 #+begin_src scheme :noweb-ref service :noweb yes :noweb-prefix no
-  (service mcron-service-type
-    (mcron-configuration
-      (jobs '(<<mcron-job>>))))
-#+end_src
-
-** Fish
-fish，开箱即用的终端解释器。
-#+begin_src scheme :noweb-ref package
-  "fish"
+(service mcron-service-type
+  (mcron-configuration
+    (jobs '(<<mcron-job>>))))
 #+end_src
 
 * 工具
-** 通用工具
-#+begin_src scheme :noweb-ref package
-  "openssl"
-  "rsync"
-  "cryptsetup"
-#+end_src
-
-** 网络调试
-#+begin_src scheme :noweb-ref package
-  "bind:utils"
-  "tcpdump"
-#+end_src
-
-** Git
-#+begin_src scheme :noweb-ref module
-  (gnu packages version-control)
-#+end_src
-
-#+begin_src scheme :noweb-ref package
-  "git"
-#+end_src
-
 ** Emacs
-#+begin_src scheme :noweb-ref home-environment-variable
-  ("EDITOR" . "emacsclient")
-  ("VISUAL" . "$EDITOR")
-  ("ESHELL" . ,(file-append (spec->pkg "fish") "/bin/fish"))
-#+end_src
-
 基础的包配置
 #+begin_src scheme :noweb-ref package
   "emacs-pgtk"
-  "emacs-eldev"
-
-  ;;包管理器
-  "emacs-use-package"  
-
-  ;;编辑模式
-  "emacs-nginx-mode"
-  "emacs-edit-indirect"
-  "emacs-fish-mode"
-  "emacs-json-mode"
-  "emacs-markdown-mode"
-  "emacs-nftables-mode"
-  "emacs-zig-mode"  
-  "emacs-cmake-mode"
-  "emacs-gdscript-mode"
-  "emacs-yaml-mode"
-  "emacs-rust-mode"
-  "emacs-rustic"
-  "emacs-racket-mode"
-  "emacs-geiser"
-  "emacs-geiser-guile"
-  "emacs-plantuml-mode"
-  "emacs-scribble-mode"
-  "emacs-inheritenv"
-  "emacs-direnv"
-  "emacs-envrc"
-
-  ;;编辑器优化
-  "emacs-company"
-  "emacs-company-box-chiko"
-  "emacs-vertico"
-  "emacs-orderless"
-  "emacs-consult"
-  "emacs-ripgrep"
-  "ripgrep"
-  "ripgrep-all"
-  "emacs-marginalia"
-  "emacs-embark"
-  "emacs-rainbow-delimiters"
-  "emacs-paredit"
-  "emacs-smartparens"  
-
-  ;;键位优化
-  "emacs-disable-mouse"
-  "emacs-hydra"
-  "emacs-restart-emacs"
-  "emacs-which-key"
-
-  ;;万能工具
-  "emacs-pinentry"
-  "emacs-pdf-tools"
-  "emacs-ement"
-  "emacs-projectile"
-  "emacs-circe"
-  "emacs-emacsql"
-  "emacs-ox-hugo"
-  "emacs-org-download"
-  "emacs-oauth2"
-  "emacs-inheritenv"
-
-  ;;AI集成
-  "emacs-llm"
-  "emacs-vecdb"
-  "emacs-copilot"
-  "emacs-copilot-chat"
-  "emacs-mcp"
-  "emacs-ellama"
-  "emacs-elisa"
-  "emacs-aider"
-
-  ;;笔记软件
-  "emacs-ekg"
-
-  ;;终端优化
-  "emacs-eat"
-  "emacs-eshell-syntax-highlighting"
-  "emacs-fish-completion"
-
-  ;;版本控制
-  "emacs-magit"
-  "emacs-magit-todos"
-  "emacs-forge"
-
-  ;;文件管理
-  "emacs-dirvish@d877433f957a363ad78b228e13a8e5215f2d6593"
-  "emacs-dired-git-info"
-
-  ;;主题资源
-  "emacs-all-the-icons"
-  "emacs-spacemacs-theme"
-
-  ;;外部依赖
-  "plantuml"
-  "pandoc"
 #+end_src
 
 #+begin_src scheme :noweb-ref home-service
-(simple-service 'emacs-configuration
+(simple-service 'emacs-init-themes
       		home-xdg-configuration-files-service-type
-      		`(("emacs/init.el"
-      		   ,(computed-substitution-with-inputs "init.el"
-      						       (local-file "../files/config/emacs/init.el")
-						       (append
-							(list (local-file "../files/config/emacs" #:recursive? #t)
-							      (local-file "../secret/epasu" #:recursive? #t))
-							(specs->pkgs "ccls"
-      								     "fish"
-      								     "python-lsp-server"
-      								     "zig-zls"
-    								     "fd"
-								     "mpv"
-								     "ffmpegthumbnailer"
-								     "7zip"
-								     "imagemagick"
-								     "godot"
-								     "mediainfo"
-								     "vips"))))
-      		  ("emacs/.init-themes.el"
+      		`(("emacs/.init-themes.el"
       		   ,(local-file "../files/config/chikoyumemi/init-theme.el"))))
 #+end_src
 
-#+begin_src scheme :noweb-ref home-service
-  (simple-service 'home-emacs
-  		home-shepherd-service-type
-  		(list (shepherd-service
-  		       (provision '(emacs-daemon))
-  		       (start
-  			#~(make-forkexec-constructor
-  			   '("emacs" "--fg-daemon")))
-  		       (stop
-  			#~(make-forkexec-constructor
-  			   '("emacsclient" "--eval" "(kill-emacs)"))))))
-#+end_src
-
-#+begin_src scheme :noweb-ref home-service
-  (simple-service 'emacs-auth-info
-		home-files-service-type
-		`((".authinfo.gpg" ,(local-file "../secret/authinfo.gpg"))))
-#+end_src
-
-[[file:../files/config/emacs/Emacs配置.org][Emacs配置]]
 [[file:../files/config/chikoyumemi/init-theme.el][emacs-themes]]
-
-** Doas
-Doas是比Sudo更简洁，也更为安全的提权工具。
-之所以用Doas而不用Sudo，是因为Sudo通常会有一定的安全漏洞，结构也比较复杂，而Doas结构相对简单，攻击面也更少，适合不需要复杂提权配置的服务器或个人。
-#+begin_src scheme :noweb-ref package
-  "opendoas"
-#+end_src
-
-引入自定义的包定义的doas服务。
-#+begin_src scheme :noweb-ref module
-  (chiko services doas)
-#+end_src
-
-自定义doas规则：
-#+begin_src scheme :noweb-ref service :noweb yes :noweb-prefix no
-  (service doas-service-type
-    (doas-configuration
-      (rules
-        (list <<doas-ruleset>>))))
-#+end_src
-
-*** Doas规则
-doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上面的规则最好作为默认和根规则，而下面的规则则作为覆盖上面规则的其它额外规则。
-
-这是最基础的规则，应用于组的规则
-#+begin_src scheme :noweb-ref doas-ruleset
-  (doas-rule
-    (permit #t)
-    (user ":wheel")
-    (options '("persist" "keepenv")))
-#+end_src
-
-为root用户提供修复的环境变量补全
-#+begin_src scheme :noweb-ref doas-ruleset
-  (doas-rule
-    (permit #t)
-    (user ":wheel")
-    (options '("persist"
-               "setenv { http_proxy https_proxy HOME=/root XDG_CACHE_HOME=/root/.cache PATH=/run/setuid-programs:/root/.config/guix/current/bin:/run/current-system/profile/bin:/run/current-system/profile/sbin INFOPATH=/root/.config/guix/current/share/info:/run/current-system/profile/share/info GIT_EXEC_PATH=/root/.guix-profile/libexec/git-core}"))
-    (as-target "root"))
-#+end_src
-
-*** 禁用sudo
-为了安全，最好禁用sudo，避免sudo的漏洞影响安全性。
-#+begin_src scheme :noweb-ref env
-  (sudoers-file
-    (plain-file "sudoers" "Defaults env_reset\ndeploy ALL=(ALL) NOPASSWD: ALL"))
-#+end_src
 
 ** GPG
 #+begin_src scheme :noweb-ref package
@@ -678,24 +454,6 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 	  (ssh-support? #t)
 	  (extra-content (string-join '("allow-emacs-pinentry"
 					"allow-loopback-pinentry") "\n"))))
-#+end_src
-
-** IPFS
-#+begin_src scheme :noweb-ref package
-"kubo"
-#+end_src
-
-#+begin_src scheme :noweb-ref service
-(service ipfs-service-type
-         (ipfs-configuration
-	   (package (spec->pkg "kubo"))
-           (gateway "/ip4/0.0.0.0/tcp/8880")
-           (api "/ip4/0.0.0.0/tcp/5001")))
-#+end_src
-
-** 解压
-#+begin_src scheme :noweb-ref package
-  "unzip"
 #+end_src
 
 ** KeepassXC
@@ -733,37 +491,6 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 #+begin_src scheme :noweb-ref service
   (service syncthing-service-type
   	 (syncthing-configuration (user "minkieyume")))
-#+end_src
-
-* 组网
-** GNU Net
-#+begin_src scheme :noweb-ref package
-  "gnunet"
-  "gnunet-scheme"
-#+end_src
-
-** Tailscale
-#+begin_src scheme :noweb-ref module
-  (rosenthal services networking)
-#+end_src
-
-#+begin_src scheme :noweb-ref service
-  (service tailscale-service-type)
-#+end_src
-
-* 容器
-#+begin_src scheme :noweb-ref module
-  (gnu services docker)
-#+end_src
-
-#+begin_src scheme :noweb-ref service
-  (service containerd-service-type)
-#+end_src
-
-#+begin_src scheme :noweb-ref service
-  (service docker-service-type
-    (docker-configuration
-      (enable-iptables? #f)))
 #+end_src
 
 * 桌面环境

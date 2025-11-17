@@ -1,0 +1,21 @@
+(define-module (chiko-modules loader set-loader)
+  #:use-module (chiko-modules sets)
+  #:use-module (chiko-modules utils)
+  #:export (merge-sets))
+
+(define (merge-sets . sets)
+  (if (null? (cdr sets))
+      (car sets)
+      (merge-set (car sets)
+		 (apply merge-sets (cdr sets)))))
+
+(define (merge-set set1 set2)
+  (make-cfgset
+   (merge-config (cfgset-sys-settings set1) (cfgset-sys-settings set2))
+   (merge-config (cfgset-home-settings set1) (cfgset-home-settings set2))
+   (append (cfgset-home-envs set1) (cfgset-home-envs set2))
+   (append (cfgset-home-files set1) (cfgset-home-files set2))
+   (append (cfgset-home-configs set1) (cfgset-home-configs set2))
+   (append (cfgset-home-desktops set1) (cfgset-home-desktops set))
+   (append (cfgset-mcron-jobs set1) (cfgset-mcron-jobs set2))
+   (append (cfgset-doas-rules set1) (cfgset-doas-rules set2))))

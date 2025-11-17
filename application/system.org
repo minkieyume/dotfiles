@@ -11,9 +11,10 @@
 (define (os-sys-app os)
   (operating-system
    (inherit os)
+   <<env>>
    (initrd-modules (append (list <<initrd-module>>) (operating-system-initrd-modules os)))
    (kernel-loadable-modules (append (specifications->packages (list <<kernel-loadable-module>>)) (operating-system-kernel-loadable-modules os)))
-   (kernel-arguments (append (list <<kernel-argument>>) (operating-system-kernel-arguments os)))
+   (kernel-arguments (append (list <<kernel-argument>>) (operating-system-user-kernel-arguments os)))
    (privileged-programs (append (list <<privileged-program>>) (operating-system-privileged-programs os)))
    (packages (append (list <<program>>) (specifications->packages (list <<package>>)) (operating-system-packages os)))
    (services
@@ -177,6 +178,19 @@ doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上�
 ** 解压
 #+begin_src scheme :noweb-ref package
   "unzip"
+#+end_src
+
+** Mcron
+Mcron是guix用于管理计划任务的服务，类似crontab。
+#+begin_src scheme :noweb-ref module
+(gnu services mcron)
+#+end_src
+
+mcron的服务，值得注意的是，jobs的参数必须要用quote括起来，因为里面是一个传递给mcron的(job xxxx)的表达式，这个表达式不能在guix编译时运行。
+#+begin_src scheme :noweb-ref service :noweb yes :noweb-prefix no
+(service mcron-service-type
+  (mcron-configuration
+    (jobs '(<<mcron-job>>))))
 #+end_src
 
 * 组网
