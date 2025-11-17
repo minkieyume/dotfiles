@@ -14,9 +14,6 @@
 	    make-home-desktop
 	    make-home-mime))
 
-(define %list-symbols
-  '(packages services))
-
 (define %default-config
   `((packages ())
     (services ())))
@@ -26,7 +23,7 @@
     (syntax-case stx ()
       ((_ (trans ...) (config ...))
        (let* ((cfgs (syntax->datum #'(config ...)))
-	      (vcfgs (merge-config %list-symbols %default-config cfgs))
+	      (vcfgs (merge-config %default-config cfgs))
 	      (stx-cfgs (datum->syntax stx (filter valid-cfg? vcfgs))))
 	 (with-syntax (((config ...) stx-cfgs))
 	   #'((compose (lambda (x) x) trans ...)

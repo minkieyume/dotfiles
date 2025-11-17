@@ -27,12 +27,7 @@
 	    make-doas
 	    make-mcron
 	    make-ssh
-	    make-home))
-
-(define %list-symbols
-  '(initrd-modules kernel-loadable-modules
-    kernel-arguments privileged-programs users groups
-    services mapped-devices file-systems packages))
+	    make-home-service))
 
 (define %default-config
   `((sudoers-file
@@ -107,7 +102,7 @@
 		      (openssh-configuration
 			final-config ...))))))))
 
-(define-syntax-rule (make-home (users ...) (environments ...))
+(define-syntax-rule (make-home-service (users ...) (environments ...))
   (service guix-home-service-type
   	 (list (list users environments) ...)))
 
@@ -129,7 +124,7 @@
     (syntax-case stx ()
       ((_ (trans ...) (config ...))
        (let* ((cfgs (syntax->datum #'(config ...)))
-	      (vcfgs (merge-config %list-symbols %default-config cfgs))
+	      (vcfgs (merge-config %default-config cfgs))
 	      (stx-cfgs (datum->syntax stx (filter valid-cfg? vcfgs))))
 	 (with-syntax (((config ...) stx-cfgs))
 	   #'((compose (lambda (x) x) trans ...)

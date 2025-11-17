@@ -6,7 +6,8 @@
   #:use-module (chiko-modules utils)
   #:use-module (chiko-modules loader dir-loader)
   #:use-module (chiko-modules sets)
-  #:export (network-manager-trans))
+  #:export (make-nm-trans-networking
+	    make-dhcpcd-networking))
 
 (define network-manager-trans
   (lambda (os)
@@ -37,3 +38,25 @@
   	 (nftables-configuration
   	  (ruleset
   	   (local-file (string-append %configdir machine "/nftables.conf"))))))
+
+(define %resolv
+  (simple-service 'resolv-service
+        	  etc-service-type
+        	  `(("resolv.conf" ,(plain-file "resolv.conf" "search tailb8a678.ts.net lan\nnameserver 192.168.8.1\nnameserver 8.8.8.8\nnameserver 1.1.1.1")))))
+
+(define (make-nm-trans-networking machine)
+  (make-cfgset*
+   #:sys-transforms
+   (list network-manager-trans)
+   #:sys-settings
+   `((services (,(make-nftables machine)
+		,%resolv)))))
+
+(define (make-dhcpcd-networking machine)
+  (make-cfgset*
+   #:sys-settings
+   `((services ((service dhcpcd-service-type
+  			 (dhcpcd-configuration
+			  (no-hook '("hostname" "resolv.conf"))))
+		(service ntp-service-type)
+		,(make-nftables machine))))))

@@ -10,7 +10,8 @@
 	    nuser?
 	    nuser-name
 	    nuser-account
-	    nuser-group))
+	    nuser-group
+	    nuser-accounts))
 
 (define-record-type <nuser>
   (make-nuser name account group)
@@ -18,3 +19,6 @@
   (name nuser-name)
   (account nuser-account)
   (group nuser-group))
+
+(define (nuser-accounts . nuser-list)
+  (map nuser-account nuser-list))

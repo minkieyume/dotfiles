@@ -5,12 +5,15 @@
 
 (define-module (chiko-modules sets)
   #:use-module (srfi srfi-9)
-  #:export (make-cfgset*
-	    make-cfgset
-	    <cfgset>
+  #:use-module (guix records)
+  #:export (<cfgset>
+	    cfgset
 	    cfgset?
+	    make-cfgset
 	    cfgset-sys-settings
 	    cfgset-home-settings
+	    cfgset-sys-transforms
+	    cfgset-home-transforms
 	    cfgset-home-envs
 	    cfgset-home-files
 	    cfgset-home-configs
@@ -18,50 +21,15 @@
 	    cfgset-mcron-jobs
 	    cfgset-doas-rules))
 
-(define (make-cfgset*
-         #:key
-         (sys-settings '())
-         (home-settings '())
-         (home-envs '())
-         (home-files '())
-         (home-configs '())
-         (home-desktops '())
-         (mcron-jobs '())
-         (doas-rules '())  
-         (sys-transforms '())
-         (home-transforms '()))
-  (make-cfgset
-   sys-settings
-   home-settings
-   sys-transforms
-   home-tramsforms
-   home-envs
-   home-files
-   home-configs
-   home-desktops
-   mcron-jobs
-   doas-rules))
-
-(define-record-type <cfgset>
-  (make-cfgset
-   sys-settings
-   home-settings
-   sys-transforms
-   home-tramsforms
-   home-envs
-   home-files
-   home-configs
-   home-desktops
-   mcron-jobs
-   doas-rules)
-  cfgset?
-  (sys-settings cfgset-sys-settings)
-  (home-settings cfgset-home-settings)
-  (sys-transforms cfgset-sys-transforms)
-  (home-tramsforms cfgset-home-transforms)
-  (home-envs cfgset-home-envs)
-  (home-files cfgset-home-files)
-  (home-configs cfgset-home-configs)
-  (home-desktops cfgset-home-desktops)
-  (mcron-jobs cfgset-mcron-jobs)
-  (doas-rules cfgset-doas-rules))
+(define-record-type* <cfgset>
+  cfgset make-cfgset cfgset?
+  (sys-settings cfgset-sys-settings (default '()))
+  (home-settings cfgset-home-settings (default '()))
+  (sys-transforms cfgset-sys-transforms(default '()))
+  (home-transforms cfgset-home-transforms (default '()))
+  (home-envs cfgset-home-envs (default '()))
+  (home-files cfgset-home-files (default '()))
+  (home-configs cfgset-home-configs (default '()))
+  (home-desktops cfgset-home-desktops (default '()))
+  (mcron-jobs cfgset-mcron-jobs (default '()))
+  (doas-rules cfgset-doas-rules (default '())))
