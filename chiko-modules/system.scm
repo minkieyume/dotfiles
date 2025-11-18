@@ -8,47 +8,34 @@
   #:use-module (gnu system privilege)
   #:use-module (srfi srfi-26)
   #:use-module (ice-9 match)
+  #:use-module (gnu packages linux)
   #:use-module (gnu services sysctl)
+  #:use-module (gnu services)
+  #:use-module (gnu services linux)
   #:use-module (gnu services admin)
   #:use-module (gnu services configuration)
-  #:use-module (rosenthal)
   #:use-module (gnu services networking)
-  #:use-module (chiko services doas)
-  #:use-module (gnu services mcron)
-  #:use-module (rosenthal services networking)
-  #:use-module (gnu services docker)
+  #:use-module (gnu services mcron)  
   #:use-module (gnu services mcron)
   #:use-module (gnu services ssh)
+  #:use-module (rosenthal)
+  #:use-module (rosenthal services networking)
   #:use-module (chiko services doas)
   #:use-module (chiko-modules utils)  
   #:use-module (chiko-modules sets)
   #:use-module (chiko-modules loader secret-loader)
   #:use-module (chiko-modules home)
   #:use-module (chiko-modules user)
-  #:export (make-system
-	    make-doas
-	    make-mcron
-	    make-ssh
-	    make-home-service))
+  #:export (make-system))
 
 (define %default-config
   `((sudoers-file
-     (plain-file "sudoers" "Defaults env_reset\ndeploy ALL=(ALL) NOPASSWD: ALL"))
-    (services (list (service tailscale-service-type)
-		    (service containerd-service-type)
-		    (service docker-service-type
-			     (docker-configuration
-			       (enable-iptables? #f)))
-		    (service pam-limits-service-type
-  			     (list
-			      (pam-limits-entry "*" 'both 'nofile 100000)))
-		    (service ipfs-service-type
-			     (ipfs-configuration
-			       (package (spec->pkg "kubo"))
-			       (gateway "/ip4/0.0.0.0/tcp/8880")
-			       (api "/ip4/0.0.0.0/tcp/5001")))))
-    (packages (list ,@(specifications->packages '("kubo" "unzip" "opendoas" "git" "openssl" "glances" "gnupg" "bind:utils"
-						  "rsync" "cryptsetup" "fish" "btop" "curl" "neofetch" "gnunet" "tcpdump"))))))
+     ,(plain-file "sudoers" "Defaults env_reset\ndeploy ALL=(ALL) NOPASSWD: ALL"))
+    (services ,(list (service pam-limits-service-type
+  			      (list
+			       (pam-limits-entry "*" 'both 'nofile 100000)))))
+    (packages ,(specifications->packages '("unzip" "opendoas" "git" "openssl" "glances" "bind:utils" "rsync" "cryptsetup"
+					   "fish" "btop" "curl" "neofetch" "gnunet" "tcpdump")))))
 (define %default-doas-rules
   (list
    (doas-rule
@@ -66,102 +53,130 @@
     (user "root")
     (options '("nopass")))))
 
-(define %default-openssh-config
-  '((password-authentication? #f)
-    (permit-root-login #f)))
-
 (define %default-ssh-allowed-env
   (list "LANG" "LC_*" "TZ" "PYTHONIOENCODING" "TERM" "COLORTERM"))
 
-;; (define-syntax make-ssh
-;;   (lambda (stx)
-;;     (syntax-case stx ()
-;;       ((_ (keys ...))
-;;        (let* ((vkeys (syntax->datum #'(keys ...)))
-;; 	      (merged (make-ssh-config vkeys)))
-;; 	 (with-syntax (((final-config ...) (datum->syntax stx merged)))
-;; 	   #'(service openssh-service-type
-;; 		      (openssh-configuration
-;; 			final-config ...)))))
-      
-;;       ((_ (keys ...) (allowed-environments ...))
-;;        (let* ((vkeys (syntax->datum #'(keys ...)))
-;; 	      (venvs (syntax->datum #'(allowed-environments ...)))
-;; 	      (merged (make-ssh-config vkeys venvs)))
-;; 	 (with-syntax (((final-config ...) (datum->syntax stx merged)))
-;; 	   #'(service openssh-service-type
-;; 		      (openssh-configuration
-;; 			final-config ...))))))))
-
-;; (define-syntax-rule (make-home-service (users environments) ...)
-;;   (service guix-home-service-type
-;;   	 (list (list users environments) ...)))
-
-
-
-;; (define-syntax make-doas
-;;   (syntax-rules ()
-;;     ((_)
-;;      (service doas-service-type
-;; 	      (doas-configuration
-;; 	       (rules
-;; 		%default-doas-rules))))
-;;     ((_ doas-rules ...)
-;;      (service doas-service-type
-;; 	      (doas-configuration
-;; 	       (rules
-;; 		(list doas-rules ...)))))))
-
-;; (define-syntax make-system
-;;   (lambda (stx)
-;;     (syntax-case stx ()
-;;       ((_ (trans ...) (config ...))
-;;        (let* ((cfgs (syntax->datum #'(config ...)))
-;; 	      (vcfgs (merge-config %default-config cfgs))
-;; 	      (stx-cfgs (datum->syntax stx (filter valid-cfg? vcfgs))))
-;; 	 (with-syntax (((config ...) stx-cfgs))
-;; 	   #'((compose (lambda (x) x) trans ...)
-;; 	      (operating-system
-;; 		config ...))))))))
-
-;; (define-syntax-rule (make-mcron mjobs ...)
-;;   (service mcron-service-type
-;; 	   (mcron-configuration
-;; 	     (jobs (list mjobs ...)))))
-
 (define* (make-ssh keys #:optional (envs %default-ssh-allowed-env))
-  `(service openss-service-type
-	    (openssh-configuration
-	      ,@(merge-config '() %default-openssh-config
-			      `((authorized-keys ,(cons list keys))
-				(accepted-environment ,(cons list envs)))))))
+  (service openssh-service-type
+	   (openssh-configuration
+	    (password-authentication? #f)
+	    (permit-root-login #f)
+	    (authorized-keys keys)
+	    (accepted-environment envs))))
 
 (define (make-mcron . mjobs)
-  `(service mcron-service-type
-	    (mcron-configuration
-	      (jobs ,mjobs))))
+  (service mcron-service-type
+	   (mcron-configuration
+	    (jobs mjobs))))
 
 (define (make-home-service . home-services)
-  `(service guix-home-service-type
-	    ,home-services))
+  (service guix-home-service-type
+	   home-services))
 
 (define (make-doas . rules)
-  `(service doas-service-type
-	    (doas-configuration
-	     (rules ,(if (null? rules)
-			 %default-doas-rules
-			 rules)))))
+  (service doas-service-type
+	   (doas-configuration
+	    (rules (if (null? rules)
+		       %default-doas-rules
+		       rules)))))
+
+(define (make-autoload-kernel-modules . modules)
+  (service kernel-module-loader-service-type modules))
+
+(define-syntax make-operating-system
+  (syntax-rules ()
+    ((_ config-alist)
+     (apply (lambda* (#:key
+                      ;; 内核相关
+                      (kernel linux-libre)
+                      (hurd #f)
+                      (kernel-loadable-modules '())
+                      (kernel-arguments %default-kernel-arguments)
+                      
+                      ;; 引导相关
+                      bootloader
+                      (label #f)
+                      (keyboard-layout #f)
+                      (initrd-modules %base-initrd-modules)
+                      (initrd base-initrd)
+                      (firmware %base-firmware)
+                      
+                      ;; 系统标识
+                      host-name
+                      
+                      ;; 存储设备
+                      (mapped-devices '())
+                      file-systems
+                      (swap-devices '())
+                      
+                      ;; 用户和组
+                      (users %base-user-accounts)
+                      (groups %base-groups)
+                      (skeletons (default-skeletons))
+                      
+                      ;; 系统配置
+                      ;;(issue %default-issue)
+                      (packages %base-packages)
+                      (timezone "Asia/Singapore")
+                      (locale "zh_CN.utf8")
+                      ;;(locale-definitions %default-locale-definitions)
+                      ;;(locale-libcs (list glibc))
+                      ;;(name-service-switch %default-nss)
+                      
+                      ;; 服务
+                      (services %base-services)
+                      (essential-services #f)
+                      
+                      ;; 权限和认证
+                      (pam-services (base-pam-services))
+                      (privileged-programs %default-privileged-programs)
+                      (sudoers-file %sudoers-specification)
+                      
+                      ;; 忽略其他未知参数
+                      #:allow-other-keys
+                      . rest)
+              (operating-system
+               (kernel kernel)
+               (hurd hurd)
+               (kernel-loadable-modules kernel-loadable-modules)
+               (kernel-arguments kernel-arguments)
+               (bootloader bootloader)
+               (keyboard-layout keyboard-layout)
+               (initrd-modules initrd-modules)
+               (initrd initrd)
+               (firmware firmware)
+               (host-name host-name)
+               (mapped-devices mapped-devices)
+               (file-systems file-systems)
+               (swap-devices swap-devices)
+               (users users)
+               (groups groups)
+               (skeletons skeletons)
+               ;; (issue issue)
+               (packages packages)
+               (timezone timezone)
+               (locale locale)
+               ;; (locale-definitions locale-definitions)
+               ;; (locale-libcs locale-libcs)
+               ;; (name-service-switch name-service-switch)
+               (services services)
+               (pam-services pam-services)
+               (privileged-programs privileged-programs)
+               (sudoers-file sudoers-file)))
+            config-alist))))
 
 (define (make-system set)
-  `((compose (lambda (x) x) ,@(cfgset-sys-transforms set))
-    (operating-system
-      ,@(merge-config %default-config
-		      `((users ,(apply nuser-accounts (cfgset-user-list set)))
-			(groups ,(apply nuser-groups (cfgset-user-list set)))
-			(services (make-mcron ,@(cfgset-mcron-jobs set))
-				  (make-doas ,@(cfgset-doas-rules set))
-				  (make-ssh %ssh-keys)
-				  (make-home-service ,@(map (lambda (name)
-							      `(,name
-								,(make-home set))) (apply nuser-make-home-names (cfgset-user-list set))))))
-		      (cfgset-sys-settings set)))))
+  (let* ((config-list (merge-config %default-config
+				    `((users ,(apply nuser-accounts (cfgset-user-list set)))
+				      (groups ,(apply nuser-groups (cfgset-user-list set)))
+				      (services (,(apply make-mcron (cfgset-mcron-jobs set))
+						 ,(apply make-doas (cfgset-doas-rules set))
+						 ,(make-ssh %ssh-keys)
+						 ,(apply make-home-service (map (lambda (name)
+										  `(,name
+										    ,(make-home set)))
+										(apply nuser-make-home-names (cfgset-user-list set)))))))
+				    (cfgset-sys-settings set)))
+	 (os-obj (make-operating-system (alist->keyword-list config-list)))
+	 (transforms (cons (lambda (x) x) (cfgset-sys-transforms set))))
+    ((apply compose transforms) os-obj)))

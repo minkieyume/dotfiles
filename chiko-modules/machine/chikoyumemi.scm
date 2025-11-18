@@ -6,15 +6,27 @@
 (define-module (chiko-modules machine chikoyumemi)
   #:use-module (gnu system)
   #:use-module (gnu system privilege)
+  #:use-module (gnu services dbus)
+  #:use-module (gnu services networking)
   #:use-module (srfi srfi-26)
   #:use-module (ice-9 match)
   #:use-module (rosenthal)
+  #:use-module (guix gexp)
   #:use-module (nonguix transformations)
   #:use-module (chiko-modules system)
   #:use-module (chiko-modules home)
   #:use-module (chiko-modules utils)
   #:use-module (chiko-modules sets)
   #:use-module (chiko-modules sets networking)
+  #:use-module (chiko-modules sets desktop)
+  #:use-module (chiko-modules sets nvidia)
+  #:use-module (chiko-modules sets guix)
+  #:use-module (chiko-modules sets emacs)
+  #:use-module (chiko-modules sets daily)
+  #:use-module (chiko-modules sets filesystem)
+  #:use-module (chiko-modules sets container)
+  #:use-module (chiko-modules sets secret)
+  #:use-module (chiko-modules sets appstore)
   #:use-module (chiko-modules loader dir-loader)
   #:use-module (chiko-modules loader secret-loader)
   #:use-module (chiko-modules user)
@@ -93,49 +105,74 @@
 (define %machine-name
   "chikoyumemi")
 
-(define %chikoyumemi-set
-  (merge-sets
-   (make-nm-trans-networking %machine-name)))
-
-(define (make-chikoyumemi-system-set set)
+(define %chikoyumemi-default-set
   (cfgset
    (user-list (list (make-minkieyume) (make-deploy) (make-root)))
+   (home-files `(("Downloads" ,(symlink-to "/yumemi/download"))
+		 ("Pictures" ,(symlink-to "/yumemi/picture"))
+		 ("Creator" ,(symlink-to "/yumemi/creator"))
+		 ("Develop" ,(symlink-to "/yumemi/develop"))
+		 ("Application" ,(symlink-to "/yumemi/program"))
+		 ("Audio" ,(symlink-to "/yumemi/audio"))
+		 ("Video" ,(symlink-to "/yumemi/video"))
+		 ("Games" ,(symlink-to "/yumemi/games"))
+		 ;; ;;加载文件
+		 (".dash_rsa" ,(local-file (string-append
+					    %secretdir
+					    "keys/dash_rsa")))
+		 (".gitconfig" ,(local-file (string-append
+					     %configdir
+					     "gitconfig")))
+		 (".ssh/config" ,(local-file (string-append
+					      %configdir
+					      "ssh-config")))
+		 (".ssh/environment" ,(local-file (string-append
+						   %configdir
+						   "ssh-env")))))
    (sys-settings
     `((locale "zh_CN.utf8")
       (timezone "Asia/Singapore")
-      (keyboard-layout (keyboard-layout "us"))
-      (host-name %machine-name)
+      (keyboard-layout ,(keyboard-layout "us"))
+      (host-name ,%machine-name)
       
       ;;启动及内核配置
       (bootloader
-	(bootloader-configuration
-	  (bootloader grub-efi-bootloader)
-	  (targets (list "/boot/efi"))
-	  (keyboard-layout keyboard-layout)))
-      (initrd-modules (list ,@%base-initrd-modules))
-      (kernel-loadable-modules '())
-      (kernel-arguments (list ,@(append (list "kernel.sysrq=1"
-					      "zswap.enabled=1"
-					      "zswap.max_pool_percent=90")  %default-kernel-arguments)))
+       ,(bootloader-configuration
+	 (bootloader grub-efi-bootloader)
+	 (targets (list "/boot/efi"))
+	 (keyboard-layout keyboard-layout)))
+      (initrd-modules ,%base-initrd-modules)
+      (kernel-arguments ,(append (list "kernel.sysrq=1"
+				       "zswap.enabled=1"
+				       "zswap.max_pool_percent=90")  %default-kernel-arguments))
 
       ;;存储设备及文件系统
-      (mapped-devices '())
-      (file-systems (list ,@(append %nvme0n1p1 %nvme0n1p2 %galaxy %base-file-systems)))
+      (file-systems ,(append %nvme0n1p1 %nvme0n1p2 %galaxy %base-file-systems))
 
       ;;用户、组
-      (users (list ,@%base-user-accounts))
-      (groups (list ,@%base-groups))
+      (users ,%base-user-accounts)
+      (groups ,%base-groups)
 
       ;;特权程序及软件包
-      (privileged-programs (list ,@%default-privileged-programs))
-      (packages (list ,@%base-packages))
-      (services (list (make-ssh (%chiko-ssh-key))
-		      (make-home-service ("minkieyume" (make-home-from-set ,set)))))))
+      (privileged-programs ,%default-privileged-programs)
+      (packages ,%base-packages)))
    (sys-transforms
     (list (nonguix-transformation-linux)))))
 
-(define %chikoyumemi-os-set
-  (merge-sets (make-chikoyumemi-system-set %chikoyumemi-set) %chikoyumemi-set))
+(define %chikoyumemi-set
+  (merge-sets
+   %chikoyumemi-default-set
+   (make-default-file-system-apps "052d416e-a016-4a62-936e-f8b317f1a546" "minkieyume")
+   (make-nm-trans-networking %machine-name)
+   (make-guix '("--cores=4") "/mnt/yumemi/@Build")
+   (make-nvidia)
+   (make-wayland-desktop %machine-name)
+   (make-container)
+   (make-gpg-agent)
+   (make-keepassxc)
+   (make-emacs %machine-name)
+   (make-daily)
+   (make-flatpak (apply make-flatpak-desktops %default-flatpak-desktops))))
 
 (define (make-chikoyumemi-os)
-  (make-system %chikoyumemi-os-set))
+  (make-system %chikoyumemi-set))

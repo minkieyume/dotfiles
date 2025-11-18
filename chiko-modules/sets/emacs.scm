@@ -1,3 +1,8 @@
+;; -*- mode: scheme -*-
+;; SPDX-FileCopyrightText: 2023, 2024 Minkie Yume <minkieyume@yumieko.com>
+;;
+;; SPDX-License-Identifier: GPL-3.0-or-later
+
 (define-module (chiko-modules sets emacs)
   #:use-module (gnu)
   #:use-module (gnu home services)
@@ -10,11 +15,13 @@
 
 (define (make-emacs machine)
   (cfgset
-   (home-settings `((packages %emacs-packages)
-		    (services ())))
+   (home-settings `((packages ,%emacs-packages)))
    (home-envs `(("EDITOR" . "emacsclient")
 		("VISUAL" . "$EDITOR")
 		("ESHELL" . ,(file-append (spec->pkg "fish") "/bin/fish"))))
+   (home-mimes '("x-scheme-handler/mailto=emacsclient.desktop"
+		 "inode/directory=emacsclient.desktop"
+		 "text/plain=emacsclient.desktop"))
    (home-configs
     `(("emacs/init.el"
        ,(computed-substitution-with-inputs "init.el"

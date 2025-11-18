@@ -32,6 +32,7 @@
      "emacs-inheritenv"
      "emacs-direnv"
      "emacs-envrc"
+     "emacs-guix"
 
      ;;编辑器优化
      "emacs-company"

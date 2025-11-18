@@ -9,6 +9,8 @@
   #:use-module (guix i18n)
   #:use-module (guix store)
   #:use-module (guix channels)
+  #:use-module (guix gexp)
+  #:use-module (gnu services base)
   #:use-module (chiko-modules loader dir-loader)
   #:export (%default-channels
 	    %default-substitute-urls

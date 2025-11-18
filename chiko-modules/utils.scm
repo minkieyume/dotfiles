@@ -1,11 +1,22 @@
 (define-module (chiko-modules utils)
   #:export (merge-config
+	    alist->keyword-list
 	    valid-cfg?))
+
+(define (alist->keyword-list alist)
+  "将关联列表转换为关键字参数列表"
+  (apply append
+         (map (lambda (pair)
+                (list (symbol->keyword (car pair))
+                      (if (list? (cdr pair))
+			  (cadr pair)
+			  (cdr pair))))
+              alist)))
 
 (define %list-symbols
   '(initrd-modules kernel-loadable-modules
-    kernel-arguments privileged-programs users groups
-    services mapped-devices file-systems packages))
+		   kernel-arguments privileged-programs users groups
+		   services mapped-devices file-systems packages))
 
 ;; ((package ("pkg1" "pkg2")))
 (define (merge-config . configs)

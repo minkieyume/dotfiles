@@ -19,10 +19,12 @@
 (define %secretdir (string-append %workdir "/secret/"))
 
 ;; Files
-(define %configdir (string-append %filedir "/config/"))
-(define %desktopdir (string-append %filedir "/desktop/"))
-(define %pubkeysdir (string-append %filedir "/keys/"))
-(define %dotfilesdir (string-append %filedir "/dotfiles/"))
+(define %configdir (string-append %filedir "config/"))
+(define %desktopdir (string-append %filedir "desktop/"))
+(define %pubkeysdir (string-append %filedir "keys/"))
+
+;; ConfigDir
+(define %dotfilesdir (string-append %configdir "dotfiles/"))
 
 ;; Methods
 (define (get-machine-configdir machine-name)

@@ -14,8 +14,14 @@
   #:export (%ssh-keys
 	    load-nyapasu))
 
+(define %chiko-ssh-key
+  (plain-file "chiko-ssh.pub" "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAOh6siUz1z6TpA5ykI5ftCYLBqV3QHTtECL+ulYLQ+D openpgp:0x1DFD0AED\n"))
+
 (define %ssh-keys
-  `((plain-file "chiko-ssh.pub" "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAOh6siUz1z6TpA5ykI5ftCYLBqV3QHTtECL+ulYLQ+D openpgp:0x1DFD0AED\n")))
+  `(("minkieyume"
+     ,%chiko-ssh-key)
+    ("deploy"
+     ,%chiko-ssh-key)))
 
 (define (load-nyapasu)
   (load (string-append %secretdir "/nyapasu.scm")))

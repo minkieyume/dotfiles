@@ -789,6 +789,11 @@ mcron的服务，值得注意的是，jobs的参数必须要用quote括起来，
   ("MOZ_ENABLE_WAYLAND" . "1")
 #+end_src
 
+* 运维
+** 域名工具
+#+begin_src scheme :noweb-ref package
+  "cloudflare-cli"
+#+end_src
 
 * 程序开发
 ** 项目管理
@@ -1001,7 +1006,6 @@ TreeSitter是内置正则的语法高亮解析引擎。
            (operating-system-user-kernel-arguments os)))))
 #+end_src
 
-
 ** Kodi
 #+begin_src scheme :noweb-ref package
   "kodi-wayland"
@@ -1102,12 +1106,6 @@ Aider暂时没有包，需要用uvx安装。
 		     (list (string-append (getenv "HOME") "/.local/bin/uvx")
 			   "uvx" "--from" "aider-chat" "aider")
 		     (cdr (command-line)))))))
-#+end_src
-
-* 运维
-** 域名工具
-#+begin_src scheme :noweb-ref package
-  "cloudflare-cli"
 #+end_src
 
 * 创作

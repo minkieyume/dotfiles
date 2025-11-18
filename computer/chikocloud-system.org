@@ -778,13 +778,13 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 #+end_src
 
 **** SSH代理
-#+begin_src scheme :noweb-ref nginx-stream-upstream
+#+begin_src scheme
 (nginx-upstream-configuration
  (name "forgejo_ssh")
  (servers (list "100.119.107.8:2222")))
 #+end_src
 
-#+begin_src scheme :noweb-ref nginx-stream-server
+#+begin_src scheme
 (nginx-server-configuration
   (server-name '("vcs.yumieko.com"))
   (listen '("2222" "[::]:2222"))
