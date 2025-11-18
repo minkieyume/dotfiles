@@ -13,10 +13,10 @@
 (define os
   (make-chikoyumemi-os))
 
-(display "-------- CHIKO YUMEMI --------")
-(newline)
-(display "Check Service:")
-(newline)
-(pretty-print (operating-system-user-services os))
+;; (display "-------- CHIKO YUMEMI --------")
+;; (newline)
+;; (display "Check Service:")
+;; (newline)
+;; (pretty-print (operating-system-user-services os))
 
 os

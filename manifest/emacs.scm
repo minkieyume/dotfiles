@@ -25,6 +25,7 @@
      "emacs-racket-mode"
      "emacs-geiser"
      "emacs-geiser-guile"
+     "emacs-guix"
      "emacs-plantuml-mode"
      "emacs-scribble-mode"
      "emacs-inheritenv"

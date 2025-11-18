@@ -145,7 +145,7 @@
        ,(bootloader-configuration
 	 (bootloader grub-efi-bootloader)
 	 (targets (list "/boot/efi"))
-	 (keyboard-layout keyboard-layout)))
+	 (keyboard-layout (keyboard-layout "us"))))
       (initrd-modules ,%base-initrd-modules)
       (kernel-arguments ,(append (list "kernel.sysrq=1"
 				       "zswap.enabled=1"
