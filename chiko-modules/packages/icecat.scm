@@ -1,3 +1,8 @@
+;; -*- mode: scheme -*-
+;; SPDX-FileCopyrightText: 2023, 2024 Minkie Yume <minkieyume@yumieko.com>
+;;
+;; SPDX-License-Identifier: GPL-3.0-or-later
+
 (define-module (chiko-modules packages icecat)
   #:use-module (rosenthal)
   #:use-module (guix profiles)
@@ -12,4 +17,4 @@
      "ohmyech-icecat"
      "privacy-redirect-icecat"
      "ublock-origin-icecat"
-     )))
+     "keepassxc-browser-icecat")))

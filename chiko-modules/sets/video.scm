@@ -21,17 +21,22 @@
 		    ,(specifications->packages '("ffmpeg")))))))
 
 (define (make-video)
-  (cfgset
-   (sys-settings `((packages
-		    ,(specifications->packages '("mpv" "ffmpeg" "obs" "kodi-wayland")))))))
+  (merge-sets
+   (make-v4l)
+   (cfgset
+    (sys-settings `((packages
+		     ,(specifications->packages '("mpv" "ffmpeg" "obs" "kodi-wayland"))))))))
 
 (define (make-video-nvidia)
-  (cfgset
-   (sys-settings `((packages
-		    ,(specifications->packages '("mpv-nvidia" "obs-nvidia" "kodi-wayland" "ffmpeg")))))))
+  (merge-sets
+   (make-v4l)
+   (cfgset
+    (sys-settings `((packages
+		     ,(specifications->packages '("mpv-nvidia" "obs-nvidia" "kodi-wayland" "ffmpeg"))))))))
 
 (define (make-v4l)
   (cfgset
+   (autoload-kernel-modules '("uvcvideo" "videodev" "v4l2loopback"))
    (sys-settings `((packages
 		    ,(specifications->packages '("v4l-utils")))
 		   (kernel-loadable-modules

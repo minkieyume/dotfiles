@@ -12,7 +12,8 @@
   #:use-module (guix gexp)
   #:use-module (chiko-modules loader dir-loader)
   #:export (%ssh-keys
-	    load-nyapasu))
+	    %nyapasu-script
+	    secret-ref))
 
 (define %chiko-ssh-key
   (plain-file "chiko-ssh.pub" "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAOh6siUz1z6TpA5ykI5ftCYLBqV3QHTtECL+ulYLQ+D openpgp:0x1DFD0AED\n"))
@@ -23,5 +24,10 @@
     ("deploy"
      ,%chiko-ssh-key)))
 
-(define (load-nyapasu)
-  (load (string-append %secretdir "/nyapasu.scm")))
+(define %nyapasu-script
+  (local-file (string-append %secretdir "/nyapasu.scm")))
+
+(primitive-load (string-append %secretdir "/nyapasu.scm"))
+
+(define (secret-ref key)
+  (nyapasu-ref key))

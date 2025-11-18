@@ -13,7 +13,6 @@
   #:use-module (chiko-modules utils)
   #:use-module (chiko-modules loader dir-loader)
   #:use-module (chiko-modules sets)
-  #:use-module (chiko-modules packages desktop)
   #:export (make-swap
 	    make-syncthing
 	    make-gvfs

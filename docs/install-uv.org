@@ -1,0 +1,32 @@
+#+TITLE: Install UV
+
+* 安装UV
+注：关于uv的安装，因为guix没有uv最新版，因此暂时安装uv手动通过下列命令完成安装：
+#+begin_src shell
+pipx install uv
+#+end_src
+
+然后patchelf命令来修复路径问题：
+#+begin_src shell
+guix shell patchelf -- patchelf --set-interpreter /gnu/store/py9r4p4jp2pa1jaagbcvw35d79j5kcg5-glibc-2.41/lib/ld-linux-x86-64.so.2 ./uv
+guix shell patchelf -- patchelf --set-interpreter /gnu/store/py9r4p4jp2pa1jaagbcvw35d79j5kcg5-glibc-2.41/lib/ld-linux-x86-64.so.2 ./uvx
+#+end_src
+
+然后，在.local/bin中写下列shell脚本：
+#+begin_src shell uv
+#!/usr/bin/env bash
+# ↑ 用 bash 兼容模式执行（fish 会自动调用外部 bash）
+# 即使在 fish 环境下运行这个脚本，也没问题
+
+export LD_LIBRARY_PATH="$HOME/.guix-profile/lib:/run/current-system/profile/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+exec /home/minkieyume/.local/share/pipx/venvs/uv/bin/uv "$@"
+#+end_src
+
+#+begin_src shell uvx
+#!/usr/bin/env bash
+# ↑ 用 bash 兼容模式执行（fish 会自动调用外部 bash）
+# 即使在 fish 环境下运行这个脚本，也没问题
+
+export LD_LIBRARY_PATH="$HOME/.guix-profile/lib:/run/current-system/profile/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+exec /home/minkieyume/.local/share/pipx/venvs/uv/bin/uvx "$@"
+#+end_src

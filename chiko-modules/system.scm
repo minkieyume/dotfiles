@@ -34,8 +34,8 @@
     (services ,(list (service pam-limits-service-type
   			      (list
 			       (pam-limits-entry "*" 'both 'nofile 100000)))))
-    (packages ,(specifications->packages '("unzip" "opendoas" "git" "openssl" "glances" "bind:utils" "rsync" "cryptsetup"
-					   "fish" "btop" "curl" "neofetch" "gnunet" "tcpdump")))))
+    (packages ,(specifications->packages '("unzip" "opendoas" "openssl" "glances" "bind:utils" "rsync" "cryptsetup"
+					   "fish" "btop" "curl" "neofetch" "gnunet" "tcpdump" "ripgrep" "jq")))))
 (define %default-doas-rules
   (list
    (doas-rule
@@ -175,7 +175,8 @@
 						 ,(apply make-home-service (map (lambda (name)
 										  `(,name
 										    ,(make-home set)))
-										(apply nuser-make-home-names (cfgset-user-list set)))))))
+										(apply nuser-make-home-names (cfgset-user-list set))))
+						 ,(apply make-autoload-kernel-modules (cfgset-autoload-kernel-modules set)))))
 				    (cfgset-sys-settings set)))
 	 (os-obj (make-operating-system (alist->keyword-list config-list)))
 	 (transforms (cons (lambda (x) x) (cfgset-sys-transforms set))))

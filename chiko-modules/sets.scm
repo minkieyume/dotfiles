@@ -23,6 +23,7 @@
 	    cfgset-mcron-jobs
 	    cfgset-doas-rules
 	    cfgset-user-list
+	    cfgset-autoload-kernel-modules
 	    merge-sets))
 
 (define-record-type* <cfgset>
@@ -38,7 +39,8 @@
   (home-mimes cfgset-home-mimes (default '()))
   (mcron-jobs cfgset-mcron-jobs (default '()))
   (doas-rules cfgset-doas-rules (default '()))
-  (user-list cfgset-user-list (default '())))
+  (user-list cfgset-user-list (default '()))
+  (autoload-kernel-modules cfgset-autoload-kernel-modules (default '())))
 
 (define (merge-sets . sets)
   (if (null? (cdr sets))
@@ -59,4 +61,6 @@
    (doas-rules (append (cfgset-doas-rules set1) (cfgset-doas-rules set2)))
    (sys-transforms (append (cfgset-sys-transforms set1) (cfgset-sys-transforms set2)))
    (home-transforms (append (cfgset-home-transforms set1) (cfgset-home-transforms set2)))
-   (user-list (append (cfgset-user-list set1) (cfgset-user-list set2)))))
+   (user-list (append (cfgset-user-list set1) (cfgset-user-list set2)))
+   (autoload-kernel-modules (append (cfgset-autoload-kernel-modules set1)
+				    (cfgset-autoload-kernel-modules set2)))))

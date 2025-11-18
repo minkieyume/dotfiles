@@ -1,3 +1,8 @@
+;; -*- mode: scheme -*-
+;; SPDX-FileCopyrightText: 2023, 2024 Minkie Yume <minkieyume@yumieko.com>
+;;
+;; SPDX-License-Identifier: GPL-3.0-or-later
+
 (define-module (chiko-modules packages emacs)
   #:use-module (rosenthal)
   #:use-module (guix profiles)

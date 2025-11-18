@@ -10,7 +10,6 @@
   #:use-module (chiko-modules utils)
   #:use-module (chiko-modules loader dir-loader)
   #:use-module (chiko-modules sets)
-  #:use-module (chiko-modules packages desktop)
   #:export (make-flatpak
 	    make-flatpak-desktops
 	    %default-flatpak-desktops))
