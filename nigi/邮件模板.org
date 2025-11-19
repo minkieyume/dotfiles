@@ -1,0 +1,64 @@
+#+TITLE: 邮件模板
+
+* 2025/11/19 垃圾邮件事件
+这是11月19日发现的垃圾邮件事件，随着18日cloudflare出现大规模故障，当晚我的邮件服务器也被人滥用发送了大量垃圾邮件。
+故有了下面这个邮件服务器处理模板：
+#+BEGIN_QUOTE
+Subject: Request for Removal of Block on IP 51.83.132.203
+
+Dear Team,
+
+I am writing to request the removal of a block / blacklist entry affecting email sent from my server.
+
+Affected IP address(es):
+
+IPv4: 51.83.132.203
+
+IPv6: 2001:41d0:601:1100::592a
+
+Server / Hostname:
+
+mail.yumieko.com
+
+VPS at OVHcloud (vps-50015373)
+
+Recently, I was informed that spam or abusive messages were being sent from this server and that the IP has been blocked / blacklisted as a result. I take this issue very seriously and have conducted a full investigation.
+
+Root cause of the issue:
+The problem was caused by a misconfiguration of my mail server which unintentionally allowed unauthorized email relaying within the internal Docker / network environment.
+This configuration error was exploited to send spam messages from my server.
+Importantly, I have checked the mail logs and found no evidence of SASL account compromise (no unauthorized authenticated logins).
+
+Corrective actions taken:
+I have already taken the following steps to stop the abuse and prevent it from happening again:
+- Immediately stopped the mail service once the issue was reported.
+- Cleared the outgoing mail queue to remove any remaining spam messages.
+- Identified and corrected the mail relay configuration, so that:
+- Only authenticated users and trusted local services can send mail.
+
+The server no longer acts as an open or overly permissive relay under any circumstances.
+- Updated credentials used by web applications and any services that send email through the server.
+- Disabled unnecessary mail-related services and ports (such as POP3 and other unused services) and reduced the attack surface.
+- Currently only the following ports are open from the mail side: 22, 587 and 993.
+- Reviewed logs for any further suspicious activity and cleaned up any potentially malicious scripts or misuse.
+- Enabled ongoing monitoring of mail logs, server processes, and outbound mail volume to quickly detect any anomalies in the future.
+- Outbound connections to TCP port 25 are now restricted and monitored.
+
+Current status
+At this time, the server has been secured and the misconfiguration that allowed spam to be sent has been fully resolved.
+I am committed to maintaining a clean, non-abusive mail environment and to complying with your anti-spam policies.
+
+Request
+- Given the corrective actions taken and the current secure configuration of the server, I kindly request that you:
+- Remove the block / blacklist entry associated with the IP 51.83.132.203
+- And, if applicable, the IPv6 2001:41d0:601:1100::592a and the hostname mail.yumieko.com
+
+If you require any additional information, logs or confirmation from my hosting provider (OVHcloud), I will be happy to provide it.
+
+Thank you very much for your time and consideration, and for your efforts in fighting spam and abuse.
+
+Best regards,
+MinkieYume,
+Littlewing Studio,
+minkieyume@yumieko.com / minkieyume@gmail.com
+#+END_QUOTE
