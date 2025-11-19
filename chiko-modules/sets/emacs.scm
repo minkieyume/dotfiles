@@ -15,7 +15,7 @@
 
 (define (make-emacs machine)
   (cfgset
-   (home-settings `((packages ,%emacs-packages)))
+   (sys-settings `((packages ,%emacs-packages)))
    (home-envs `(("EDITOR" . "emacsclient")
 		("VISUAL" . "$EDITOR")
 		("ESHELL" . ,(file-append (spec->pkg "fish") "/bin/fish"))))
