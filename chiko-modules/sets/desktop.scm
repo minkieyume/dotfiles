@@ -194,7 +194,8 @@
      (list (make-greetd-transform)))
     (sys-settings
      `((services
-	,sys-desktop-services)))
+	,sys-desktop-services)
+       (packages ,%desktop-packages)))
     (home-files `((".gtkrc-2.0"
   		 ,(local-file
 		     (string-append
@@ -219,5 +220,4 @@
 				   machine-name "/foot.ini")))))
     (home-settings
      `((services ,(append (list composer fontconfig notification
-				launcher bar background) home-desktop-services))
-       (packages ,%desktop-packages))))))
+				launcher bar background) home-desktop-services)))))))

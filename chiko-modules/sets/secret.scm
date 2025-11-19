@@ -19,14 +19,14 @@
 			 (extra-options '("allow-emacs-pinentry"
 					  "allow-loopback-pinentry")))
   (cfgset
-   (home-settings `((packages ,(specifications->packages (list pinetry)))
-		    (services
+   (home-settings `((services
 		     ,(list (service home-gpg-agent-service-type
 				     (home-gpg-agent-configuration
-				      (pinentry-program
-				       (file-append (spec->pkg pinetry) (string-append "/bin/" pinetry)))
-				      (ssh-support? #t)
-				      (extra-content (string-join extra-options "\n"))))))))))
+				       (pinentry-program
+					(file-append (spec->pkg pinetry) (string-append "/bin/" pinetry)))
+				       (ssh-support? #t)
+				       (extra-content (string-join extra-options "\n"))))))))
+   (sys-settings `((packages ,(specifications->packages (list pinetry)))))))
 
 (define (make-keepassxc)
   (cfgset

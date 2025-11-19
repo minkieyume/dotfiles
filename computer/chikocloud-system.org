@@ -833,6 +833,8 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
 #+begin_src scheme :noweb-ref service
 (service synapse-service-type
 	 (synapse-configuration
+	  (uid 991)
+	  (gid 991)
 	  (server-name "chat.yumieko.com")
 	  (postgresql-password-file "/var/lib/synapse/ppasu")))
 #+end_src

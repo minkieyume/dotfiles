@@ -15,12 +15,12 @@
 
 (define* (make-icecat #:key (icecat "librewolf"))
   (cfgset
-   (home-settings `((packages ,(list (spec->pkg icecat)))))
+   (sys-settings `((packages ,(list (spec->pkg icecat)))))
    (home-envs `(("MOZ_ENABLE_WAYLAND" . "1")))))
 
 (define (make-mu-isync)
   (cfgset
-   (home-settings `((packages ,(specifications->packages '("mu" "isync")))))
+   (sys-settings `((packages ,(specifications->packages '("mu" "isync")))))
    (home-files `((".mbsyncrc"
   		,(local-file (string-append %configdir "mbsyncrc.conf")))))
    (mcron-jobs `((job '(next-minute (range 0 60 3))
