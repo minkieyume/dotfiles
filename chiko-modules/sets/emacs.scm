@@ -5,6 +5,7 @@
 
 (define-module (chiko-modules sets emacs)
   #:use-module (gnu)
+  #:use-module (guix gexp)
   #:use-module (gnu home services)
   #:use-module (rosenthal)
   #:use-module (chiko-modules utils)
@@ -16,6 +17,17 @@
 (define (make-emacs machine)
   (cfgset
    (sys-settings `((packages ,%emacs-packages)))
+   (home-settings `((services ,(list (simple-service 'home-emacs
+  						     home-shepherd-service-type
+  						     (list (shepherd-service
+  							    (provision '(emacs-daemon))
+  							    (start
+  							     #~(make-forkexec-constructor
+  								'("emacs" "--fg-daemon")))
+  							    (stop
+  							     #~(make-forkexec-constructor
+  								'("emacsclient" "--eval" "(kill-emacs)"))))))))))
+   (home-files `((".authinfo.gpg" ,(local-file (string-append %secretdir "authinfo.gpg")))))
    (home-envs `(("EDITOR" . "emacsclient")
 		("VISUAL" . "$EDITOR")
 		("ESHELL" . ,(file-append (spec->pkg "fish") "/bin/fish"))))

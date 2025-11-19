@@ -6,10 +6,9 @@
 (define-module (chiko-modules sets guix)
   #:use-module (gnu)
   #:use-module (gnu home services)
-  #:use-module (rosenthal)
   #:use-module (chiko-modules utils)
   #:use-module (chiko-modules loader dir-loader)
-  #:use-module (chiko-modules loader guix-loader)
+  #:use-module ((chiko-modules loader guix-loader) #:prefix guix:)
   #:use-module (chiko-modules sets)
   #:export (make-guix))
 
@@ -24,9 +23,9 @@
 			       (guix-service-type
   				config => (guix-configuration
 					   (inherit config)
-					   (substitute-urls %default-substitute-urls)
-					   (channels %default-channels)
-					   (authorized-keys %default-authorized-keys)
+					   (substitute-urls guix:%default-substitute-urls)
+					   (channels guix:%default-channels)
+					   (authorized-keys guix:%default-authorized-keys)
 					   (discover? #t)
 					   (extra-options extra-options)
 					   (tmpdir tmpdir)))))))))))

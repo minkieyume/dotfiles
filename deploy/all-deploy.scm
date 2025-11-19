@@ -27,7 +27,7 @@
 
 (define %chikoniko
   (machine
-   (operating-system (load "../reconfigure/chikoniko-system.scm"))
+   (operating-system (load "../build/build-chikoniko.scm"))
    (environment managed-host-environment-type)
    (configuration (machine-ssh-configuration
 		   (host-name "chikoniko")
@@ -39,14 +39,14 @@
 
 (define %chikoyumemi
   (machine
-    (operating-system (load "../reconfigure/chikoyumemi-system.scm"))
-    (environment managed-host-environment-type)
-    (configuration (machine-ssh-configuration
-		     (host-name "chikoyumemi")
-		     (build-locally? #t)
-		     (system "x86_64-linux")
-		     (user "deploy")
-		     (host-key "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGAEqd0gx+mPuKJmi2ugGToNQD0zxVhqB7j5FJdMzzcV")
-		     (port 22)))))
+   (operating-system (load "../build/build-chikoyumemi.scm"))
+   (environment managed-host-environment-type)
+   (configuration (machine-ssh-configuration
+		   (host-name "chikoyumemi")
+		   (build-locally? #t)
+		   (system "x86_64-linux")
+		   (user "deploy")
+		   (host-key "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGAEqd0gx+mPuKJmi2ugGToNQD0zxVhqB7j5FJdMzzcV")
+		   (port 22)))))
 
 (list %chikocloud %chikoniko %chikopara %chikoyumemi)

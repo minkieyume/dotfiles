@@ -60,7 +60,18 @@
 	(simple-service 'ip-forward
 			sysctl-service-type
 			'(("net.ipv4.ip_forward" . "1")
-			  ("net.ipv6.conf.all.forwarding" . "1")))))
+			  ("net.ipv6.conf.all.forwarding" . "1")))
+	(simple-service 'tcp-keepalive
+			sysctl-service-type
+			'(("net.ipv4.tcp_keepalive_time" . "60")
+  			  ("net.ipv4.tcp_keepalive_intvl" . "20")
+  			  ("net.ipv4.tcp_keepalive_probes" . "5")
+  			  ("net.ipv4.tcp_fin_timeout" . "15")
+  			  ("net.netfilter.nf_conntrack_tcp_timeout_established" . "1800")))
+	(simple-service 'conntrack-udp-timeout
+			sysctl-service-type
+			'(("net.netfilter.nf_conntrack_udp_timeout" . "180")
+			  ("net.netfilter.nf_conntrack_udp_timeout_stream" . "600")))))
 
 (define (make-nm-trans-networking machine)
   (cfgset
