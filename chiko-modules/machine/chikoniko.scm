@@ -123,9 +123,11 @@
 	 (targets (list "/boot/efi"))
 	 (keyboard-layout (keyboard-layout "us"))))
       (initrd-modules ,%base-initrd-modules)
-      (kernel-arguments ,(append (list "kernel.sysrq=1"
+      (kernel-arguments ,(append (list "i8042.reset" "i8042.nomux" "i8042.nopnp"
+				       "kernel.sysrq=1"
 				       "zswap.enabled=1"
-				       "zswap.max_pool_percent=90")  %default-kernel-arguments))
+				       "zswap.max_pool_percent=90"
+				       "modprobe.blacklist=pcspkr")  %default-kernel-arguments))
 
       ;;存储设备及文件系统
       (file-systems ,(append %nvme0n1p1 %nvme0n1p2 %base-file-systems))
