@@ -327,12 +327,12 @@
                     (org-agenda-overriding-header "未计划事项")))))  	
 	("x" "项目进度"
 	 alltodo ""
-	 ((org-agenda-files '("~/Develop/GameDevelop/夜之城传说/游戏档案/项目进度.org")))
+	 ((org-agenda-files '("~/Develop/GameDevelop/projects/夜之城传说/游戏档案/项目进度.org")))
 	 (org-agenda-use-tag-inheritance t))
 	
 	("p" "程序进度"
 	 alltodo ""
-         ((org-agenda-files '("~/Develop/GameDevelop/夜之城传说/游戏档案/琪可编程.org")))
+         ((org-agenda-files '("~/Creator/remote/琪可计划/琪可编程.org")))
 	 (org-agenda-use-tag-inheritance t))
 	
 	("h" "折腾进度"

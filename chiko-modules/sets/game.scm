@@ -17,25 +17,25 @@
 	    make-steam-nvidia
 	    make-game-nvidia))
 
-(define (make-steam-cfg)
+(define (make-steam-cfg sandbox-path)
   (cfgset
-   (home-envs `(("GUIX_SANDBOX_HOME" . "/yumemi/sandbox")
-		("GUIX_SANDBOX_EXTRA_SHARES" . "$HOME/Downloads:/yumemi/picture/screenshots")))
+   (home-envs `(("GUIX_SANDBOX_HOME" . ,sandbox-path)
+		("GUIX_SANDBOX_EXTRA_SHARES" . "$HOME/Downloads:$HOME/Picture/screenshots")))
    (sys-settings `((services ,(list (udev-rules-service 'steam-devices (spec->pkg "steam-devices-udev-rules"))
 				    (udev-rules-service 'controller (udev-rule "60-controller-permission.rules" "\
   KERNEL==\"event*\", ATTRS{idVendor}==\"045e\", ATTRS{idProduct}==\"028e\", \
   MODE=\"0660\", GROUP=\"users\""))))))))
 
-(define (make-steam)
+(define (make-steam sandbox-path)
   (merge-sets
-   (make-steam-cfg)
+   (make-steam-cfg sandbox-path)
    (cfgset
     (sys-settings `((packages
 		     ,(specifications->packages '("steam"))))))))
 
-(define (make-steam-nvidia)
+(define (make-steam-nvidia sandbox-path)
   (merge-sets
-   (make-steam-cfg)
+   (make-steam-cfg sandbox-path)
    (cfgset
     (sys-settings `((packages
 		     ,(specifications->packages '("steam-nvidia" "nvidia-vaapi-driver"))))))))
@@ -45,12 +45,12 @@
    (sys-settings `((packages
 		    ,%retroarch-with-extensions)))))
 
-(define (make-game)
+(define (make-game sandbox-path)
   (merge-sets
-   (make-steam)
+   (make-steam sandbox-path)
    (make-retroarch)))
 
-(define (make-game-nvidia)
+(define (make-game-nvidia sandbox-path)
   (merge-sets
-   (make-steam-nvidia)
+   (make-steam-nvidia sandbox-path)
    (make-retroarch)))

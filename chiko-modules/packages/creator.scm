@@ -12,8 +12,11 @@
   (specifications->packages
    '("godot"
      "hugo"
-     "texlive"
-     "texlive-pdflatexpicscale"
+     "texlive-bin"
+     "texlive-amsmath"
+     "texlive-graphics"
+     "texlive-xetex"
+     "texlive-xecjk"
      "krita"
      "inkscape"
      "libwacom"

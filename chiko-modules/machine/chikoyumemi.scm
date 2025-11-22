@@ -180,7 +180,7 @@
    (make-flatpak (apply make-flatpak-desktops %default-flatpak-desktops))
    (make-video-nvidia)
    (make-creator)
-   (make-game-nvidia)
+   (make-game-nvidia "/yumemi/sandbox")
    (make-develop)
    (make-ai)))
 
