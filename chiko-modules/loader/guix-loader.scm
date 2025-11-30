@@ -21,7 +21,7 @@
 
 (define %default-substitute-urls
   (list "https://cache-cdn.guix.moe"
-	"https://mirrors.sjtug.sjtu.edu.cn/guix"
+        "https://mirrors.sjtug.sjtu.edu.cn/guix"	
 	"https://guix.bordeaux.inria.fr"
 	"https://bordeaux.guix.gnu.org"
 	"https://ci.guix.gnu.org"))

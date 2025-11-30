@@ -20,7 +20,7 @@
 (define (make-steam-cfg sandbox-path)
   (cfgset
    (home-envs `(("GUIX_SANDBOX_HOME" . ,sandbox-path)
-		("GUIX_SANDBOX_EXTRA_SHARES" . "$HOME/Downloads:$HOME/Picture/screenshots")))
+		("GUIX_SANDBOX_EXTRA_SHARES" . ,(string-append "$HOME/Downloads:" sandbox-path "/screenshots"))))
    (sys-settings `((services ,(list (udev-rules-service 'steam-devices (spec->pkg "steam-devices-udev-rules"))
 				    (udev-rules-service 'controller (udev-rule "60-controller-permission.rules" "\
   KERNEL==\"event*\", ATTRS{idVendor}==\"045e\", ATTRS{idProduct}==\"028e\", \

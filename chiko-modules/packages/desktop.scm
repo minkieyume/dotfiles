@@ -35,11 +35,16 @@
    '("xdg-desktop-portal"
      "xdg-desktop-portal-gnome"
      "xdg-desktop-portal-gtk"
-     "xdg-utils")))
+     "xdg-utils"
+     "xdg-dbus-proxy"
+     "xkeyboard-config")))
 
 (define %niri-packages
   (specifications->packages
    '("niri"
+     "wayland"
+     "wayland-protocols"
+     "egl-wayland"
      "wl-clipboard"
      "imv"
      "rofi"
@@ -54,8 +59,19 @@
      "pavucontrol"
      "hicolor-icon-theme")))
 
+(define %graphics-packages
+  (specifications->packages
+   '("libxkbcommon"
+     "alsa-lib"
+     "libgudev"
+     "vulkan-loader"
+     "mesa-utils"
+     "glfw"
+     )))
+
 (define %desktop-packages
   (append %font-packages
 	  %fcitx-packages
 	  %xdg-packages
-	  %niri-packages))
+	  %niri-packages
+	  %graphics-packages))

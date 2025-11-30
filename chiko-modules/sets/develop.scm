@@ -8,6 +8,7 @@
   #:use-module (rosenthal)
   #:use-module (chiko-modules utils)
   #:use-module (chiko-modules loader dir-loader)
+  #:use-module (chiko-modules loader secret-loader)
   #:use-module (chiko-modules sets)
   #:use-module (chiko-modules packages develop)
   #:use-module (rustup build toolchain)
@@ -37,7 +38,8 @@
 				   #:components
 				   (list "cargo" "rustc" "rustfmt" "rust-std"
 					 "rust-src" "clippy" "miri" "rust-analyzer"
-					 "rust-mingw"))))))))
+					 "rust-mingw"))))))
+   (home-envs `(("CARGO_REGISTRY_TOKEN" . ,(secret-ref 'crates-io))))))
 
 (define (make-uv) ; See 'Install UV.org'
   (cfgset
