@@ -159,7 +159,7 @@
    (make-flatpak (apply make-flatpak-desktops %default-flatpak-desktops))
    (make-video)
    (make-creator)
-   (make-game)
+   (make-game "/niko/sandbox")
    (make-develop)
    (make-aider)))
 
