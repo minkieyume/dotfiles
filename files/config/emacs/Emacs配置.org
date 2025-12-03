@@ -235,19 +235,6 @@ llm是AI最重要的核心前置库。
 (use-package llm)
 #+end_src
 
-*** vecdb
-llm是一个给AI的向量数据库。
-#+begin_src emacs-lisp :noweb-ref config
-(use-package vecdb
-  :config
-  (require 'vecdb-qdrant)
-  (defvar chiko-vecdb-provider (make-vecdb-qdrant-provider :api-key (string-trim (with-temp-buffer
-										   (insert-file-contents "$$qdrant-api-key.txt$$")
-										   (buffer-string)))
-  							   :url "http://chikoyumemi:6333"))
-  (setq ekg-vecdb-provider (cons chiko-vecdb-provider (make-vecdb-collection :name "ekg" :vector-size 1024))))
-#+end_src
-
 *** MCP
 mcp是AI与外界互动的接口库。
 #+begin_src emacs-lisp :noweb-ref config :noweb yes
