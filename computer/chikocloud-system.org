@@ -330,12 +330,14 @@ OVH装了guix后有IPV6无法访问的问题，所以需要配置IPV6网关解�
 		    (one-shot? #t)
 		    (start #~(lambda _
   			       (let* ((ip #$(file-append (spec->pkg "iproute2") "/sbin/ip"))
+				      (address "2001:41d0:601:1100::592a/64")
 				      (gateway "2001:41d0:601:1100::1")
 				      (interface "eth0")
-  				      (st (system* ip "-6" "route" "add" "default" "via" gateway "dev" interface "onlink")))
+  				      (st0 (system* ip "-6" "route" "add" "default" "via" gateway "dev" interface "onlink"))
+				      (st1 (system* ip "addr" "add" address "dev" interface)))
   				 (and (map (lambda (st)
   					     (= 0 (status:exit-val st)))
-  					   (list st)))))))))
+  					   (list st0 st1)))))))))
 #+end_src
 
 *** Nftables
