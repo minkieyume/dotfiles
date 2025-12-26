@@ -73,7 +73,8 @@
       (("domain_suffix" . "ubi.com"))
       (("domain_suffix" . "uplay.com"))
       (("domain_suffix" . "ubisoftconnect.com"))
-      (("domain_suffix" . "whatismyipaddress.com"))))
+      (("domain_suffix" . "whatismyipaddress.com"))
+      (("domain_suffix" . #("misskey.io" "misskey.flowers")))))
   
   (define %direct-ips
     '((("rule_set" . "geoip-cn"))
