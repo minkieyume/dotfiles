@@ -96,6 +96,7 @@
       (("domain_suffix" . "freedesktop.org"))
       (("domain_suffix" . "allthemusic.info"))
       (("domain_suffix" . #("misskey.io" "misskey.flowers")))
+      (("domain_suffix" . #("claude.ai" "claude.com")))
       (("inbound" . "proxy_in"))))
 
   (define %proxy-ips
