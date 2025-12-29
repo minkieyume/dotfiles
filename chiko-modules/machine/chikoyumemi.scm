@@ -6,7 +6,6 @@
 (define-module (chiko-modules machine chikoyumemi)
   #:use-module (gnu system)
   #:use-module (gnu system privilege)
-  #:use-module (gnu services dbus)
   #:use-module (gnu services networking)
   #:use-module (srfi srfi-26)
   #:use-module (ice-9 match)

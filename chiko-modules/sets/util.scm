@@ -3,7 +3,7 @@
 ;;
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 
-(define-module (chiko-modules sets server)
+(define-module (chiko-modules sets util)
   #:use-module (rosenthal)
   #:use-module (chiko-modules utils)
   #:use-module (chiko-modules loader dir-loader)

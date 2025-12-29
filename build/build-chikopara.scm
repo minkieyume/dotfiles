@@ -3,11 +3,14 @@
 ;;
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 ;;
-;;Test (load "deploy/chikopara-deploy.scm")
+;;Test (load "build/build-chikoyumemi.scm")
 (add-to-load-path (string-append (getcwd)))
-(use-modules (chiko-modules deploy chikopara)
+(use-modules (chiko-modules machine chikopara)
 	     (ice-9 pretty-print)
 	     (gnu system)
 	     (gnu services))
 
-(list %chikopara-deploy)
+(define os
+  (make-chikopara-os))
+
+os
