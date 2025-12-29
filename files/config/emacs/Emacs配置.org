@@ -331,32 +331,32 @@ mcp是AI与外界互动的接口库。
 
 ** Compilot
 #+begin_src emacs-lisp :noweb-ref config
-(use-package copilot
-  :bind (:map copilot-completion-map
-          ("<tab>" . 'copilot-accept-completion)
-          ("TAB" . 'copilot-accept-completion)
-          ("C-TAB" . 'copilot-accept-completion-by-word)
-          ("C-<tab>" . 'copilot-accept-completion-by-word)
-          ("C-c n" . 'copilot-next-completion)
-          ("C-c p" . 'copilot-previous-completion))
-  :hook ((prog-mode . copilot-mode))
-  :config
-  (add-to-list 'copilot-indentation-alist '(prog-mode 2))
-  (add-to-list 'copilot-indentation-alist '(scheme-mode 2))
-  (add-to-list 'copilot-indentation-alist '(nftables-mode 2))
-  (add-to-list 'copilot-indentation-alist '(conf-mode 2))
-  (add-to-list 'copilot-indentation-alist '(lisp-interaction-mode 2))
-  (add-to-list 'copilot-indentation-alist '(emacs-lisp-mode 2))
-  (add-to-list 'copilot-indentation-alist '(lisp-data-mode 2))
-  (add-to-list 'copilot-indentation-alist '(fish-mode 2)))
+  ;; (use-package copilot
+  ;;   :bind (:map copilot-completion-map
+  ;;           ("<tab>" . 'copilot-accept-completion)
+  ;;           ("TAB" . 'copilot-accept-completion)
+  ;;           ("C-TAB" . 'copilot-accept-completion-by-word)
+  ;;           ("C-<tab>" . 'copilot-accept-completion-by-word)
+  ;;           ("C-c n" . 'copilot-next-completion)
+  ;;           ("C-c p" . 'copilot-previous-completion))
+  ;;   :hook ((prog-mode . copilot-mode))
+  ;;   :config
+  ;;   (add-to-list 'copilot-indentation-alist '(prog-mode 2))
+  ;;   (add-to-list 'copilot-indentation-alist '(scheme-mode 2))
+  ;;   (add-to-list 'copilot-indentation-alist '(nftables-mode 2))
+  ;;   (add-to-list 'copilot-indentation-alist '(conf-mode 2))
+  ;;   (add-to-list 'copilot-indentation-alist '(lisp-interaction-mode 2))
+  ;;   (add-to-list 'copilot-indentation-alist '(emacs-lisp-mode 2))
+  ;;   (add-to-list 'copilot-indentation-alist '(lisp-data-mode 2))
+  ;;   (add-to-list 'copilot-indentation-alist '(fish-mode 2)))
 
-(use-package copilot-chat
-	     :bind (:map global-map
-		    ("C-c o" . copilot-chat-transient))
-	     :hook ((git-commit-setup . copilot-chat-insert-commit-message))
-	     :custom
-	     ((copilot-chat-default-model "gpt-4.1")
-	      (copilot-chat-commit-prompt (f-read-text "$$ai/prompts/git-commit.md$$"))))
+  ;; (use-package copilot-chat
+  ;; 	     :bind (:map global-map
+  ;; 		    ("C-c o" . copilot-chat-transient))
+  ;; 	     :hook ((git-commit-setup . copilot-chat-insert-commit-message))
+  ;; 	     :custom
+  ;; 	     ((copilot-chat-default-model "gpt-4.1")
+  ;; 	      (copilot-chat-commit-prompt (f-read-text "$$ai/prompts/git-commit.md$$"))))
 #+end_src
 
 * 写作
