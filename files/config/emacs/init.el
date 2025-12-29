@@ -184,15 +184,15 @@
   :bind
   ("C-c a" . aider-transient-menu)
   :custom
-  (aider-popular-models '("openai/gpt-4.1" "openai/gpt-5-codex" "openai/claude-haiku-4.5"
-      			  "openai/claude-sonnet-4.5"))
-  (aider-args '("--model" "openai/gpt-4.1" "--no-auto-accept-architect"))
+  (aider-popular-models '("anthropic/claude-haiku-4-5-20251001"
+      			  "anthropic/claude-sonnet-4-5-20250929"
+			  "anthropic/claude-opus-4-5-20251101"))
+  (aider-args '("--model" "anthropic/claude-haiku-4-5-20251001" "--no-auto-accept-architect"))
   :config
   (setenv "OLLAMA_API_BASE" "http://127.0.0.1:11434")
-  (setenv "OPENAI_API_BASE" "https://api.githubcopilot.com")
-  (setenv "OPENAI_API_KEY" (string-trim (with-temp-buffer
-    					  (insert-file-contents "$$copilot-api-key.txt$$")
-    					  (buffer-string)))))
+  (setenv "ANTHROPIC_API_KEY" (string-trim (with-temp-buffer
+    					    (insert-file-contents "$$anthropic-api-key.txt$$")
+    					    (buffer-string)))))
 (use-package copilot
   :bind (:map copilot-completion-map
           ("<tab>" . 'copilot-accept-completion)
