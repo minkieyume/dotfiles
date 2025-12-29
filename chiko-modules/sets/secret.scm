@@ -48,6 +48,6 @@
 		      ,(list (simple-service 'postgres-pass-file
 					     etc-service-type
 					     (map
-					      (lambda (item) (cadr item))
+					      (lambda (item) (cdr item))
 					      (filter (lambda (item)
 							(if (member (car item) needed) #t #f)) secrets))))))))))
