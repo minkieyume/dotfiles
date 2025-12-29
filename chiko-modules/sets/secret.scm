@@ -13,7 +13,8 @@
   #:use-module (chiko-modules sets)
   #:use-module (chiko-modules packages desktop)
   #:export (make-gpg-agent
-	    make-keepassxc))
+	    make-keepassxc
+	    make-postgresql-secret))
 
 (define* (make-gpg-agent #:key
 			 (pinetry "pinentry-emacs")
@@ -36,17 +37,17 @@
 						 "keepassxc")))))))
 
 (define (make-postgresql-secret . needed)
-  (let (secrets `(("forgejo" . ("secret/postgres/forgejo"
-				,(plain-file "forgejo-db-password.txt"
-					     (secret-ref 'forgejo-db))))
-		  ("immich" . ("secret/postgres/immich"
-			       ,(plain-file "immich-db-password.txt"
-					    (secret-ref 'immich-db-pass)))))))
-  (cfgset
-   (sys-settings `((services
-		    ,(list (simple-service 'postgres-pass-file
-					   etc-service-type
-					   (map
-					    (lambda (item) (cadr item))
-					    (filter (lambda (item)
-						      (if (member (car item) needed) #t #f)) secrets)))))))))
+  (let ((secrets `(("forgejo" . ("secret/postgres/forgejo"
+				 ,(plain-file "forgejo-db-password.txt"
+					      (secret-ref 'forgejo-db))))
+		   ("immich" . ("secret/postgres/immich"
+				,(plain-file "immich-db-password.txt"
+					     (secret-ref 'immich-db-pass)))))))
+    (cfgset
+     (sys-settings `((services
+		      ,(list (simple-service 'postgres-pass-file
+					     etc-service-type
+					     (map
+					      (lambda (item) (cadr item))
+					      (filter (lambda (item)
+							(if (member (car item) needed) #t #f)) secrets))))))))))
