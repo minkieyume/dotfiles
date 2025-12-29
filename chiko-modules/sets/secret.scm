@@ -9,6 +9,7 @@
   #:use-module (gnu home services gnupg)
   #:use-module (chiko-modules utils)
   #:use-module (chiko-modules loader dir-loader)
+  #:use-module (chiko-modules loader secret-loader)
   #:use-module (chiko-modules sets)
   #:use-module (chiko-modules packages desktop)
   #:export (make-gpg-agent
