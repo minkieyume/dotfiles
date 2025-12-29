@@ -55,6 +55,12 @@
   	 (calibre-web-configuration
   	  (port 8083))))
 
+(define (make-immich)
+  (service immich-service-type
+  	 (immich-configuration
+  	  (db-password (secret-ref 'immich-db-pass))
+	    (postgresql-password-file "/etc/secret/postgres/immich"))))
+
 (define* (make-nas #:key
 		   (phodav-path "/resource")
 		   (navidrome-config

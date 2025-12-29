@@ -167,9 +167,10 @@
    (make-singbox-listener)
    (make-base-server)
    (make-hdtoolkit)
+   (make-postgresql-secret "immich")
    (make-rsync (rsync-module (name "backup")
   			     (file-name "/resource/data/backup/")
-  			     (read-only? #f)))   
+  			     (read-only? #f)))
    (make-nas)))
 
 (define (make-chikopara-os)

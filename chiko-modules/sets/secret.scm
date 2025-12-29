@@ -33,3 +33,19 @@
    (sys-settings `((packages
 		    ,(specifications->packages '("libsecret"
 						 "keepassxc")))))))
+
+(define (make-postgresql-secret . needed)
+  (let (secrets `(("forgejo" . ("secret/postgres/forgejo"
+				,(plain-file "forgejo-db-password.txt"
+					     (secret-ref 'forgejo-db))))
+		  ("immich" . ("secret/postgres/immich"
+			       ,(plain-file "immich-db-password.txt"
+					    (secret-ref 'immich-db-pass)))))))
+  (cfgset
+   (sys-settings `((services
+		    ,(list (simple-service 'postgres-pass-file
+					   etc-service-type
+					   (map
+					    (lambda (item) (cadr item))
+					    (filter (lambda (item)
+						      (if (member (car item) needed) #t #f)) secrets)))))))))
