@@ -161,7 +161,7 @@
   (merge-sets
    %chikopara-default-set
    (make-default-file-system-apps "d113fc46-c2e4-4211-87de-49892502b016" "minkieyume")
-   (make-dhcpcd-networking %machine-name)
+   (make-dhcpcd-networking %machine-name #:avahi? #t)
    (make-guix '("--cores=4") #f)
    (make-container)
    (make-singbox-listener)

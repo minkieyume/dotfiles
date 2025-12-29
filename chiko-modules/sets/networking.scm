@@ -7,6 +7,7 @@
   #:use-module (guix gexp)
   #:use-module (gnu services sysctl)
   #:use-module (gnu services admin)
+  #:use-module (gnu services avahi)
   #:use-module (gnu services configuration)
   #:use-module (gnu services networking)
   #:use-module (rosenthal)
@@ -73,7 +74,7 @@
 			'(("net.netfilter.nf_conntrack_udp_timeout" . "180")
 			  ("net.netfilter.nf_conntrack_udp_timeout_stream" . "600")))))
 
-(define (make-nm-trans-networking machine)
+(define* (make-nm-trans-networking machine #:key (avahi? #f))
   (cfgset
    (sys-transforms
     (list network-manager-trans))
@@ -81,9 +82,12 @@
     `((services ,(append (list (make-nftables machine)
 			       (service tailscale-service-type)
 			       %resolv)
+			 (if avahi?
+			     (list (service avahi-service-type))
+			   '())
 			 %network-enhance))))))
 
-(define (make-dhcpcd-networking machine)
+(define* (make-dhcpcd-networking machine #:key (avahi? #f))
   (cfgset
    (sys-settings
     `((services ,(append
@@ -91,4 +95,7 @@
 			(service ntp-service-type)
 			(make-nftables machine)
 			(service tailscale-service-type))
+		  (if avahi?
+		      (list (service avahi-service-type))
+		    '())
 		  %network-enhance))))))

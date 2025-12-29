@@ -157,6 +157,7 @@
   							    (command #~(getenv "SHELL"))))))))))
   						  (iota 6 1))))))))))
 
+
 (define* (make-wayland-desktop machine-name			       
 			       #:key
 			       (composer (make-niri machine-name
@@ -197,25 +198,25 @@
 	,sys-desktop-services)
        (packages ,%desktop-packages)))
     (home-files `((".gtkrc-2.0"
-  		 ,(local-file
+  		   ,(local-file
 		     (string-append
 		      %configdir
 		      machine-name
 		      "/gtk2.conf")))
 		  ("gtk-3.0/settings.ini"
-  		 ,(local-file
+  		   ,(local-file
 		     (string-append
 		      %configdir
 		      machine-name
 		      "/gtk.conf")))
-  		("gtk-4.0/settings.ini"
-  		 ,(local-file
+  		  ("gtk-4.0/settings.ini"
+  		   ,(local-file
 		     (string-append
 		      %configdir
 		      machine-name
 		      "/gtk.conf")))))
     (home-configs `(("foot/foot.ini"
-  		   ,(local-file (string-append
+  		     ,(local-file (string-append
 				   %configdir
 				   machine-name "/foot.ini")))))
     (home-settings

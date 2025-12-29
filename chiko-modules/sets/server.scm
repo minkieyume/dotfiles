@@ -5,6 +5,8 @@
 
 (define-module (chiko-modules sets server)
   #:use-module (rosenthal)
+  #:use-module (gnu services)
+  #:use-module (gnu services base)
   #:use-module (gnu services rsync)
   #:use-module (gnu services databases)
   #:use-module (gnu services networking)
@@ -42,15 +44,20 @@
 			  (extra-config
 			   '(("listen_addresses"           "*"))))))))
 
-(define (make-base-server)
+(define* (make-base-server #:key
+			   (sys-base %base-services)
+			   (home-base %base-home-services))
   (cfgset
+   (home-settings `((services
+		     ,home-base)))
    (sys-settings `((packages
 		    ,%server-toolkit)
 		   (services
-		    ,(list (service opendht-service-type
-				    (opendht-configuration
-				     (peer-discovery? #t)))
-			   (service dbus-root-service-type)
-			   (service elogind-service-type)
-			   (service redis-service-type)
-			   (make-postgresql)))))))
+		    ,(append (list (service opendht-service-type
+					    (opendht-configuration
+					     (peer-discovery? #t)))
+				   (service dbus-root-service-type)
+				   (service elogind-service-type)
+				   (service redis-service-type)
+				   (make-postgresql))
+			     sys-base))))))
