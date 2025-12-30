@@ -70,6 +70,7 @@
   :config
   (which-key-mode))
 (global-set-key (kbd "C-c r") 'eshell)
+(global-set-key (kbd "C-c c") 'compile)
 (defun delete-current-file ()
   "Delete the file visited by the current buffer and close the buffer."
   (interactive)
@@ -81,7 +82,7 @@
           (message "Deleted file: %s" file))
       (message "No file is associated with this buffer."))))
 
-(global-set-key (kbd "C-c d") 'delete-current-file)
+(global-set-key (kbd "C-c D") 'delete-current-file)
 (use-package edit-indirect
   :after org
   :bind
@@ -275,7 +276,7 @@
 (global-set-key (kbd "C-c l") #'org-store-link)
 (global-set-key (kbd "C-c C-l") #'org-insert-link)
 (global-set-key (kbd "C-c A") #'org-agenda)
-(global-set-key (kbd "C-c c") #'org-capture)
+(global-set-key (kbd "C-c C") #'org-capture)
 (use-package org-download
   :bind (:map org-mode-map
 	      ("C-c y" . org-download-clipboard))
@@ -549,13 +550,23 @@
             (dired parent-dir)
           (message "当前目录没有上一级目录！")))
     (message "当前缓冲区不是 Dirvish 或 Dired 模式。")))
-(defun open-foot-terminal-here ()
+(defun open-foot-terminal (dir)
   "Open foot terminal in current directory."
   (interactive)
-  (let ((dir (expand-file-name default-directory)))
-    (start-process "foot" nil "foot" "--working-directory" dir)))
+  (if dir (start-process "foot" nil "foot" "--working-directory" dir)))
 
-(global-set-key (kbd "C-c t") #'open-foot-terminal-here)
+(defun open-foot-terminal-current-buffer ()
+  "Open foot terminal in current directory."
+  (interactive)
+  (open-foot-terminal (expand-file-name default-directory)))
+
+(defun open-foot-terminal-current-project ()
+  "Open foot terminal in current directory."
+  (interactive)
+  (open-foot-terminal (expand-file-name (projectile-project-root))))
+
+(global-set-key (kbd "C-c t") #'open-foot-terminal-current-buffer)
+(global-set-key (kbd "C-c T") #'open-foot-terminal-current-project)
 ;; (use-package eat
 ;;   :hook
 ;;   (eshell-load . eat-eshell-mode)

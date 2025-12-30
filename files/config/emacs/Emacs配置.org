@@ -844,13 +844,23 @@ Ekg是方便快速整理灵感和笔记的笔记插件。
 * 终端优化
 ** 系统终端
 #+begin_src emacs-lisp :noweb-ref config
-(defun open-foot-terminal-here ()
+(defun open-foot-terminal (dir)
   "Open foot terminal in current directory."
   (interactive)
-  (let ((dir (expand-file-name default-directory)))
-    (start-process "foot" nil "foot" "--working-directory" dir)))
+  (if dir (start-process "foot" nil "foot" "--working-directory" dir)))
 
-(global-set-key (kbd "C-c t") #'open-foot-terminal-here)
+(defun open-foot-terminal-current-buffer ()
+  "Open foot terminal in current directory."
+  (interactive)
+  (open-foot-terminal (expand-file-name default-directory)))
+
+(defun open-foot-terminal-current-project ()
+  "Open foot terminal in current directory."
+  (interactive)
+  (open-foot-terminal (expand-file-name (projectile-project-root))))
+
+(global-set-key (kbd "C-c t") #'open-foot-terminal-current-buffer)
+(global-set-key (kbd "C-c T") #'open-foot-terminal-current-project)
 #+END_SRC
 
 ** Eat
