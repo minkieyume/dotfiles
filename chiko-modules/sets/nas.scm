@@ -11,6 +11,7 @@
   #:use-module (chiko-modules packages nas)
   #:use-module (chiko-modules utils)
   #:use-module (chiko-modules loader dir-loader)
+  #:use-module (chiko-modules loader secret-loader)
   #:use-module (chiko-modules sets)
   #:export (make-nas))
 
@@ -72,4 +73,5 @@
    (sys-settings `((services
 		    ,(list (make-phodav phodav-path)
 			   (make-navidrome navidrome-config)
-			   (make-calibre)))))))
+			   (make-calibre)
+			   (make-immich)))))))
