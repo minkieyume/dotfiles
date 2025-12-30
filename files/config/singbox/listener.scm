@@ -92,6 +92,7 @@
       (("domain_suffix" . "githubusercontent.com"))
       (("ip_cidr" . #("140.82.112.0/20" "140.82.121.0/20" "192.30.252.0/22" "185.199.108.0/22" "143.55.64.0/20")))
       (("ip_cidr" . #("2600:1f18::/32")))
+      (("ip_cidr" . #("2a01:4f9::/32")))
       (("domain_suffix" . "boiledscript.com"))
       (("domain_suffix" . "freedesktop.org"))
       (("domain_suffix" . "allthemusic.info"))
