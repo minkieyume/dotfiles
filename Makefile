@@ -5,4 +5,4 @@ reconfigure-%:
 	doas guix system reconfigure build/build-$*.scm
 
 deploy-%:
-	guix deploy deploy/chikopara-deploy-$*.scm
+	guix deploy deploy/$*-deploy.scm
