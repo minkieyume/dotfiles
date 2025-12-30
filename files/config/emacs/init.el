@@ -449,7 +449,6 @@
   :custom
   (epa-pinentry-mode 'loopback))
 (use-package pdf-tools)
-(use-package ement)
 (use-package dirvish
   :init
   (dirvish-override-dired-mode)
@@ -603,3 +602,9 @@
       mu4e-view-html-commands '("librewolf"))
 (setq mm-text-html-renderer 'shr
       mm-coding-system-priorities '(utf-8 gbk gb2312))
+(use-package ement)
+(use-package elfeed
+  :bind ("C-x w" . 'elfeed)
+  :custom
+  (elfeed-feeds '("https://www.yumieko.com/index.xml"
+		  "https://blog.southfox.me/rss2.xml")))

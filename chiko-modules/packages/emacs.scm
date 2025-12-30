@@ -90,6 +90,14 @@
      "emacs-eshell-syntax-highlighting"
      "emacs-fish-completion"
 
+     ;;RSS订阅
+     "emacs-elfeed"
+     "emacs-elfeed-goodies"
+     "emacs-elfeed-score"
+     "emacs-elfeed-tube"
+     "emacs-elfeed-protocol"
+     "emacs-elfeed-org"
+
      ;;版本控制
      "emacs-magit"
      "emacs-magit-todos"
@@ -101,7 +109,7 @@
 
      ;;主题资源
      "emacs-all-the-icons"
-     "emacs-spacemacs-theme"
+     "emacs-spacemacs-theme"     
 
      ;;外部依赖
      "plantuml"

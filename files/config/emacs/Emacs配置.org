@@ -136,7 +136,7 @@ Company的前端（已禁用）
 ** 自定义键位
 #+begin_src emacs-lisp :noweb-ref config
   (global-set-key (kbd "C-c r") 'eshell)
-  (global-set-key (kbd "C-c c") 'compile)
+  (global-set-key (kbd "C-c c") 'project-recompile)
 #+end_src
 
 ** 自定义操作
@@ -721,12 +721,6 @@ Ekg是方便快速整理灵感和笔记的笔记插件。
   (use-package pdf-tools)
 #+end_src
 
-* 通信
-** 即时通信
-#+begin_src emacs-lisp :noweb-ref config
-  (use-package ement)
-#+end_src
-
 * 文件管理
 ** Dirvish
 文件管理工具。
@@ -965,4 +959,19 @@ Emacs的终端模拟器。
          (gnus-use-scoring nil)
          (display . all)
          (gnus-show-threads t))))
+#+END_SRC
+
+** 即时通信
+#+begin_src emacs-lisp :noweb-ref config
+  (use-package ement)
+#+end_src
+
+* 媒体
+** RSS
+#+begin_src emacs-lisp :noweb-ref config
+(use-package elfeed
+  :bind ("C-x w" . 'elfeed)
+  :custom
+  (elfeed-feeds '("https://www.yumieko.com/index.xml"
+		  "https://blog.southfox.me/rss2.xml")))
 #+END_SRC
