@@ -190,6 +190,8 @@
   (setenv "AIDER_WEAK_MODEL" "anthropic/claude-haiku-4-5-20251001")
   (setenv "AIDER_EDITOR_MODEL" "anthropic/claude-haiku-4-5-20251001")
   (setenv "AIDER_MAP_TOKENS" "1024")
+  (setenv "AIDER_CHAT_LANGUAGE" "Chinese")
+  (setenv "AIDER_COMMIT_LANGUAGE" "English")
   (setenv "OLLAMA_API_BASE" "http://127.0.0.1:11434")
   (setenv "ANTHROPIC_API_KEY" (string-trim (with-temp-buffer
       					     (insert-file-contents "$$anthropic-api-key.txt$$")
