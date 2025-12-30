@@ -2,4 +2,4 @@ current
 reconfigure
 secret
 image
-.aider*
+.aider.*

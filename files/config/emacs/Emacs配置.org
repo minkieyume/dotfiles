@@ -316,14 +316,15 @@ mcp是AI与外界互动的接口库。
   ("C-c a" . aider-transient-menu)
   :custom
   (aider-popular-models '("anthropic/claude-haiku-4-5-20251001"
-      			  "anthropic/claude-sonnet-4-5-20250929"
-			  "anthropic/claude-opus-4-5-20251101"))
+        		  "anthropic/claude-sonnet-4-5-20250929"
+  			  "anthropic/claude-opus-4-5-20251101"))
   (aider-args '("--model" "anthropic/claude-haiku-4-5-20251001" "--no-auto-accept-architect"))
   :config
   (setenv "OLLAMA_API_BASE" "http://127.0.0.1:11434")
   (setenv "ANTHROPIC_API_KEY" (string-trim (with-temp-buffer
-    					    (insert-file-contents "$$anthropic-api-key.txt$$")
-    					    (buffer-string)))))
+      					     (insert-file-contents "$$anthropic-api-key.txt$$")
+      					     (buffer-string))))
+  (setenv "AIDER_MAP_TOKENS" "1024"))
 #+end_src
 
 ** Compilot
