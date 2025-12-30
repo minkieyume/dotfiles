@@ -64,9 +64,6 @@
 ;;   :straight t)
 (use-package all-the-icons
   :bind("C-c i" . all-the-icons-insert))
-(use-package disable-mouse
-  :config
-  (global-disable-mouse-mode)) ; 全局禁用鼠标
 (use-package hydra)
 (use-package restart-emacs)
 (use-package which-key
