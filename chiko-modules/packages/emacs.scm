@@ -79,7 +79,7 @@
      "emacs-copilot-chat"
      "emacs-mcp"
      "emacs-ellama"
-     "emacs-elisa"
+     ;;"emacs-elisa"
      "emacs-aider"
 
      ;;笔记软件

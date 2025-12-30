@@ -34,7 +34,7 @@
   (specifications->packages
    '("xdg-desktop-portal"
      "xdg-desktop-portal-gnome"
-     "xdg-desktop-portal-gtk"
+     ;;"xdg-desktop-portal-gtk"
      "xdg-utils"
      "xdg-dbus-proxy"
      "xkeyboard-config")))
