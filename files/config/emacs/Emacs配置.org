@@ -136,6 +136,7 @@ Company的前端（已禁用）
 ** 自定义键位
 #+begin_src emacs-lisp :noweb-ref config
   (global-set-key (kbd "C-c r") 'eshell)
+  (global-set-key (kbd "C-c c") 'compile)
 #+end_src
 
 ** 自定义操作
@@ -152,7 +153,7 @@ Company的前端（已禁用）
             (message "Deleted file: %s" file))
         (message "No file is associated with this buffer."))))
 
-  (global-set-key (kbd "C-c d") 'delete-current-file)
+  (global-set-key (kbd "C-c D") 'delete-current-file)
 #+end_src
 
 * 编辑扩展
@@ -428,7 +429,7 @@ Ekg是方便快速整理灵感和笔记的笔记插件。
 (global-set-key (kbd "C-c l") #'org-store-link)
 (global-set-key (kbd "C-c C-l") #'org-insert-link)
 (global-set-key (kbd "C-c A") #'org-agenda)
-(global-set-key (kbd "C-c c") #'org-capture)
+(global-set-key (kbd "C-c C") #'org-capture)
 #+end_src
 
 ** Org Download
