@@ -58,12 +58,12 @@
      "emacs-pdf-tools"
      "emacs-ement"
      "emacs-projectile"
-     "emacs-circe"
      "emacs-emacsql"
      "emacs-ox-hugo"
      "emacs-org-download"
-     "emacs-oauth2"
-     "emacs-inheritenv"
+     "emacs-oauth2" ;; 验证工具
+     "emacs-inheritenv" ;; 环境变量
+     "emacs-devdocs" ;; 文档工具
 
      ;;AI集成
      "emacs-llm"

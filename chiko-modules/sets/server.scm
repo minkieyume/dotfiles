@@ -55,9 +55,11 @@
 		   (services
 		    ,(append (list (service opendht-service-type
 					    (opendht-configuration
-					     (peer-discovery? #t)))
+					      (peer-discovery? #t)))
 				   (service dbus-root-service-type)
 				   (service elogind-service-type)
-				   (service redis-service-type)
+				   (service redis-service-type
+					    (redis-configuration
+					      (bind "0.0.0.0")))
 				   (make-postgresql))
 			     sys-base))))))
