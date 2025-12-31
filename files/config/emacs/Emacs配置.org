@@ -136,7 +136,7 @@ Company的前端（已禁用）
 ** 自定义键位
 #+begin_src emacs-lisp :noweb-ref config
   (global-set-key (kbd "C-c r") 'eshell)
-  (global-set-key (kbd "C-c c") 'project-recompile)
+  (global-set-key (kbd "C-c c") (kbd "C-u M-x project-recompile RET"))
 #+end_src
 
 ** 自定义操作
