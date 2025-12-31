@@ -62,6 +62,12 @@
   	  (db-password (secret-ref 'immich-db-pass))
 	    (postgresql-password-file "/etc/secret/postgres/immich"))))
 
+(define (make-photoprism)
+  (service photoprism-service-type
+  	   (photoprism-configuration
+	    (password "admin")
+	    (picture-directory "/resource/picture/galleries"))))
+
 (define* (make-nas #:key
 		   (phodav-path "/resource")
 		   (navidrome-config
@@ -74,4 +80,4 @@
 		    ,(list (make-phodav phodav-path)
 			   (make-navidrome navidrome-config)
 			   (make-calibre)
-			   (make-immich)))))))
+			   ))))))
