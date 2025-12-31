@@ -71,6 +71,8 @@
      "emacs-oauth2"
      "emacs-inheritenv"
      "emacs-devdocs"
+
+     ;;词典查找
      "sdcv"
      "emacs-sdcv"
 
