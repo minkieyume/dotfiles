@@ -65,12 +65,14 @@
      "emacs-pdf-tools"
      "emacs-ement"
      "emacs-projectile"
-     "emacs-circe"
      "emacs-emacsql"
      "emacs-ox-hugo"
      "emacs-org-download"
      "emacs-oauth2"
      "emacs-inheritenv"
+     "emacs-devdocs"
+     "sdcv"
+     "emacs-sdcv"
 
      ;;AI集成
      "emacs-llm"
