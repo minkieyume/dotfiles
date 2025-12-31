@@ -70,7 +70,7 @@
   :config
   (which-key-mode))
 (global-set-key (kbd "C-c r") 'eshell)
-(global-set-key (kbd "C-c c") 'project-recompile)
+(global-set-key (kbd "C-c c") (kbd "C-u M-x project-recompile RET"))
 (defun delete-current-file ()
   "Delete the file visited by the current buffer and close the buffer."
   (interactive)
