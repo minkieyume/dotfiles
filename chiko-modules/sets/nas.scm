@@ -80,4 +80,4 @@
 		    ,(list (make-phodav phodav-path)
 			   (make-navidrome navidrome-config)
 			   (make-calibre)
-			   ))))))
+			   (make-photoprism)))))))

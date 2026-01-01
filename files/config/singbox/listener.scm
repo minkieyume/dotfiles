@@ -89,10 +89,10 @@
       (("domain_suffix" . "indienova.com"))
       (("domain_suffix" . "github.com"))
       (("domain_suffix" . "githubusercontent.com"))
-      (("ip_cidr" . #("140.82.112.0/20" "140.82.121.0/20" "192.30.252.0/22" "185.199.108.0/22" "143.55.64.0/20")))
-      (("ip_cidr" . #("2600:1f18::/32")))
-      (("ip_cidr" . #("2a01:4f9::/32")))
+      (("ip_cidr" . #("140.82.112.0/20" "140.82.121.0/20" "192.30.252.0/22" "185.199.108.0/22" "143.55.64.0/20"))) ;外网IPv4
+      (("ip_cidr" . #("2600:1f18::/32" "2a01:4f9::/32" "2a00:1450::/32"))) ;外网IPv6
       (("domain_suffix" . #("boiledscript.com" "chn.moe" "korange.work")))
+      (("domain_suffix" . #("recaptcha.net")))
       (("domain_suffix" . "freedesktop.org"))
       (("domain_suffix" . "allthemusic.info"))
       (("domain_suffix" . #("guix.moe")))
