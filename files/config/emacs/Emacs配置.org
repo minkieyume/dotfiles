@@ -644,17 +644,19 @@ Ekg是方便快速整理灵感和笔记的笔记插件。
 
 *** Geiser工具
 #+begin_src emacs-lisp :noweb-ref config
-  (use-package geiser
-    :config
-    (setq geiser-active-implementations '(guile chibi racket)
-  	geiser-mode-auto-p nil)
-    (add-to-list 'load-path "$$emacs-godot-s7-scheme$$")
-    (load "geiser-godot-s7-autoloads.el"))
+(use-package geiser
+  :custom
+  (geiser-mode-auto-p t)
+  (geiser-active-implementations '(guile))
+  (geiser-scheme-implementation 'guile)
+  :config
+  (add-to-list 'load-path "$$emacs-godot-s7-scheme$$")
+  (load "geiser-godot-s7-autoloads.el"))
 
-  (use-package geiser-guile)
+(use-package geiser-guile)
 
-  ;; (use-package geiser-chibi
-  ;;   :straight t)
+;; (use-package geiser-chibi
+;;   :straight t)
 #+end_src
 
 *** 彩虹括号
