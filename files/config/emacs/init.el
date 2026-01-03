@@ -413,9 +413,8 @@
 (use-package racket-mode)
 (use-package geiser
   :custom
-  (geiser-mode-auto-p t)
-  (geiser-active-implementations '(guile))
-  (geiser-scheme-implementation 'guile)
+  (geiser-mode-auto-p t)  
+  (geiser-default-implementation 'guile)
   :config
   (add-to-list 'load-path "$$emacs-godot-s7-scheme$$")
   (load "geiser-godot-s7-autoloads.el"))
