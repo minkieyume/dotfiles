@@ -605,7 +605,10 @@
       mm-coding-system-priorities '(utf-8 gbk gb2312))
 (use-package ement)
 (use-package elfeed
-  :bind ("C-x w" . 'elfeed)
+  :bind ("C-c w" . 'elfeed)
   :custom
   (elfeed-feeds '("https://www.yumieko.com/index.xml"
-		  "https://blog.southfox.me/rss2.xml")))
+  		  "https://blog.southfox.me/rss2.xml"
+  		  "https://dthompson.us/feed.xml"
+		  "https://illust.moongazer.net/index.xml"
+		  "https://blog.moongazer.net/index.xml")))
