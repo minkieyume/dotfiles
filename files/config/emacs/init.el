@@ -185,7 +185,7 @@
   (aider-popular-models '("anthropic/claude-haiku-4-5-20251001"
         		  "anthropic/claude-sonnet-4-5-20250929"
   			  "anthropic/claude-opus-4-5-20251101"))
-  (aider-args '("--no-auto-accept-architect" "--no-gitignore" "--cache-prompts" "--cache-keepalive-pings" "6"))
+  (aider-args '("--no-auto-accept-architect" "--no-gitignore" "--cache-prompts" "--no-stream" "--cache-keepalive-pings" "48"))
   :config
   (setenv "AIDER_MODEL" "anthropic/claude-sonnet-4-5-20250929")
   (setenv "AIDER_WEAK_MODEL" "anthropic/claude-haiku-4-5-20251001")
