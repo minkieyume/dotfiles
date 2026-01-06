@@ -182,14 +182,15 @@
   :bind
   ("C-c a" . aider-transient-menu)
   :custom
-  (aider-popular-models '("haiku"
-        		  "sonnet"
-  			  "opus"))
+  (aider-popular-models '("anthropic/claude-haiku-4-5"
+			  "haiku"
+			  "anthropic/claude-sonnet-4-5"
+			  "anthropic/claude-opus-4-5"))
   (aider-args '("--no-auto-accept-architect" "--no-gitignore" "--cache-prompts" "--no-stream" "--cache-keepalive-pings" "48"))
   :config
-  (setenv "AIDER_MODEL" "sonnet")
-  (setenv "AIDER_WEAK_MODEL" "haiku")
-  (setenv "AIDER_EDITOR_MODEL" "haiku")
+  (setenv "AIDER_MODEL" "anthropic/claude-sonnet-4-5")
+  (setenv "AIDER_WEAK_MODEL" "anthropic/claude-haiku-4-5")
+  (setenv "AIDER_EDITOR_MODEL" "anthropic/claude-haiku-4-5")
   (setenv "AIDER_MAP_TOKENS" "1024")
   (setenv "AIDER_CHAT_LANGUAGE" "Chinese")
   (setenv "AIDER_COMMIT_LANGUAGE" "English")
