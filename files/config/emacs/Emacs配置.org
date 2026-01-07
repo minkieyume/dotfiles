@@ -745,6 +745,7 @@ Ekg是方便快速整理灵感和笔记的笔记插件。
      ("C"  "~/Creator"                  "创作目录")
      ("P"  "~/Pictures"                 "图片目录")
      ("g"  "~/Develop/GameDevelop"      "游戏开发")
+     ("G"  "~/Games"                    "游戏")
      ("p"  "~/Develop/ProgramDevelop"   "程序开发")
      ("c"  "~/Creator/conlingue"        "造语")
      ("s"  "~/Creator/conlingue/shangrira" "香格里拉语")
