@@ -434,7 +434,7 @@
   :bind (:map sly-prefix-map
 	      ("M-h" . sly-documentation-lookup))
   :custom
-  (inferior-lisp-program "$bin/sbcl$"))
+  (inferior-lisp-program "$$bin/sbcl$$"))
 (use-package rainbow-delimiters
   :hook ((prog-mode conf-mode yaml-mode) . rainbow-delimiters-mode)
   :config

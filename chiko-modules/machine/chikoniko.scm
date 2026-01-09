@@ -95,6 +95,7 @@
 		 ("Audio" ,(symlink-to "/niko/audio"))
 		 ("Video" ,(symlink-to "/niko/video"))
 		 ("Games" ,(symlink-to "/niko/games"))
+		 (".stardict/dic" ,(symlink-to "/niko/creator/remote/Dict"))
 		 ;; ;;加载文件
 		 (".dash_rsa" ,(local-file (string-append
 					    %secretdir
