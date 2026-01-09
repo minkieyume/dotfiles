@@ -8,8 +8,8 @@ pipx install uv
 
 然后patchelf命令来修复路径问题：
 #+begin_src shell
-guix shell patchelf -- patchelf --set-interpreter /gnu/store/py9r4p4jp2pa1jaagbcvw35d79j5kcg5-glibc-2.41/lib/ld-linux-x86-64.so.2 ./uv
-guix shell patchelf -- patchelf --set-interpreter /gnu/store/py9r4p4jp2pa1jaagbcvw35d79j5kcg5-glibc-2.41/lib/ld-linux-x86-64.so.2 ./uvx
+guix shell patchelf -- patchelf --set-interpreter (guix build glibc)/lib/ld-linux-x86-64.so.2 /home/minkieyume/.local/share/pipx/venvs/uv/bin/uv
+guix shell patchelf -- patchelf --set-interpreter (guix build glibc)/lib/ld-linux-x86-64.so.2 /home/minkieyume/.local/share/pipx/venvs/uv/bin/uvx
 #+end_src
 
 然后，在.local/bin中写下列shell脚本：
