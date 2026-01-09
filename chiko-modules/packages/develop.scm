@@ -7,7 +7,9 @@
   #:use-module (rosenthal)
   #:use-module (guix profiles)
   #:export (%usually-dev-utils
-	    %tree-sitter))
+	    %tree-sitter
+	    %common-lisp
+	    %scheme))
 
 (define %usually-dev-utils
   (specifications->packages
@@ -17,9 +19,20 @@
      "zig"
      "zig-zls"
      "python"
-     "pipx"
-     "sbcl"
-     "racket"
+     "pipx")))
+
+(define %common-lisp
+  (specifications->packages
+   '("sbcl"
+     "sbcl-alexandria"
+     "sbcl-bordeaux-threads"
+     "sbcl-cffi"
+     "sbcl-cl-ppcre"
+     "sbcl-fiveam")))
+
+(define %scheme
+  (specifications->packages
+   '("racket"
      "r-s7"
      "clojure"
      "s7"

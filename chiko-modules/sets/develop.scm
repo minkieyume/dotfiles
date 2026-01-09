@@ -54,4 +54,4 @@
    (make-uv)
    (cfgset
     (sys-settings `((packages
-		     ,(append %usually-dev-utils %tree-sitter)))))))
+		     ,(append %usually-dev-utils %common-lisp %scheme %tree-sitter)))))))
