@@ -413,6 +413,8 @@
 
 (use-package racket-mode)
 (use-package geiser
+  :init
+  (geiser)
   :custom
   (geiser-mode-auto-p t)  
   (geiser-default-implementation 'guile)
@@ -424,6 +426,15 @@
 
 ;; (use-package geiser-chibi
 ;;   :straight t)
+(use-package sly
+  :init
+  (sly)
+  :config
+  (require 'sly-autoloads)
+  :bind (:map sly-prefix-map
+	      ("M-h" . sly-documentation-lookup))
+  :custom
+  (inferior-lisp-program "$bin/sbcl$"))
 (use-package rainbow-delimiters
   :hook ((prog-mode conf-mode yaml-mode) . rainbow-delimiters-mode)
   :config
@@ -469,6 +480,7 @@
      ("C"  "~/Creator"                  "创作目录")
      ("P"  "~/Pictures"                 "图片目录")
      ("g"  "~/Develop/GameDevelop"      "游戏开发")
+     ("G"  "~/Games"                    "游戏")
      ("p"  "~/Develop/ProgramDevelop"   "程序开发")
      ("c"  "~/Creator/conlingue"        "造语")
      ("s"  "~/Creator/conlingue/shangrira" "香格里拉语")

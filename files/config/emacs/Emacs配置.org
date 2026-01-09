@@ -634,7 +634,7 @@ Ekg是方便快速整理灵感和笔记的笔记插件。
   `(rust-mode . ("rust-analyzer"))
 #+end_src
 
-** Scheme
+** Scheme/CommonLisp
 *** 模式配置
 #+begin_src emacs-lisp :noweb-ref config
 (use-package scheme-mode
@@ -646,6 +646,8 @@ Ekg是方便快速整理灵感和笔记的笔记插件。
 *** Geiser工具
 #+begin_src emacs-lisp :noweb-ref config
 (use-package geiser
+  :init
+  (geiser)
   :custom
   (geiser-mode-auto-p t)  
   (geiser-default-implementation 'guile)
@@ -657,6 +659,19 @@ Ekg是方便快速整理灵感和笔记的笔记插件。
 
 ;; (use-package geiser-chibi
 ;;   :straight t)
+#+end_src
+
+*** Sly
+#+begin_src emacs-lisp :noweb-ref config
+(use-package sly
+  :init
+  (sly)
+  :config
+  (require 'sly-autoloads)
+  :bind (:map sly-prefix-map
+	      ("M-h" . sly-documentation-lookup))
+  :custom
+  (inferior-lisp-program "$bin/sbcl$"))
 #+end_src
 
 *** 彩虹括号

@@ -52,7 +52,12 @@
      "emacs-embark"
      "emacs-rainbow-delimiters"
      "emacs-paredit"
-     "emacs-smartparens"  
+     "emacs-smartparens"
+
+     ;;Lisp
+     "emacs-sly"
+     "emacs-sly-asdf"
+     "emacs-sly-quicklisp"
 
      ;;键位优化
      "emacs-disable-mouse"

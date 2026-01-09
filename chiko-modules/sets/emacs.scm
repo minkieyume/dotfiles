@@ -52,6 +52,7 @@
 							 "imagemagick"
 							 "godot"
 							 "mediainfo"
-							 "vips"))))
+							 "vips"
+							 "sbcl"))))
       ("emacs/.init-themes.el"
        ,(local-file (string-append %configdir machine "/init-theme.el")))))))
