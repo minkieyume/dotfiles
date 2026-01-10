@@ -120,7 +120,7 @@
 		 ("Audio" ,(symlink-to "/yumemi/audio"))
 		 ("Video" ,(symlink-to "/yumemi/video"))
 		 ("Games" ,(symlink-to "/yumemi/games"))
-		 (".stardict/dic" ,(symlink-to "/niko/creator/remote/Dict"))
+		 (".stardict/dic" ,(symlink-to "/yumemi/creator/remote/Dict"))
 		 ;; ;;加载文件
 		 (".dash_rsa" ,(local-file (string-append
 					    %secretdir
