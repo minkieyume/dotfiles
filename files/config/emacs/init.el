@@ -427,8 +427,6 @@
 ;; (use-package geiser-chibi
 ;;   :straight t)
 (use-package sly
-  :init
-  (sly)
   :config
   (require 'sly-autoloads)
   :bind (:map sly-prefix-map

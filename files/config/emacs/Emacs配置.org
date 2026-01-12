@@ -664,8 +664,6 @@ Ekg是方便快速整理灵感和笔记的笔记插件。
 *** Sly
 #+begin_src emacs-lisp :noweb-ref config
 (use-package sly
-  :init
-  (sly)
   :config
   (require 'sly-autoloads)
   :bind (:map sly-prefix-map
