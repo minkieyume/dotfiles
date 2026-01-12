@@ -28,7 +28,8 @@
      "sbcl-bordeaux-threads"
      "sbcl-cffi"
      "sbcl-cl-ppcre"
-     "sbcl-fiveam")))
+     "sbcl-fiveam"
+     "gcl")))
 
 (define %scheme
   (specifications->packages
