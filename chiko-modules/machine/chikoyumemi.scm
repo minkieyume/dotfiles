@@ -112,6 +112,7 @@
 (define %chikoyumemi-default-set
   (cfgset
    (user-list (list (make-minkieyume) (make-deploy) (make-root)))
+   (mcron-jobs `((job '(next-minute (range 0 60 3)) "rsync -a /yumemi/sandbox/aseprite /home/minkieyume/Creator/remote")))
    (home-files `(("Downloads" ,(symlink-to "/yumemi/download"))
 		 ("Pictures" ,(symlink-to "/yumemi/picture"))
 		 ("Creator" ,(symlink-to "/yumemi/creator"))
