@@ -347,6 +347,8 @@ OVH装了guix后有IPV6无法访问的问题，所以需要配置IPV6网关解�
       (ruleset (local-file "../files/config/chiko_cloud/nftables.conf"))))
 #+end_src
 
+
+* 上次到这里了哦！
 ** OpenSSH
 #+begin_src scheme :noweb-ref module
   (gnu services ssh)

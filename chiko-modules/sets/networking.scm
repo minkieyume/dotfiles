@@ -16,7 +16,8 @@
   #:use-module (chiko-modules loader dir-loader)
   #:use-module (chiko-modules sets)
   #:export (make-nm-trans-networking
-	    make-dhcpcd-networking))
+	    make-dhcpcd-networking
+	    make-ipv6-gateway))
 
 (define network-manager-trans
   (lambda (os)
@@ -74,6 +75,30 @@
 			'(("net.netfilter.nf_conntrack_udp_timeout" . "180")
 			  ("net.netfilter.nf_conntrack_udp_timeout_stream" . "600")))))
 
+(define-syntax-rule (make-ipv6-gateway addr gtw itf)
+  (cfgset
+   (sys-settings
+    `((services ,(list (simple-service 'set-gateway
+	shepherd-root-service-type
+	(list
+	 (shepherd-service
+	  (documentation "设置IPV6网关")
+	  (provision '(set-gateway))
+	  (requirement '(networking))
+	  (respawn? #f)
+	  (auto-start? #t)
+	  (one-shot? #t)
+	  (start #~(lambda _
+                     (let* ((ip #$(file-append (spec->pkg "iproute2") "/sbin/ip"))
+			    (address addr)
+			    (gateway gtw)
+			    (interface itf)
+                            (st0 (system* ip "-6" "route" "add" "default" "via" gateway "dev" interface "onlink"))
+			    (st1 (system* ip "addr" "add" address "dev" interface)))
+                       (and (map (lambda (st)
+                                   (= 0 (status:exit-val st)))
+                                 (list st0 st1)))))))))))))))
+
 (define* (make-nm-trans-networking machine #:key (avahi? #f))
   (cfgset
    (sys-transforms
@@ -84,7 +109,7 @@
 			       %resolv)
 			 (if avahi?
 			     (list (service avahi-service-type))
-			   '())
+			     '())
 			 %network-enhance))))))
 
 (define* (make-dhcpcd-networking machine #:key (avahi? #f))

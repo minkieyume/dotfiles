@@ -6,7 +6,7 @@
 (define %chiko-channels
   (list (channel
           (name 'chikochannel)
-          (url "https://github.com/minkieyume/chiko-guix-channel.git")
+          (url "https://codeberg.org/minkieyume/chiko-guix-channel.git")
           (branch "main")
           (introduction
            (make-channel-introduction

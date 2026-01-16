@@ -16,7 +16,8 @@
   #:use-module (chiko-modules loader dir-loader)
   #:use-module (chiko-modules sets)
   #:export (make-rsync
-	    make-base-server))
+	    make-base-server
+	    make-vps))
 
 (define (make-rsync . modules)
   (cfgset
@@ -63,3 +64,10 @@
 					      (bind "0.0.0.0")))
 				   (make-postgresql))
 			     sys-base))))))
+
+(define* (make-vps #:key
+		   (sys-base %base-services)
+		   (home-base %base-home-services))
+  (merge-sets (make-base-server sys-base home-base)
+	      (cfgset
+	       (sys-settings `((initrd-modules ("virtio_scsi" "virtio_pci")))))))
