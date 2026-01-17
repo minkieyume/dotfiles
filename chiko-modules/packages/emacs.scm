@@ -22,6 +22,7 @@
      "emacs-fish-mode"
      "emacs-json-mode"
      "emacs-markdown-mode"
+     "emacs-markless"
      "emacs-nftables-mode"
      "emacs-zig-mode"  
      "emacs-cmake-mode"
