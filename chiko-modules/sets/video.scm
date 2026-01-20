@@ -32,7 +32,7 @@
    (make-v4l)
    (cfgset
     (sys-settings `((packages
-		     ,(specifications->packages '("mpv-nvidia" "obs-nvidia" "kodi-wayland" "ffmpeg-nvidia"))))))))
+		     ,(specifications->packages '("mpv-nvidia" "obs-nvidia" "kodi-wayland" "ffmpeg"))))))))
 
 (define (make-v4l)
   (cfgset

@@ -641,6 +641,9 @@ Ekg是方便快速整理灵感和笔记的笔记插件。
   :mode "\\.neko\\'")
 
 (use-package racket-mode)
+
+(use-package lisp-mode
+  :mode "\\.lisp\\'")
 #+end_src
 
 *** Geiser工具
