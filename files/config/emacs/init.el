@@ -412,6 +412,9 @@
   :mode "\\.neko\\'")
 
 (use-package racket-mode)
+
+(use-package lisp-mode
+  :mode "\\.lisp\\'")
 (use-package geiser
   :init
   (geiser)
@@ -615,11 +618,21 @@
 (setq mm-text-html-renderer 'shr
       mm-coding-system-priorities '(utf-8 gbk gb2312))
 (use-package ement)
+(defun see-elfeed ()
+  (interactive)
+  (elfeed)
+  (elfeed-update))
+
 (use-package elfeed
-  :bind ("C-c w" . 'elfeed)
+  :bind ("C-c w" . 'see-elfeed)
   :custom
   (elfeed-feeds '("https://www.yumieko.com/index.xml"
   		  "https://blog.southfox.me/rss2.xml"
   		  "https://dthompson.us/feed.xml"
 		  "https://illust.moongazer.net/index.xml"
-		  "https://blog.moongazer.net/index.xml")))
+		  "https://blog.moongazer.net/index.xml"
+		  "https://nicechord.com/index.xml"
+		  "https://wiwi.blog/blog/rss.xml"
+		  "https://blogblog.club/blog/rss.xml"
+		  "https://blog.giveanornot.com/index.xml"
+		  "https://feeds.feedburner.com/othree")))
