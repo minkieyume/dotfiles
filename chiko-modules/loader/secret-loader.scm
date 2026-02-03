@@ -21,6 +21,8 @@
 (define %ssh-keys
   `(("minkieyume"
      ,%chiko-ssh-key)
+    ("dreamtwi"
+     ,(local-file "../files/keys/dreamtwi_PC_ed25519.pub"))
     ("deploy"
      ,%chiko-ssh-key)))
 

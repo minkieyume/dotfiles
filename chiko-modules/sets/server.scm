@@ -68,6 +68,6 @@
 (define* (make-vps #:key
 		   (sys-base %base-services)
 		   (home-base %base-home-services))
-  (merge-sets (make-base-server sys-base home-base)
+  (merge-sets (make-base-server #:sys-base sys-base #:home-base home-base)
 	      (cfgset
 	       (sys-settings `((initrd-modules ("virtio_scsi" "virtio_pci")))))))

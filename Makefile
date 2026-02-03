@@ -1,5 +1,5 @@
 build-%:
-	doas guix system build build/build-$*.scm
+	guix system build build/build-$*.scm
 
 reconfigure-%:
 	doas guix system reconfigure build/build-$*.scm

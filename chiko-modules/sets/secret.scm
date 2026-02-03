@@ -41,8 +41,14 @@
 				 ,(plain-file "forgejo-db-password.txt"
 					      (secret-ref 'forgejo-db))))
 		   ("immich" . ("secret/postgres/immich"
-				,(plain-file "immich-db-password.txt"
-					     (secret-ref 'immich-db-pass)))))))
+				 ,(plain-file "immich-db-password.txt"
+					      (secret-ref 'immich-db-pass))))
+		   ("misskey" . ("secret/postgres/misskey"
+				 ,(plain-file "misskey-db-password.txt"
+					      (secret-ref 'misskeydb))))
+		   ("hedgedoc" . ("secret/postgres/hedgedoc"
+				  ,(plain-file "hedgedoc-db-password.txt"
+					       (secret-ref 'hedgedoc-db-pass)))))))
     (cfgset
      (sys-settings `((services
 		      ,(list (simple-service 'postgres-pass-file

@@ -106,6 +106,7 @@
   (load "../secret/nyapasu.scm")
 #+end_src
 
+* 数据库密钥：推迟待办
 #+begin_src scheme :noweb-ref service
 (simple-service 'postgres-pass-file
 		etc-service-type
@@ -348,7 +349,6 @@ OVH装了guix后有IPV6无法访问的问题，所以需要配置IPV6网关解�
 #+end_src
 
 
-* 上次到这里了哦！
 ** OpenSSH
 #+begin_src scheme :noweb-ref module
   (gnu services ssh)
@@ -472,11 +472,10 @@ fish，开箱即用的终端解释器。
   "fish"
 #+end_src
 
-*** 备份数据库
+* 备份数据库 （推迟待办）
 #+begin_src scheme :noweb-ref mcron-job
   (job "0 2 * * *" "doas -u misskey pg_dump -U misskey -d misskey > /tmp/misskey.sql && ( rsync -avz --timeout=30 /tmp/misskey.sql rsync://100.119.107.8/backup/misskey ; rm /tmp/misskey.sql)")
   (job "0 2 * * *" "doas -u synapse pg_dump -U synapse -d synapse > /tmp/synapse.sql && ( rsync -avz --timeout=30 /tmp/synapse.sql rsync://100.119.107.8/backup/synapse ; rm /tmp/synapse.sql)")
-  (job "0 2 * * *" "doas -u etherpad pg_dump -U etherpad -d etherpad > /tmp/etherpad.sql && ( rsync -avz --timeout=30 /tmp/etherpad.sql rsync://100.119.107.8/backup/etherpad ; rm /tmp/etherpad.sql)")
   (job "0 2 * * *" "chmod -R 755 /var/lib/misskey/files")
   (job "0 2 * * *" "rsync -avz --timeout=30 /var/lib/misskey/files rsync://100.119.107.8/backup/misskey")
   (job "0 2 * * *" "rsync -avz --timeout=30 /var/lib/synapse rsync://100.119.107.8/backup")
