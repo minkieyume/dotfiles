@@ -85,8 +85,8 @@
    (make-guix '("--cores=0") #f)
    (make-container)
    (make-vps)
-   ;; (make-postgresql-secret "misskey" "hedgedoc")
-   ;; (make-webs (misskey-webserver "littlewing.yumieko.com"))
+   (make-postgresql-secret "misskey" "hedgedoc")
+   (make-webs (misskey-webserver "littlewing.yumieko.com"))
    ))
 
 (define (make-chikocloud-os)

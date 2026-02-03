@@ -80,14 +80,14 @@
   				       (extra-content (string-append "map $http_upgrade $connection_upgrade { default upgrade; '' close; }\nclient_max_body_size 500M;"
 								     "limit_req_zone $binary_remote_addr zone=appcreate:10m rate=10r/m;"))
   				       (server-blocks
-  					(apply append (map nginx-servers webservers)))
+  					(apply append (map webserver-nginx-servers webservers)))
 				       (upstream-blocks
-					(apply append (map nginx-upstreams webservers)))
+					(apply append (map webserver-nginx-upstreams webservers)))
 				       (stream (nginx-stream-configuration
 						(upstream-blocks
-						 (apply append (map nginx-stream-upstreams webservers)))
+						 (apply append (map webserver-nginx-stream-upstreams webservers)))
 						(server-blocks
-						 (apply append (map nginx-stream-servers webservers))))))))))))))
+						 (apply append (map webserver-nginx-stream-servers webservers))))))))))))))
 
 (define (misskey-webserver domain)
   (webserver
@@ -129,14 +129,14 @@
 			   (list
 			    (nginx-location-configuration
 			      (uri "/")
-			      (body `(,@proxy-confs
+			      (body `(,@%nginx-proxy-confings
 				      "proxy_pass http://127.0.0.1:3000;")))
 			    (nginx-location-configuration
 			      (uri "/api/app/create")
-			      (body `(,@proxy-confs
+			      (body `(,@%nginx-proxy-confings
 				      "limit_req zone=appcreate burst=5 nodelay;"
 				      "proxy_pass http://127.0.0.1:3000;")))
 			    (nginx-location-configuration
-			      (uri (nyapasu-ref 'ws-transport-path))
-			      (body `(,@proxy-confs
+			      (uri (secret-ref 'ws-transport-path))
+			      (body `(,@%nginx-proxy-confings
 				      "proxy_pass http://127.0.0.1:7890;"))))))))))
