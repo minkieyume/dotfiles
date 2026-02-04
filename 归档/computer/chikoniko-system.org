@@ -1,0 +1,1253 @@
+#+TITLE: ChikoNiko
+
+* Chiko Niko System
+琪可的笔记本配置。
+#+begin_src scheme :tangle ../reconfigure/chikoniko-system.scm :noweb yes :noweb-prefix no
+(load "../common.scm")
+(use-modules <<module>>)
+
+<<define>>
+(define %os
+  (operating-system
+   <<env>>
+   (bootloader <<bootloader>>)
+   (initrd-modules (append '(<<initrd-module>>) %base-initrd-modules))
+   (kernel-loadable-modules (specifications->packages '(<<kernel-loadable-module>>)))
+   (kernel-arguments (cons* <<kernel-argument>> %default-kernel-arguments))
+   (privileged-programs (cons* <<privileged-program>> %default-privileged-programs))
+   (users (cons* <<user>> %base-user-accounts))
+   (groups (cons* <<group>> %base-groups))
+   (services (cons* <<service>>
+  		    ((compose <<rosenthal-desktop-transformation>>) %rosenthal-desktop-services)))
+   (mapped-devices (list <<mapped-device>>))
+   (file-systems (append <<filesystems>> %base-file-systems))
+   (packages (append (specifications->packages '(<<package>>)) %base-packages))))
+
+((compose <<transformation>>)
+ %os)
+#+end_src
+
+** 基础信息
+本地化、时区、键盘布局、主机名
+#+begin_src scheme :noweb-ref env
+  (locale "zh_CN.utf8")
+  (timezone "Asia/Singapore")
+  (keyboard-layout (keyboard-layout "us"))
+  (host-name "chikoniko")
+#+end_src
+
+** 系统配置
+*** 内核参数
+#+begin_src scheme :noweb-ref kernel-argument
+  "i8042.reset" "i8042.nomux" "i8042.nopnp"
+#+end_src
+
+*** 内核模块
+**** 初始化模块
+#+begin_src scheme :noweb-ref initrd-module
+#+end_src
+
+**** 可加载模块
+#+begin_src scheme :noweb-ref kernel-loadable-module
+  "v4l2loopback-linux-module"
+#+end_src
+
+**** 模块自动加载
+#+begin_src scheme :noweb-ref service
+(service kernel-module-loader-service-type
+	 (kernel-module-loader-configuration
+	  (modules '("uvcvideo" "videodev" "v4l2loopback"))))
+#+end_src
+
+
+** 用户配置
+*** Root
+#+begin_src scheme :noweb-ref user
+  (user-account
+    (inherit %root-account)
+    (password #f))
+#+end_src
+
+*** MinkieYume
+#+begin_src scheme :noweb-ref user
+  (user-account
+   (name "minkieyume")
+   (comment "Minkieyume")
+   (password "$6$4QkvhBIch2jaueTp$h7P.Q.JlV3iT7xnoUyXoo0obiOsnSxmP8Rscv2PpF1YhP7I6Sp3/CN5VddDSxGqOWfzo0D.2yeP/Km4oCsOvm1")
+   (group "users")
+   (shell (file-append (spec->pkg "fish") "/bin/fish"))
+   (home-directory "/home/minkieyume")
+   (supplementary-groups '("wheel" "netdev" "audio" "video" "niko")))
+#+end_src
+
+#+begin_src scheme :noweb-ref group
+  (user-group
+   (name "niko"))
+#+end_src
+
+*** Deploy
+#+begin_src scheme :noweb-ref user
+  (user-account
+   (name "deploy")
+   (comment "Deploy")
+   (group "users")
+   (home-directory "/home/deploy")
+   (supplementary-groups '("wheel")))
+#+end_src
+
+** 基础模块
+#+begin_src scheme :noweb-ref module
+  (gnu)
+  (gnu system)
+  (gnu system privilege)
+  (srfi srfi-26)
+  (ice-9 match)
+  (gnu services sysctl)
+  (gnu services admin)
+  (gnu services configuration)
+#+end_src
+
+#+begin_src scheme :noweb-ref module
+  (rosenthal)
+  (nonguix transformations)
+#+end_src
+
+** 系统管理
+负责管理系统的基础包
+#+begin_src scheme :noweb-ref package
+  "btop" "curl" "neofetch"
+#+end_src
+
+** 密码导入
+#+begin_src scheme :noweb-ref define
+  (define %nyapasu-script
+    (local-file "../secret/nyapasu.scm"))
+  (load "../secret/nyapasu.scm")
+#+end_src
+
+** 性能监视
+#+begin_src scheme :noweb-ref package
+  "glances"
+#+end_src
+
+** Bootloader配置
+#+begin_src scheme :noweb-ref bootloader
+  (bootloader-configuration
+    (bootloader grub-efi-bootloader)
+    (targets (list "/boot/efi"))
+    (keyboard-layout keyboard-layout))
+#+end_src
+
+** 内核配置
+#+begin_src scheme :noweb-ref transformation
+  (nonguix-transformation-linux)
+
+  (lambda (os)
+    (operating-system
+      (inherit os)      
+      (kernel-arguments
+        (cons* "kernel.sysrq=1"
+          "zswap.enabled=1"
+          "zswap.max_pool_percent=90"
+          "modprobe.blacklist=pcspkr"
+          (operating-system-user-kernel-arguments os)))))
+#+end_src
+
+** 驱动映射
+#+begin_src scheme :noweb-ref mapped-device
+#+end_src
+
+** 文件系统
+这是被“挂载”的文件系统列表。
+*** 系统盘
+#+begin_src scheme :noweb-ref filesystems
+  (let ((options-for-subvolume
+          (lambda (subvolume)
+            (string-join
+              (list "compress=zstd"
+                (or (and=> subvolume (cut string-append "subvol=" <>))
+                  "subvolid=5"))
+              ","))))
+    (map (match-lambda
+           ((subvolume . mount-point)
+             (file-system
+               (device (file-system-label "niko"))
+               (mount-point mount-point)
+               (type "btrfs")
+               (options (options-for-subvolume subvolume))
+               (create-mount-point? #t)
+               (check? (string=? mount-point "/")))))
+      '(("@System" . "/")
+        ("@Data"      .      "/var/lib")
+        ("@Log"      .       "/var/log")
+        ("@GNU"       .          "/gnu")
+        ("@Home"      .         "/home")
+        ("@Tmp"       .          "/tmp")
+        ("@Creator"   . "/niko/creator")
+        ("@Develop"   . "/niko/develop")
+        ("@Picture"   . "/niko/picture")
+        ("@Video"     .   "/niko/video")
+        ("@Audio"     .   "/niko/audio")
+        ("@Program"   . "/niko/program")
+        ("@Games"     .   "/niko/games")
+        ("@Download"  ."/niko/download")
+        ("@Sandbox"   . "/niko/sandbox")
+        ("@Build"     .   "/niko/build")
+        (#f           .     "/mnt/niko"))))
+#+end_src
+
+#+begin_src scheme :noweb-ref filesystems
+  (list
+   (file-system
+    (mount-point "/boot/efi")
+    (device (uuid "639A-B4E6"
+  		'fat32))
+    (type "vfat")))
+#+end_src
+
+#+begin_src scheme :noweb-ref transformation
+  (lambda (os)
+    (operating-system
+     (inherit os)
+     (swap-devices
+      (list (swap-space
+             (target (uuid "204fc3c3-89b6-449b-9b32-9df5ed18d024"))
+             (discard? #t))))))
+#+end_src
+
+*** 自动挂载
+自动挂载，规则由AutoFS配置。
+#+begin_src scheme :noweb-ref module
+(chiko services autofs)
+#+end_src
+
+#+begin_src scheme :noweb-ref service
+(service autofs-service-type
+ (autofs-configuration
+  (config-file
+   (local-file "../files/config/autofs/autofs.conf"))
+  (master-file
+   (local-file "../files/config/autofs/auto.master"))
+  (extra-files
+   `(("auto.nfs" . ,(local-file "../files/config/autofs/auto.nfs"))))))
+#+end_src
+
+*** GVFS
+GVFS是一个能将网络目录挂载为本地虚拟文件系统，且对本地程序优化更好的挂载工具
+#+begin_src scheme :noweb-ref package
+  "gvfs"
+  "glib:bin"  
+#+end_src
+
+#+begin_src scheme :noweb-ref service
+(service gvfs-service-type)
+#+end_src
+
+** Guix配置
+#+begin_src scheme :noweb-ref transformation
+(lambda (os)
+  (operating-system
+   (inherit os)
+   (services
+    (modify-services (operating-system-user-services os)
+  		     (guix-service-type
+  		      config => (guix-configuration
+  				 (inherit config)
+  				 (substitute-urls %chiko-substitute-urls)
+  				 (channels %chiko-channels)
+				   (authorized-keys %chiko-authorized-keys)
+  				 (discover? #t)
+  				 (extra-options '("--cores=4"))
+  				 (tmpdir "/mnt/niko/@Build")))))))
+#+end_src
+
+* Chiko Niko Home
+#+begin_src scheme :noweb yes :noweb-ref module
+  (gnu home services)
+  (gnu home services dotfiles)
+  (gnu home services shells)
+#+end_src
+
+** Home服务
+#+begin_src scheme :noweb yes :noweb-prefix no :noweb-ref service
+  (service guix-home-service-type
+  	 `(("minkieyume" ,(home-environment
+  			   (services (cons* <<home-service>> %rosenthal-desktop-home-services))))))
+#+end_src
+
+#+begin_src scheme :noweb yes :noweb-ref home-service
+  (service home-dotfiles-service-type
+  	 (home-dotfiles-configuration
+  	  (directories '("../files/config/dotfiles"))))
+#+end_src
+
+#+begin_src scheme :noweb-ref home-service
+  (service home-files-service-type
+  	 `((".dash_rsa" ,(local-file "../secret/keys/dash_rsa"))
+  	   (".gitconfig" ,(local-file "../files/config/gitconfig"))
+  	   (".ssh/config" ,(local-file "../files/config/ssh-config"))
+  	   ("Downloads" ,(symlink-to "/niko/download"))
+  	   ("Pictures" ,(symlink-to "/niko/picture"))
+  	   ("Creator" ,(symlink-to "/niko/creator"))
+  	   ("Develop" ,(symlink-to "/niko/develop"))
+  	   ("Application" ,(symlink-to "/niko/program"))
+  	   ("Audio" ,(symlink-to "/niko/audio"))
+  	   ("Video" ,(symlink-to "/niko/video"))
+  	   ("Games" ,(symlink-to "/niko/games"))))
+#+end_src
+
+** 环境变量
+#+begin_src scheme :noweb yes :noweb-ref home-service :noweb-prefix no
+  (simple-service 'extra-environment-variables
+      home-environment-variables-service-type
+    `(<<home-environment-variable>>))
+#+end_src
+
+
+* 基础服务
+** 登陆管理
+#+begin_src scheme :noweb-ref service
+  (service pam-limits-service-type
+  	 (list
+            (pam-limits-entry "*" 'both 'nofile 100000)))
+#+end_src
+
+** 网络模块
+#+begin_src scheme :noweb-ref module
+  (gnu services networking)
+#+end_src
+
+*** 系统网络
+#+begin_src scheme :noweb-ref service
+;; https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes
+(simple-service 'udp-buffer-size
+		sysctl-service-type
+		'(("net.core.rmem_max" . "7500000")
+		  ("net.core.wmem_max" . "7500000")))
+(simple-service 'ip-forward
+		sysctl-service-type
+		'(("net.ipv4.ip_forward" . "1")
+		  ("net.ipv6.conf.all.forwarding" . "1")))
+(simple-service 'tcp-keepalive
+                sysctl-service-type
+                '(("net.ipv4.tcp_keepalive_time" . "60")
+  		("net.ipv4.tcp_keepalive_intvl" . "20")
+  		("net.ipv4.tcp_keepalive_probes" . "5")
+  		("net.ipv4.tcp_fin_timeout" . "15")
+  		("net.netfilter.nf_conntrack_tcp_timeout_established" . "1800")))
+(simple-service 'conntrack-udp-timeout
+		sysctl-service-type
+		'(("net.netfilter.nf_conntrack_udp_timeout" . "180")
+		  ("net.netfilter.nf_conntrack_udp_timeout_stream" . "600")))
+#+end_src
+
+*** NetworkManager
+#+begin_src scheme :noweb-ref transformation
+(lambda (os)
+  (operating-system
+   (inherit os)
+   (services
+    (modify-services (operating-system-user-services os)
+  		     (network-manager-service-type
+  		      config => (network-manager-configuration
+  				 (inherit config)
+				   (dns "none")
+  				 (extra-configuration-files
+  				  `(("wifi_rand_mac.conf"
+  				     ,(plain-file "wifi_rand_mac.conf" "\
+  # Generate a random MAC for each network connection and associate the two
+  # permanently.
+  [connection-mac-randomization]
+  ethernet.cloned-mac-address=stable
+  wifi.cloned-mac-address=stable\n"))
+  				    ("ip6-privacy.conf"
+  				     ,(plain-file "ip6-privacy.conf" "\
+  # Use IPv6 Privacy Extensions.
+  [connection]
+  ipv6.ip6-privacy=2\n"))))))))))
+#+end_src
+
+*** Nftables
+#+begin_src scheme :noweb-ref service
+  (service nftables-service-type
+    (nftables-configuration
+      (ruleset
+       (computed-substitution-with-inputs "nftables.conf"
+          (local-file "../files/config/chikoniko/nftables.conf")
+	  (list (local-file "../files/config/singbox" #:recursive? #t))))))
+#+end_src
+
+*** Resolv配置
+#+begin_src scheme :noweb-ref service
+(simple-service 'resolv-service
+        	etc-service-type
+        	`(("resolv.conf" ,(plain-file "resolv.conf" "search tailb8a678.ts.net\nnameserver 192.168.8.1\nnameserver 8.8.8.8\nnameserver 1.1.1.1\nnameserver 114.114.114.114"))))
+#+End_src
+
+** OpenSSH
+#+begin_src scheme :noweb-ref module
+  (gnu services ssh)
+#+end_src
+
+配置SSH配置的服务：
+#+begin_src scheme :noweb-ref service
+(service openssh-service-type
+    	 (openssh-configuration
+    	  (password-authentication? #f)
+    	  (permit-root-login #f)
+    	  (authorized-keys
+    	   `(("minkieyume"
+  	    ,%chiko-ssh-key)
+  	   ("deploy"
+    	      ,%chiko-ssh-key)))
+	  (accepted-environment
+	   '("LANG" "LC_*" "TZ" "PYTHONIOENCODING" "TERM" "COLORTERM"))))
+#+end_src
+
+** Mcron
+Mcron是guix用于管理计划任务的服务，类似crontab。
+#+begin_src scheme :noweb-ref module
+  (gnu services mcron)
+#+end_src
+
+mcron的服务，值得注意的是，jobs的参数必须要用quote括起来，因为里面是一个传递给mcron的(job xxxx)的表达式，这个表达式不能在guix编译时运行。
+#+begin_src scheme :noweb-ref service :noweb yes :noweb-prefix no
+  (service mcron-service-type
+    (mcron-configuration
+      (jobs '(<<mcron-job>>))))
+#+end_src
+
+** Fish
+fish，开箱即用的终端解释器。
+#+begin_src scheme :noweb-ref package
+  "fish"
+#+end_src
+
+* 工具
+** 通用工具
+#+begin_src scheme :noweb-ref package
+  "openssl"
+  "rsync"
+  "cryptsetup"
+#+end_src
+
+** 网络调试
+#+begin_src scheme :noweb-ref package
+  "bind:utils"
+  "tcpdump"
+#+end_src
+
+** 加密工具
+#+begin_src scheme :noweb-ref package
+  "openssl"
+  "cryptsetup"
+#+end_src
+
+** Git
+#+begin_src scheme :noweb-ref module
+  (gnu packages version-control)
+#+end_src
+
+#+begin_src scheme :noweb-ref package
+  "git"
+#+end_src
+
+** Emacs
+#+begin_src scheme :noweb-ref home-environment-variable
+  ("EDITOR" . "emacsclient")
+  ("VISUAL" . "$EDITOR")
+  ("ESHELL" . ,(file-append (spec->pkg "fish") "/bin/fish"))
+#+end_src
+
+基础的包配置
+#+begin_src scheme :noweb-ref package
+  "emacs-pgtk"
+  "emacs-eldev"
+
+  ;;包管理器
+  "emacs-use-package"  
+
+  ;;编辑模式
+  "emacs-nginx-mode"
+  "emacs-edit-indirect"
+  "emacs-fish-mode"
+  "emacs-json-mode"
+  "emacs-markdown-mode"
+  "emacs-nftables-mode"
+  "emacs-zig-mode"  
+  "emacs-cmake-mode"
+  "emacs-gdscript-mode"
+  "emacs-yaml-mode"
+  "emacs-rust-mode"
+  "emacs-racket-mode"
+  "emacs-geiser"
+  "emacs-geiser-guile"
+  "emacs-plantuml-mode"
+  "emacs-scribble-mode"
+
+  ;;编辑器优化
+  "emacs-company"
+  "emacs-company-box-chiko"
+  "emacs-vertico"
+  "emacs-orderless"
+  "emacs-consult"
+  "emacs-ripgrep"
+  "ripgrep"
+  "ripgrep-all"
+  "emacs-marginalia"
+  "emacs-embark"
+  "emacs-rainbow-delimiters"
+  "emacs-paredit"
+  "emacs-smartparens"  
+
+  ;;键位优化
+  "emacs-disable-mouse"
+  "emacs-hydra"
+  "emacs-restart-emacs"
+  "emacs-which-key"
+
+  ;;万能工具
+  "emacs-pinentry"
+  "emacs-pdf-tools"
+  "emacs-ement"
+  "emacs-projectile"
+  "emacs-circe"
+  "emacs-emacsql"
+  "emacs-ox-hugo"
+  "emacs-org-download"
+  "emacs-oauth2"
+
+  ;;AI集成
+  "emacs-llm"
+  "emacs-vecdb"
+  "emacs-copilot"
+  "emacs-copilot-chat"
+  "emacs-mcp"
+  "emacs-ellama"
+  "emacs-elisa"
+  "emacs-aider"
+
+  ;;笔记软件
+  "emacs-ekg"
+
+  ;;终端优化
+  "emacs-eat"
+  "emacs-eshell-syntax-highlighting"
+  "emacs-fish-completion"
+
+  ;;版本控制
+  "emacs-magit"
+  "emacs-magit-todos"
+  "emacs-forge"
+
+  ;;文件管理
+  "emacs-dirvish@d877433f957a363ad78b228e13a8e5215f2d6593"
+  "emacs-dired-git-info"
+
+  ;;主题资源
+  "emacs-all-the-icons"
+  "emacs-spacemacs-theme"
+
+  ;;外部依赖
+  "tree-sitter"
+  "tree-sitter-racket"
+  "plantuml"
+#+end_src
+
+#+begin_src scheme :noweb-ref home-service
+(simple-service 'emacs-configuration
+      		home-xdg-configuration-files-service-type
+      		`(("emacs/init.el"
+      		   ,(computed-substitution-with-inputs "init.el"
+      						       (local-file "../files/config/emacs/init.el")
+						       (append
+							(list (local-file "../files/config/emacs" #:recursive? #t)
+							      (local-file "../secret/epasu" #:recursive? #t))
+							(specs->pkgs "ccls"
+      								     "fish"
+      								     "python-lsp-server"
+      								     "rust-analyzer"
+      								     "zig-zls"
+    								     "fd"
+								     "mpv"
+								     "ffmpegthumbnailer"
+								     "p7zip"
+								     "imagemagick"
+								     "godot"
+								     "mediainfo"
+								     "vips"))))
+      		  ("emacs/.init-themes.el"
+      		   ,(local-file "../files/config/chikoniko/init-theme.el"))))
+#+end_src
+
+#+begin_src scheme :noweb-ref home-service
+  (simple-service 'home-emacs
+  		home-shepherd-service-type
+  		(list (shepherd-service
+  		       (provision '(emacs-daemon))
+  		       (start
+  			#~(make-forkexec-constructor
+  			   '("emacs" "--fg-daemon")))
+  		       (stop
+  			#~(make-forkexec-constructor
+  			   '("emacsclient" "--eval" "(kill-emacs)"))))))
+#+end_src
+
+#+begin_src scheme :noweb-ref home-service
+  (simple-service 'emacs-auth-info
+		home-files-service-type
+		`((".authinfo.gpg" ,(local-file "../secret/authinfo.gpg"))))
+#+end_src
+
+[[file:../files/config/emacs/Emacs配置.org][Emacs配置]]
+[[file:../files/config/chikoniko/init-theme.el][emacs-themes]]
+
+** Doas
+Doas是比Sudo更简洁，也更为安全的提权工具。
+之所以用Doas而不用Sudo，是因为Sudo通常会有一定的安全漏洞，结构也比较复杂，而Doas结构相对简单，攻击面也更少，适合不需要复杂提权配置的服务器或个人。
+#+begin_src scheme :noweb-ref package
+  "opendoas"
+#+end_src
+
+引入自定义的包定义的doas服务。
+#+begin_src scheme :noweb-ref module
+  (chiko services doas)
+#+end_src
+
+自定义doas规则：
+#+begin_src scheme :noweb-ref service :noweb yes :noweb-prefix no
+  (service doas-service-type
+    (doas-configuration
+      (rules
+        (list <<doas-ruleset>>))))
+#+end_src
+
+*** Doas规则
+doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上面的规则最好作为默认和根规则，而下面的规则则作为覆盖上面规则的其它额外规则。
+
+这是最基础的规则，应用于组的规则
+#+begin_src scheme :noweb-ref doas-ruleset
+  (doas-rule
+    (permit #t)
+    (user ":wheel")
+    (options '("persist" "keepenv")))
+#+end_src
+
+为root用户提供修复的环境变量补全
+#+begin_src scheme :noweb-ref doas-ruleset
+  (doas-rule
+    (permit #t)
+    (user ":wheel")
+    (options '("persist"
+               "setenv { http_proxy https_proxy HOME=/root XDG_CACHE_HOME=/root/.cache PATH=/run/setuid-programs:/root/.config/guix/current/bin:/run/current-system/profile/bin:/run/current-system/profile/sbin INFOPATH=/root/.config/guix/current/share/info:/run/current-system/profile/share/info GIT_EXEC_PATH=/root/.guix-profile/libexec/git-core}"))
+    (as-target "root"))
+#+end_src
+
+*** 禁用sudo
+为了安全，最好禁用sudo，避免sudo的漏洞影响安全性。
+#+begin_src scheme :noweb-ref env
+  (sudoers-file
+    (plain-file "sudoers" "Defaults env_reset\ndeploy ALL=(ALL) NOPASSWD: ALL"))
+#+end_src
+
+
+** GPG
+#+begin_src scheme :noweb-ref package
+  "gnupg"
+  "pinentry-emacs"
+#+end_src
+
+#+begin_src scheme :noweb-ref module
+  (gnu home services gnupg)
+#+end_src
+
+#+begin_src scheme :noweb-ref home-service
+(service home-gpg-agent-service-type
+	 (home-gpg-agent-configuration
+	  (pinentry-program
+	   (file-append (spec->pkg "pinentry-emacs") "/bin/pinentry-emacs"))
+	  (ssh-support? #t)
+	  (extra-content (string-join '("allow-emacs-pinentry"
+					"allow-loopback-pinentry") "\n"))))
+#+end_src
+
+** 解压
+#+begin_src scheme :noweb-ref package
+  "unzip"
+#+end_src
+
+** KeepassXC
+密码管理软件
+#+begin_src scheme :noweb-ref package
+  "keepassxc"
+  "keepassxc-browser-icecat"
+#+end_src
+
+* 备份
+** Syncthing
+#+begin_src scheme :noweb-ref module
+  (gnu services syncthing)
+#+end_src
+
+#+begin_src scheme :noweb-ref service
+  (service syncthing-service-type
+  	 (syncthing-configuration (user "minkieyume")))
+#+end_src
+
+* 组网
+** GNU Net
+#+begin_src scheme :noweb-ref package
+  "gnunet"
+  "gnunet-scheme"
+#+end_src
+
+** Tailscale
+#+begin_src scheme :noweb-ref module
+  (rosenthal services networking)
+#+end_src
+
+#+begin_src scheme :noweb-ref service
+  (service tailscale-service-type)
+#+end_src
+
+* 容器
+#+begin_src scheme :noweb-ref module
+  (gnu services docker)
+#+end_src
+
+#+begin_src scheme :noweb-ref service
+  (service containerd-service-type)
+#+end_src
+
+#+begin_src scheme :noweb-ref service
+  (service docker-service-type
+    (docker-configuration
+      (enable-iptables? #f)))
+#+end_src
+
+* 桌面环境
+#+begin_src scheme :noweb-ref module
+  (gnu home services fontutils)
+#+end_src
+
+** Greetd
+#+begin_src scheme :noweb-ref rosenthal-desktop-transformation
+  (lambda (rosenthal-desktop-services)
+    (modify-services rosenthal-desktop-services
+  		   (greetd-service-type
+  		    config => (greetd-configuration
+  			       (inherit config)
+  			       (terminals
+  				(map (lambda (x)
+  				       (greetd-terminal-configuration
+  					(terminal-vt (number->string x))
+  					(terminal-switch (eqv? 1 x))
+  					(default-session-command
+  					  (cond
+  					   ((eqv? 1 x)
+  					    (greetd-tuigreet-session))
+  					   (else
+  					    (greetd-agreety-session
+  					     (command
+  					      (greetd-user-session
+  					       (command #~(getenv "SHELL"))))))))))
+  				     (iota 6 1)))))))
+#+end_src
+
+** GTK
+*** GTK配置
+#+begin_src scheme :noweb-ref home-service
+  (simple-service 'gtk-settings-new
+  		home-files-service-type 
+  		`((".gtkrc-2.0"
+  		   ,(local-file "../files/config/chikoniko/gtk2.conf"))))
+#+end_src
+
+#+begin_src scheme :noweb-ref home-service
+  (simple-service 'gtk-settings-new
+  		home-xdg-configuration-files-service-type
+  		`(("gtk-3.0/settings.ini"
+  		   ,(local-file "../files/config/chikoniko/gtk.conf"))
+  		  ("gtk-4.0/settings.ini"
+  		   ,(local-file "../files/config/chikoniko/gtk.conf"))))
+#+end_src
+
+** Wayland
+*** niri
+#+begin_src scheme :noweb-ref package
+  "niri"
+  "wl-clipboard"
+  "imv"
+  "foot"
+  "light"
+  "swaylock"
+  "swaylock-effects"
+  "wireplumber"
+  "xwayland-satellite"
+  "helvum"
+  "pavucontrol"
+  "hicolor-icon-theme"
+#+end_src
+
+#+begin_src scheme :noweb-ref home-service
+  (service home-niri-service-type
+  	 (home-niri-configuration
+  	  (config
+  	   (computed-substitution-with-inputs "niri.kdl"
+  					      (local-file "../files/config/chikoniko/niri.kdl")
+  					      (cons* (local-file "../secret/wallpapers" #:recursive? #t)
+  					       (specs->pkgs "foot"
+  							    "light"
+  							    "rofi"
+  							    "swaylock-effects"
+  							    "wireplumber"
+  							    "xwayland-satellite"))))))
+  (service home-rofi-service-type
+  	 (home-rofi-configuration
+  	  (config
+  	   (mixed-text-file "rofi.rasi" "\
+  configuration {
+      icon-theme: \"Qogir\";
+  }
+  @theme \"" (spec->pkg "rofi") "/share/rofi/themes/fullscreen-preview.rasi\"\n"))))
+#+end_src
+[[file:../files/config/chikoniko/niri.kdl][Niri配置]]
+
+*** Foot
+轻量级的终端模拟器
+#+begin_src scheme :noweb-ref home-service
+  (simple-service 'foot-configuration
+  		home-xdg-configuration-files-service-type
+  		`(("foot/foot.ini"
+  		   ,(local-file "../files/config/chikoniko/foot.ini"))))
+#+end_src
+
+*** waybar
+#+begin_src scheme :noweb-ref home-service
+  (service home-waybar-service-type
+    (home-waybar-configuration
+      (config
+        (computed-substitution-with-inputs "config.json"
+          (local-file "../files/config/chikoniko/waybar.json")
+          (specs->pkgs "light" "wireplumber")))
+      (style
+        (local-file "../files/config/chikoniko/waybar.css"))))
+#+end_src
+
+*** swaybg
+#+begin_src scheme :noweb-ref home-service
+  (service home-swaybg-service-type
+  	 (home-swaybg-configuration
+  	  (background (local-file "../secret/wallpapers/wallpaper.png"))))
+#+end_src
+
+*** mako
+#+begin_src scheme :noweb-ref home-service
+  (service home-mako-service-type
+    (home-mako-configuration
+      (config (local-file "../files/config/chikoniko/mako.conf"))))
+#+end_src
+
+*** fontconfig
+#+begin_src scheme :noweb-ref package
+  "font-awesome"
+  "font-adobe-source-serif"
+  "font-google-noto"
+  "font-google-noto-sans-cjk"
+  "font-google-noto-serif-cjk"
+  "font-google-noto-emoji"
+  "font-victor-mono"
+  "font-sarasa-gothic"
+#+end_src
+
+#+begin_src scheme :noweb-ref home-service
+  (simple-service 'extra-fontconfig
+      home-fontconfig-service-type
+    (let ((sans  "SF Pro Text")
+          (serif "New York Medium")
+          (mono  "Victor Mono")
+          (emoji "Noto Color Emoji"))
+      `((alias
+         (family "sans-serif")
+         (prefer
+          (family ,sans)
+          (family "Noto Sans CJK SC")
+          (family ,emoji)))
+        (alias
+         (family "serif")
+         (prefer
+          (family ,serif)
+          (family "Noto Serif CJK SC")
+          (family ,emoji)))
+        (alias
+         (family "monospace")
+         (prefer
+          (family ,mono)
+          (family "Sarasa Mono SC")
+          (family ,emoji)))
+
+        ,@(map (lambda (name)
+                 `(alias
+                   (family ,name)
+                   (prefer
+                    (family ,sans)
+                    (family "sans-serif"))))
+               '("system-ui"
+                 "ui-sans-serif"))
+        (alias
+         (family "ui-serif")
+         (prefer
+          (family ,serif)
+          (family "serif")))
+        (alias
+         (family "ui-monospace")
+         (prefer
+          (family ,mono)
+          (family "monospace"))))))
+#+end_src
+
+*** fcitx5
+**** 服务配置
+#+begin_src scheme :noweb-ref home-service
+  (service home-fcitx5-service-type
+  	 (home-fcitx5-configuration
+  	   (themes (specs->pkgs "fcitx5-material-color-theme"))
+  	   (input-method-editors (specs->pkgs "fcitx5-rime" "fcitx5-anthy"))
+  	   (qt-im-module? #t)))
+#+end_src
+
+**** 环境配置
+#+begin_src scheme :noweb-ref home-environment-variable
+  ("SDL_IM_MODULE" . "fcitx")
+  ("GLFW_IM_MODULE" . "ibus")
+  ("QT_IM_MODULES" . "wayland;fcitx;ibus")
+#+end_src
+
+**** GTK兼容
+#+begin_src scheme :noweb-ref package
+    "fcitx5-gtk"
+    "fcitx5-gtk4"
+#+end_src
+
+#+begin_src scheme :noweb-ref home-environment-variable
+  ("GTK_IM_MODULE_FILE" . "$GUIX_GTK3_IM_MODULE_FILE")
+#+end_src
+
+*** librewolf
+#+begin_src scheme :noweb-ref package
+  "librewolf"
+  "icecat-l10n:zh-CN"
+  "adaptive-tab-bar-colour-icecat"
+  "livemarks-icecat"
+  "miniflux-injector-icecat"
+  "ohmyech-icecat"
+  "privacy-redirect-icecat"
+  "ublock-origin-icecat"
+#+end_src
+
+#+begin_src scheme :noweb-ref home-environment-variable
+  ("MOZ_ENABLE_WAYLAND" . "1")
+#+end_src
+
+** FreeDesktop
+*** xdg-desktop-portal
+#+begin_src scheme :noweb-ref package
+  "xdg-desktop-portal"
+  "xdg-desktop-portal-gnome"
+  "xdg-desktop-portal-gtk"
+  "xdg-utils"
+  "flatpak-xdg-utils"
+#+end_src
+
+*** desktop预设
+**** Krita
+#+begin_src scheme :noweb-ref home-service
+(simple-service 'krita-desktop
+  		home-files-service-type
+  		`((".local/share/applications/org.kde.krita.desktop"
+		   ,(computed-substitution-with-inputs "org.kde.krita.desktop"
+  						       (local-file "../files/desktop/org.kde.krita.desktop")
+  						       (list (spec->pkg "krita"))))))
+#+end_src
+
+**** Element
+#+begin_src scheme :noweb-ref home-service
+(simple-service 'element-desktop
+  		home-files-service-type
+  		`((".local/share/applications/element-desktop.desktop"
+		   ,(computed-substitution-with-inputs "element-desktop.desktop"
+  						       (local-file "../files/desktop/element-desktop.desktop")
+  						       (list (spec->pkg "element-desktop"))))))
+#+end_src
+
+**** Flatpak
+#+begin_src scheme :noweb-ref home-service
+(let ((desktop-files '("org.mapeditor.Tiled.desktop"
+		       "org.kde.digikam.desktop"
+		       "org.localsend.localsend_app.desktop"
+		       "com.calibre_ebook.calibre.desktop"
+		       "com.orama_interactive.Pixelorama.desktop"
+		       "com.qq.QQ.desktop")))
+  (simple-service 'flatpak-desktop
+                  home-files-service-type
+		  `(,@(map (lambda (desktop-file)
+                             `(,(string-append ".local/share/applications/" desktop-file)
+			       ,(local-file (string-append %this-dir "/../files/desktop/" desktop-file))))
+			   desktop-files))))
+#+end_src
+
+* AI软件
+** Aider
+Aider暂时没有包，需要用uvx安装。
+#+begin_src scheme :noweb-ref home-service
+(simple-service 'aider-file
+		home-files-service-type
+		`((".local/bin/aider" ,aider-wrapper)))
+#+end_src
+
+#+begin_src scheme :noweb-ref define
+(define aider-wrapper
+  (program-file
+   "aider-wrapper"
+   #~(begin
+       (apply execl (append
+		     (list (string-append (getenv "HOME") "/.local/bin/uvx")
+			   "uvx" "--from" "aider-chat" "aider")
+		     (cdr (command-line)))))))
+#+end_src
+
+
+* 程序开发
+** 开发库
+#+begin_src scheme :noweb-ref package
+  "linux-libre-headers"
+#+end_src
+
+** 编译工具
+pkg-config这个包似乎有bug，装上会导致nheko等一堆程序找不到。
+#+begin_src scheme :noweb-ref package
+  "scons"
+#+end_src
+
+
+** C/Cpp
+#+begin_src scheme :noweb-ref package
+  "gcc-toolchain"
+  "ccls"
+#+end_src
+
+** Rust
+#+begin_src scheme :noweb-ref package
+  "rust"
+  "rust-analyzer"
+  "rust:tools"
+  "rust:cargo"
+#+end_src
+
+** Zig
+#+begin_src scheme :noweb-ref package
+  "zig"
+  "zig-zls"
+#+end_src
+
+** Python
+#+begin_src scheme :noweb-ref package
+  "python"
+  "pipx"
+#+end_src
+
+*** UV
+注：关于uv的安装，因为guix没有uv最新版，因此暂时安装uv手动通过下列命令完成安装：
+#+begin_src shell
+pipx install uv
+#+end_src
+
+安装patchelf包：
+#+begin_src scheme :noweb-ref package
+"patchelf"
+#+end_src
+
+然后使用patchelf命令来修复路径问题：
+#+begin_src shell
+patchelf --set-interpreter /gnu/store/py9r4p4jp2pa1jaagbcvw35d79j5kcg5-glibc-2.41/lib/ld-linux-x86-64.so.2 ./uv
+patchelf --set-interpreter /gnu/store/py9r4p4jp2pa1jaagbcvw35d79j5kcg5-glibc-2.41/lib/ld-linux-x86-64.so.2 ./uvx
+#+end_src
+
+然后，在.local/bin中写下列shell脚本：
+#+begin_src shell uv
+#!/usr/bin/env bash
+# ↑ 用 bash 兼容模式执行（fish 会自动调用外部 bash）
+# 即使在 fish 环境下运行这个脚本，也没问题
+
+export LD_LIBRARY_PATH="$HOME/.guix-profile/lib:/run/current-system/profile/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+exec /home/minkieyume/.local/share/pipx/venvs/uv/bin/uv "$@"
+#+end_src
+
+#+begin_src shell uvx
+#!/usr/bin/env bash
+# ↑ 用 bash 兼容模式执行（fish 会自动调用外部 bash）
+# 即使在 fish 环境下运行这个脚本，也没问题
+
+export LD_LIBRARY_PATH="$HOME/.guix-profile/lib:/run/current-system/profile/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+exec /home/minkieyume/.local/share/pipx/venvs/uv/bin/uvx "$@"
+#+end_src
+
+最后，添加环境变量：
+#+begin_src scheme :noweb-ref home-environment-variable
+  ("PATH" . "$HOME/.local/bin:$PATH")
+  ("UV_INDEX_URL" . "https://pypi.tuna.tsinghua.edu.cn/simple")
+#+end_src
+
+** Racket
+#+begin_src scheme :noweb-ref package
+  "racket"
+#+end_src
+
+** Scheme
+#+begin_src scheme :noweb-ref package
+  "chibi-scheme"
+#+end_src
+
+
+* 包管理器
+** Flatpak
+#+begin_src scheme :noweb-ref package
+  "flatpak"
+#+end_src
+
+* 通讯
+** Jami
+#+begin_src scheme :noweb-ref package
+  "jami"
+#+end_src
+
+* 多媒体
+** mpv
+#+begin_src scheme :noweb-ref package
+  "mpv"
+#+end_src
+
+** Obs
+#+begin_src scheme :noweb-ref package
+  "obs"
+#+end_src
+
+** V4L2
+#+begin_src scheme :noweb-ref package
+  "v4l-utils"
+#+end_src
+
+#+begin_src scheme :noweb-ref transformation
+(nonguix-transformation-linux)
+
+(lambda (os)
+  (operating-system
+   (inherit os)      
+   (kernel-arguments
+    (cons* "v4l2loopback.devices=1"
+  	 "v4l2loopback.exclusive_caps=1"
+  	 "v4l2loopback.card_label=Virtual Camera"
+           (operating-system-user-kernel-arguments os)))))
+#+end_src
+
+
+** Kodi
+#+begin_src scheme :noweb-ref package
+  "kodi-wayland"
+#+end_src
+
+* 游戏
+** Steam
+#+begin_src scheme :noweb-ref package
+  "steam"
+  "steam-devices-udev-rules"
+#+end_src
+
+#+begin_src scheme :noweb-ref home-environment-variable
+  ("GUIX_SANDBOX_HOME" . "/niko/sandbox")
+  ("GUIX_SANDBOX_EXTRA_SHARES" . "$HOME/Downloads:/niko/picture/screenshots")
+#+end_src
+
+*** 驱动配置
+#+begin_src scheme :noweb yes :noweb-ref service :noweb-prefix no
+  (udev-rules-service 'steam-devices (spec->pkg "steam-devices-udev-rules"))
+  (udev-rules-service 'controller <<controller-permission-udev-rule>>)
+#+end_src
+
+See also: <https://github.com/ValveSoftware/steam-for-linux/issues/2092>
+#+begin_src scheme :noweb-ref controller-permission-udev-rule
+  (udev-rule "60-controller-permission.rules" "\
+  KERNEL==\"event*\", ATTRS{idVendor}==\"045e\", ATTRS{idProduct}==\"028e\", \
+  MODE=\"0660\", GROUP=\"users\"")
+#+end_src
+
+** Retroarch
+#+begin_src scheme :noweb-ref package
+  "retroarch"
+#+end_src
+
+
+* 创作
+** 游戏开发
+*** Godot
+#+begin_src scheme :noweb-ref package
+  "godot"
+#+end_src
+
+*** Tiled
+#+begin_src scheme :noweb-ref package
+  "tiled"
+#+end_src
+
+
+** 个人网站
+#+begin_src scheme :noweb-ref package
+  "hugo"
+#+end_src
+
+
+** 绘画
+#+begin_src scheme :noweb-ref package
+  "krita"
+  "inkscape"
+  "libwacom"
+#+end_src
+
+** 音乐创作
+*** LMMS
+#+begin_src scheme :noweb-ref package
+  "lmms"
+#+end_src
+
+*** SingBox
+八音盒软件
+#+begin_src scheme :noweb-ref module
+((chiko services networking) #:prefix chiko:)
+#+end_src
+
+#+begin_src scheme :noweb-ref package
+"sing-box"
+#+end_src
+
+**** 配置导入
+#+begin_src scheme :noweb-ref define
+  (define %sing-box-listener
+    (local-file "../files/config/singbox/listener.scm"))
+  (define %sing-box-config-file
+    (computed-file "sing-box.json"
+      (with-extensions (map specification->package '("guile-json@4"))
+        #~(begin
+            (primitive-load #$%nyapasu-script)
+            (primitive-load #$%sing-box-listener)
+            (sing-box-listener #$output)))))
+#+end_src
+
+**** 服务
+#+begin_src scheme :noweb-ref service
+(service chiko:sing-box-service-type
+  	 (chiko:sing-box-configuration
+  	  (sing-box (spec->pkg "sing-box"))
+  	  (config-file %sing-box-config-file)
+  	  (tproxy-nft-config-file (local-file "../files/config/singbox/singbox-tproxy.nft"))
+  	  (auto-start? #t)))
+#+end_src

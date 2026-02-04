@@ -1,0 +1,874 @@
+#+TITLE: ChikoPara
+
+* Chiko Para System
+琪可的NAS配置，存储各种东西同时运行奇怪的服务。
+#+begin_src scheme :tangle ../reconfigure/chikopara-system.scm :noweb yes :noweb-prefix no
+(load "../common.scm")
+(use-modules <<module>>)
+
+<<define>>
+(define %os
+  (operating-system
+   <<env>>
+   (bootloader <<bootloader>>)
+   (initrd-modules (append '(<<initrd-module>>) %base-initrd-modules))
+   (privileged-programs (cons* <<privileged-program>> %default-privileged-programs))
+   (users (cons* <<user>> %base-user-accounts))
+   (services (cons* <<service>> %base-services))
+   (mapped-devices (list <<mapped-device>>))
+   (file-systems (append <<filesystems>> %base-file-systems))
+   (packages (append (specifications->packages '(<<package>>)) %base-packages))))
+
+((compose <<transformation>>)
+ %os)
+#+end_src
+
+** 基础信息
+本地化、时区、键盘布局、主机名
+#+begin_src scheme :noweb-ref env
+  (locale "zh_CN.utf8")
+  (timezone "Asia/Singapore")
+  (keyboard-layout (keyboard-layout "us"))
+  (host-name "chikopara")
+#+end_src
+
+** 系统模块
+#+begin_src scheme :noweb-ref initrd-module
+
+#+end_src
+
+** 用户配置
+*** Root
+#+begin_src scheme :noweb-ref user
+  (user-account
+    (inherit %root-account)
+    (password #f))
+#+end_src
+
+*** MinkieYume
+#+begin_src scheme :noweb-ref user
+  (user-account
+    (name "minkieyume")
+    (comment "Minkieyume")
+    (group "users")
+    (password "$6$4QkvhBIch2jaueTp$h7P.Q.JlV3iT7xnoUyXoo0obiOsnSxmP8Rscv2PpF1YhP7I6Sp3/CN5VddDSxGqOWfzo0D.2yeP/Km4oCsOvm1")
+    (shell (file-append (spec->pkg "fish") "/bin/fish"))
+    (home-directory "/home/minkieyume")
+    (supplementary-groups '("wheel" "netdev" "audio" "video")))
+#+end_src
+
+*** Deploy
+#+begin_src scheme :noweb-ref user
+  (user-account
+   (name "deploy")
+   (comment "Deploy")
+   (group "users")
+   (home-directory "/home/deploy")
+   (supplementary-groups '("wheel")))
+#+end_src
+
+** 基础模块
+#+begin_src scheme :noweb-ref module
+  (gnu)
+  (gnu system)
+  (gnu packages admin)  
+  (gnu system privilege)
+  (srfi srfi-26)
+  (ice-9 match)
+  (gnu services sysctl)
+#+end_src
+
+** 频道模块
+#+begin_src scheme :noweb-ref module
+  (rosenthal)
+  (nonguix transformations)
+#+end_src
+
+** 密码导入
+#+begin_src scheme :noweb-ref define
+  (define %nyapasu-script
+    (local-file "../secret/nyapasu.scm"))
+  (load "../secret/nyapasu.scm")
+#+end_src
+
+#+begin_src scheme :noweb-ref service
+(simple-service 'postgres-pass-file
+		etc-service-type
+		`(("secret/postgres/forgejo" ,(plain-file "forgejo-db-password.txt"
+							   (nyapasu-ref 'forgejo-db)))))
+#+end_src
+
+** 基础包
+一些基础包
+#+begin_src scheme :noweb-ref module
+  (gnu packages curl)
+#+end_src
+
+#+begin_src scheme :noweb-ref package
+  "htop" "curl"
+#+end_src
+
+** 性能监视
+#+begin_src scheme :noweb-ref module
+  (gnu packages python-xyz)
+#+end_src
+
+#+begin_src scheme :noweb-ref package
+  "glances"
+#+end_src
+
+** Bootloader配置
+#+begin_src scheme :noweb-ref bootloader
+  (bootloader-configuration
+    (bootloader grub-efi-bootloader)
+    (targets (list "/boot/efi"))
+    (keyboard-layout keyboard-layout))
+#+end_src
+
+** 内核配置
+#+begin_src scheme :noweb-ref transformation
+  (nonguix-transformation-linux)
+
+  (lambda (os)
+    (operating-system
+      (inherit os)
+      (kernel-arguments
+        (cons* "kernel.sysrq=0"
+          "zswap.enabled=1"
+          "zswap.max_pool_percent=90"
+          "modprobe.blacklist=pcspkr"
+          (operating-system-user-kernel-arguments os)))))
+#+end_src
+
+** 驱动映射
+#+begin_src scheme :noweb-ref mapped-device
+#+end_src
+
+** 文件系统
+这是被“挂载”的文件系统列表。
+*** 系统盘
+#+begin_src scheme :noweb-ref filesystems
+  (let ((options-for-subvolume
+          (lambda (subvolume)
+            (string-join
+              (list "compress=zstd"
+                (or (and=> subvolume (cut string-append "subvol=" <>))
+                  "subvolid=5"))
+              ","))))
+    (map (match-lambda
+           ((subvolume . mount-point)
+             (file-system
+               (device (file-system-label "sabaru"))
+               (mount-point mount-point)
+               (type "btrfs")
+               (options (options-for-subvolume subvolume))
+               (create-mount-point? #t)
+               (check? (string=? mount-point "/")))))
+      '(("@System" . "/")
+        ("@Data"   . "/var/lib")
+        ("@Home"   . "/home")
+        (#f        . "/mnt/sabaru"))))
+#+end_src
+
+#+begin_src scheme :noweb-ref filesystems
+  (list
+    (file-system
+      (mount-point "/boot/efi")
+      (device (uuid "2BB9-C31F"
+                'fat32))
+      (type "vfat")))
+#+end_src
+
+#+begin_src scheme :noweb-ref transformation
+  (lambda (os)
+    (operating-system
+      (inherit os)
+      (swap-devices
+        (list (swap-space
+                (target (uuid "d113fc46-c2e4-4211-87de-49892502b016"))
+                (discard? #t))))))
+#+end_src
+
+*** Nana数据盘
+#+begin_src scheme :noweb-ref filesystems
+  (let ((options-for-subvolume
+          (lambda (subvolume)
+            (string-join
+              (list "compress=zstd" "commit=3600"
+                (or (and=> subvolume (cut string-append "subvol=" <>))
+                  "subvolid=5"))
+              ","))))
+    (map (match-lambda
+           ((subvolume . mount-point)
+             (file-system
+               (device (file-system-label "nana"))
+               (mount-point mount-point)
+               (type "btrfs")
+               (options (string-append (options-for-subvolume subvolume)))
+  	     (flags '(lazy-time))
+  	     (mount-may-fail? #t)
+               (create-mount-point? #t)
+               (check? (string=? mount-point "/")))))
+      '(("@Picture" . "/resource/picture")
+        ("@Music"   . "/resource/music")
+        ("@Film"   . "/resource/film")
+        ("@Video" .  "/resource/video")
+        ("@Download" . "/resource/download")
+        ("@Develop" . "/resource/develop")
+        ("@Book"   . "/resource/book")
+        ("@Game"   . "/resource/game")
+        ("@Creator"   . "/resource/creator")
+        ("@Git"   . "/resource/git")
+        ("@Res" . "/resource/res")
+        ("@Data" . "/resource/data")
+        (#f        . "/mnt/nana"))))
+#+end_src
+
+*** Riri备份盘
+#+begin_src scheme :noweb-ref filesystems
+(let ((options-for-subvolume
+       (lambda (subvolume)
+         (string-join
+          (list "compress=zstd" "commit=43200"
+                (or (and=> subvolume (cut string-append "subvol=" <>))
+                    "subvolid=5"))
+          ","))))
+  (map (match-lambda
+         ((subvolume . mount-point)
+          (file-system
+           (device (file-system-label "riri"))
+           (mount-point mount-point)
+           (type "btrfs")
+           (options (string-append (options-for-subvolume subvolume)))
+           (flags '(lazy-time))
+           (mount-may-fail? #t)
+           (create-mount-point? #t)
+           (check? (string=? mount-point "/")))))
+       '(("@NanaBackup" . "/backup/nana")
+         (#f        . "/mnt/riri"))))
+#+end_src
+
+** Guix配置
+#+begin_src scheme :noweb-ref transformation
+  (lambda (os)
+    (operating-system
+     (inherit os)
+     (services
+      (modify-services (operating-system-user-services os)
+  		     (guix-service-type
+  		      config => (guix-configuration
+  				 (inherit config)
+  				 (substitute-urls %chiko-substitute-urls)
+  				 (channels %chiko-channels)
+  				 (authorized-keys %chiko-authorized-keys)
+  				 (extra-options '("--cores=4"))))))))
+#+end_src
+
+
+* Chiko Para Home
+#+begin_src scheme :noweb yes :noweb-ref module
+  (gnu home services)
+  (gnu home services dotfiles)
+  (gnu home services shells)
+#+end_src
+
+** Home服务
+#+begin_src scheme :noweb yes :noweb-ref service :noweb-prefix no
+  (service guix-home-service-type
+  	 `(("minkieyume" ,(home-environment
+  			   (services (cons* <<home-service>> %base-home-services))))))
+#+end_src
+
+#+begin_src scheme :noweb yes :noweb-ref home-service
+  (service home-dotfiles-service-type
+    (home-dotfiles-configuration
+      (directories '("../files/config/dotfiles"))))
+#+end_src
+
+** 环境变量
+#+begin_src scheme :noweb yes :noweb-ref home-service :noweb-prefix no
+  (simple-service 'extra-environment-variables
+      home-environment-variables-service-type
+    `(<<home-environment-variable>>))
+#+end_src
+
+* 基础服务
+** 登陆管理
+#+begin_src scheme :noweb-ref service
+  (service pam-limits-service-type
+  	 (list
+            (pam-limits-entry "*" 'both 'nofile 100000)))
+#+end_src
+
+** 网络模块
+#+begin_src scheme :noweb-ref module
+  (gnu services networking)
+#+end_src
+
+*** 系统网络
+#+begin_src scheme :noweb-ref service
+  ;; https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes
+  (simple-service 'udp-buffer-size
+    sysctl-service-type
+    '(("net.core.rmem_max" . "7500000")
+       ("net.core.wmem_max" . "7500000")))
+  (simple-service 'ip-forward
+    sysctl-service-type
+    '(("net.ipv4.ip_forward" . "1")
+       ("net.ipv6.conf.all.forwarding" . "1")))
+#+end_src
+
+*** dhcpd和ntp
+#+begin_src scheme :noweb-ref service
+  (service dhcpcd-service-type
+  	 (dhcpcd-configuration
+  	  (no-hook '("hostname" "resolv.conf"))))
+  (service ntp-service-type)
+#+end_src
+
+*** Nftables
+#+begin_src scheme :noweb-ref service
+  (service nftables-service-type
+    (nftables-configuration
+      (ruleset
+       (computed-substitution-with-inputs "nftables.conf"
+          (local-file "../files/config/chikopara/nftables.conf")
+	  (list (local-file "../files/config/singbox" #:recursive? #t))))))
+#+end_src
+
+
+*** Resolv配置
+#+begin_src scheme :noweb-ref service
+(simple-service 'resolv-service
+        	etc-service-type
+        	`(("resolv.conf" ,(plain-file "resolv.conf" "search tailb8a678.ts.net lan\nnameserver 192.168.8.1\nnameserver 8.8.8.8\nnameserver 1.1.1.1"))))
+#+end_src
+
+** OpenSSH
+#+begin_src scheme :noweb-ref module
+  (gnu services ssh)
+#+end_src
+
+配置SSH配置的服务：
+#+begin_src scheme :noweb-ref service
+(service openssh-service-type
+    	 (openssh-configuration
+    	  (password-authentication? #f)
+    	  (permit-root-login #f)
+    	  (authorized-keys
+    	   `(("minkieyume"
+  	    ,%chiko-ssh-key)
+  	   ("deploy"
+    	      ,%chiko-ssh-key)))
+	  (accepted-environment
+	   '("LANG" "LC_*" "TZ" "PYTHONIOENCODING" "TERM" "COLORTERM"))))
+#+end_src
+
+** Mcron
+Mcron是guix用于管理计划任务的服务，类似crontab。
+#+begin_src scheme :noweb-ref module
+  (gnu services mcron)
+#+end_src
+
+mcron的服务，值得注意的是，jobs的参数必须要用quote括起来，因为里面是一个传递给mcron的(job xxxx)的表达式，这个表达式不能在guix编译时运行。
+#+begin_src scheme :noweb-ref service :noweb yes :noweb-prefix no
+  (service mcron-service-type
+    (mcron-configuration
+      (jobs '(<<mcron-job>>))))
+#+end_src
+
+** Fish
+fish，开箱即用的终端解释器。
+#+begin_src scheme :noweb-ref package
+  "fish"
+#+end_src
+
+* 备份
+** Rsync
+Rsync是简单的备份工具，可以方便在不同设备之间同步和备份数据。
+#+begin_src scheme :noweb-ref module
+  (gnu services rsync)
+  (gnu packages rsync)
+#+end_src
+
+#+begin_src scheme :noweb-ref package
+  "rsync"
+#+end_src
+
+#+begin_src scheme :noweb-ref service  :noweb yes :noweb-prefix no
+  (service rsync-service-type
+  	 (rsync-configuration
+  	  (modules (list <<rsync-module>>))))
+#+end_src
+
+*** Rsync同步文件
+备份文件夹：
+#+begin_src scheme :noweb-ref rsync-module
+  (rsync-module (name "backup")
+  	      (file-name "/resource/data/backup/")
+  	      (read-only? #f))
+#+end_src
+
+*** Rsync同步任务
+#+begin_src scheme :noweb-ref mcron-job
+  (job "0 2 * * *" "rsync -a /resource /backup/nana")
+#+end_src
+
+** Syncthing
+#+begin_src scheme :noweb-ref module
+  (gnu services syncthing)
+#+end_src
+
+#+begin_src scheme :noweb-ref service
+(service syncthing-service-type
+    	 (syncthing-configuration (user "minkieyume")
+  				  (config-file
+  				   (syncthing-config-file
+  				    (gui-address "0.0.0.0:8384")
+  				    (gui-user "minkieyume")
+  				    (gui-password "$2a$10$TZcxvm7oleRcyLkl8o8v5emoGHEIXoSczLpmPKSUAEBUqzn4c6Nk.")))))
+#+end_src
+
+
+* 工具
+** 硬件管理
+*** 磁盘管理
+#+begin_src scheme :noweb-ref package
+  "smartmontools"
+  "iotop"
+  "hdparm"
+#+end_src
+
+**** 磁盘休眠
+#+begin_src scheme :noweb yes :noweb-ref service :noweb-prefix no
+(udev-rules-service 'hdparm
+		    (file->udev-rule
+		     "90-hdparm.rules"
+		     (mixed-text-file "90-hdparm.rules"
+		      #~(string-append
+			 "ACTION==\"add\", SUBSYSTEM==\"block\",KERNEL==\"sd[a-z]\","
+			 "RUN+=\"" #$(file-append (spec->pkg "hdparm") "/sbin/hdparm") " -B 127 -S 120 /dev/%k\""))))
+#+end_src
+
+** 网络调试
+#+begin_src scheme :noweb-ref package
+  "bind:utils"
+  "tcpdump"
+#+end_src
+
+** Git
+#+begin_src scheme :noweb-ref module
+  (gnu packages version-control)
+#+end_src
+
+#+begin_src scheme :noweb-ref package
+  "git"
+#+end_src
+
+** Emacs
+基础的包配置
+#+begin_src scheme :noweb-ref package
+  "emacs-no-x"
+#+end_src
+
+模块配置
+#+begin_src scheme :noweb-ref module
+  (gnu packages emacs)
+#+end_src
+
+** Doas
+Doas是比Sudo更简洁，也更为安全的提权工具。
+之所以用Doas而不用Sudo，是因为Sudo通常会有一定的安全漏洞，结构也比较复杂，而Doas结构相对简单，攻击面也更少，适合不需要复杂提权配置的服务器或个人。
+#+begin_src scheme :noweb-ref package
+  "opendoas"
+#+end_src
+
+引入自定义的包定义的doas服务。
+#+begin_src scheme :noweb-ref module
+  (chiko services doas)
+#+end_src
+
+自定义doas规则：
+#+begin_src scheme :noweb-ref service :noweb yes :noweb-prefix no
+  (service doas-service-type
+    (doas-configuration
+      (rules
+        (list <<doas-ruleset>>))))
+#+end_src
+
+*** Doas规则
+doas规则的匹配顺序是下面的规则覆盖上面的规则，因此最上面的规则最好作为默认和根规则，而下面的规则则作为覆盖上面规则的其它额外规则。
+
+这是最基础的规则，应用于组的规则
+#+begin_src scheme :noweb-ref doas-ruleset
+  (doas-rule
+    (permit #t)
+    (user ":wheel")
+    (options '("persist" "keepenv")))
+#+end_src
+
+为root用户提供修复的环境变量补全
+#+begin_src scheme :noweb-ref doas-ruleset
+  (doas-rule
+    (permit #t)
+    (user ":wheel")
+    (options '("persist"
+               "setenv { http_proxy https_proxy HOME=/root XDG_CACHE_HOME=/root/.cache PATH=/run/setuid-programs:/root/.config/guix/current/bin:/run/current-system/profile/bin:/run/current-system/profile/sbin INFOPATH=/root/.config/guix/current/share/info:/run/current-system/profile/share/info GIT_EXEC_PATH=/root/.guix-profile/libexec/git-core}"))
+    (as-target "root"))
+#+end_src
+
+*** 禁用sudo
+为了安全，最好禁用sudo，避免sudo的漏洞影响安全性。
+#+begin_src scheme :noweb-ref env
+  (sudoers-file
+    (plain-file "sudoers" "Defaults env_reset\ndeploy ALL=(ALL) NOPASSWD: ALL"))
+#+end_src
+
+** GPG
+#+begin_src scheme :noweb-ref package
+  "gnupg"
+#+end_src
+
+#+begin_src scheme :noweb-ref module
+  (gnu packages gnupg)
+#+end_src
+
+** 解压
+模块配置
+#+begin_src scheme :noweb-ref module
+  (gnu packages compression)
+#+end_src
+
+#+begin_src scheme :noweb-ref package
+  "unzip"
+#+end_src
+
+
+* 数据库
+#+begin_src scheme :noweb-ref module
+  (gnu services databases)
+  (gnu packages databases)
+#+end_src
+
+** Postgresql
+#+begin_src scheme :noweb-ref service
+  (service postgresql-service-type
+    (postgresql-configuration
+      (postgresql (spec->pkg "postgresql@15"))))
+#+end_src
+
+* CI/CD
+*** Cuirass
+#+begin_src scheme :noweb-ref module
+  (gnu services cuirass)
+#+end_src
+
+#+begin_src scheme :noweb yes :noweb-prefix no
+(service cuirass-service-type
+	 (cuirass-configuration
+	   (interval (* 6 3600))
+	   (port 8081)
+	   (specifications #~(list <<cuirass-spec>>))))
+#+end_src
+
+#+begin_src scheme
+(specification
+ (name 'chikochannel)
+ (build '(channels chikochannel))
+ (channels #$%chiko-channels))
+#+end_src
+
+* 网页
+#+begin_src scheme :noweb-ref module
+  (gnu services web)
+  (gnu services certbot)
+  (rosenthal services web)
+#+end_src
+
+* 组网
+** GNU Net
+#+begin_src scheme :noweb-ref package
+  "gnunet"
+  "gnunet-scheme"
+#+end_src
+
+** Tailscale
+#+begin_src scheme :noweb-ref module
+  (rosenthal services networking)
+#+end_src
+
+#+begin_src scheme :noweb-ref service
+  (service tailscale-service-type)
+#+end_src
+
+** OpenDHT
+#+begin_src scheme :noweb-ref service
+(service opendht-service-type
+	 (opendht-configuration
+	   (peer-discovery? #t)))
+#+end_src
+
+
+
+* 容器
+#+begin_src scheme :noweb-ref module
+  (gnu services docker)
+#+end_src
+
+#+begin_src scheme :noweb-ref service
+  (service containerd-service-type)
+#+end_src
+
+#+begin_src scheme :noweb-ref service
+  (service docker-service-type
+    (docker-configuration
+      (enable-iptables? #f)))
+#+end_src
+
+* 进程管理
+#+begin_src scheme :noweb-ref module
+  (gnu services dbus)
+#+end_src
+
+** dbus
+#+begin_src scheme :noweb-ref service
+  (service dbus-root-service-type)
+#+end_src
+
+** elogind
+#+begin_src scheme :noweb-ref service
+  (service elogind-service-type)
+#+end_src
+
+* 音乐创作
+** SingBox
+八音盒软件
+#+begin_src scheme :noweb-ref module
+((chiko services networking) #:prefix chiko:)
+#+end_src
+
+#+begin_src scheme :noweb-ref package
+"sing-box"
+#+end_src
+
+**** 配置导入
+#+begin_src scheme :noweb-ref define
+  (define %sing-box-listener
+    (local-file "../files/config/singbox/listener.scm"))
+  (define %sing-box-config-file
+    (computed-file "sing-box.json"
+      (with-extensions (map specification->package '("guile-json@4"))
+        #~(begin
+            (primitive-load #$%nyapasu-script)
+            (primitive-load #$%sing-box-listener)
+            (sing-box-listener #$output)))))
+#+end_src
+
+**** 服务
+#+begin_src scheme :noweb-ref service
+(service chiko:sing-box-service-type
+  	 (chiko:sing-box-configuration
+  	  (sing-box (spec->pkg "sing-box"))
+  	  (config-file %sing-box-config-file)
+  	  (tproxy-nft-config-file (local-file "../files/config/singbox/singbox-tproxy.nft"))
+  	  (auto-start? #t)))
+#+end_src
+
+* 网盘
+** NFS
+#+begin_src scheme :noweb-ref module
+  (gnu services nfs)
+  (gnu packages nfs)
+#+end_src
+
+#+begin_src scheme :noweb-ref package
+  "nfs-utils"
+#+end_src
+
+#+begin_src scheme :noweb-ref service
+  (service nfs-service-type
+    (nfs-configuration
+      (exports
+        '(("/resource"
+            "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt,fsid=0)")
+           ("/resource/picture"
+             "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt)")
+           ("/resource/music"
+             "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt)")
+           ("/resource/film"
+             "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt)")
+           ("/resource/video"
+             "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt)")
+           ("/resource/download"
+             "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt)")
+           ("/resource/develop"
+             "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt)")
+           ("/resource/book"
+             "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt)")
+           ("/resource/game"
+             "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt)")
+           ("/resource/creator"
+             "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt)")
+           ("/resource/git"
+             "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt)")
+           ("/resource/data"
+             "192.168.8.0/24(rw,insecure,no_subtree_check,crossmnt)")))))
+#+end_src
+
+** Phodav
+#+begin_src scheme :noweb-ref package
+  "phodav"
+#+end_src
+
+#+begin_src scheme :noweb-ref service
+(simple-service 'phodav-service
+  		shepherd-root-service-type
+  		(list
+  		 (let ((port 8990)
+		       (path "/resource")
+		       (users '(("chiko" . "09ed42cad7c512496c9de58d499ce426")))
+		       (no-mdns #t)) ;; set to #t to disable mdns
+  		   (shepherd-service
+  		    (documentation "Run Phodav Mount")
+  		    (provision '(phodav chezdav))
+  		    (requirement '(networking))
+		    (respawn? #t)
+  		    (respawn-limit 100)
+  		    (respawn-delay 20)
+  		    (start #~(make-forkexec-constructor
+  			      (list #$(file-append (spec->pkg "phodav") "/bin/chezdav")
+				    "--port" #$(number->string port)
+				    "--path" #$path				    
+				    "--htdigest" #$(plain-file "phodav-htdigest.conf" (string-join
+										       (map
+											(lambda (u)
+											  (string-append (car u)
+													 ":Phodav:" (or (cdr u) ""))) users)
+										       "\n"))
+				    "--realm" "Phodav"
+				    "--public"
+				    #$(if no-mdns "--no-mdns" ""))
+                              #:log-file "/var/log/phodav.log"))
+  		    (stop #~(make-kill-destructor))))))
+#+end_src
+
+** IPFS
+#+begin_src scheme :noweb-ref package
+"kubo"
+#+end_src
+
+#+begin_src scheme :noweb-ref service
+(service ipfs-service-type
+         (ipfs-configuration
+	   (package (spec->pkg "kubo"))
+           (gateway "/ip4/0.0.0.0/tcp/8880")
+           (api "/ip4/0.0.0.0/tcp/5001")))
+#+end_src
+
+** 代码托管
+#+begin_src scheme :noweb-ref service
+(service forgejo-service-type
+	 (forgejo-configuration
+	   (postgresql-password-file "/run/secrets/postgres/forgejo")
+	   (config
+	    `((#f
+               ("APP_NAME" . "雏翼代码库")
+               ("RUN_USER" . "forgejo")
+               ("WORK_PATH" . "/var/lib/forgejo")
+               ("RUN_MODE" . "prod")
+	       ("APP_SLOGAN" . "雏翼工作室的代码仓库"))
+	      ("server"
+	       ("DOMAIN" . "vcs.yumieko.com")
+	       ("HTTP_PORT" . "3020")
+	       ("ROOT_URL" . "https://vcs.yumieko.com/")
+	       ("PROTOCOL" . "http")
+	       ("DISABLE_SSH" . "false")
+	       ("SSH_PORT" . "2222")
+	       ("START_SSH_SERVER" . "true")
+	       ("SSH_DOMAIN" . "vcs.yumieko.com")
+	       ("APP_DATA_PATH" . "/var/lib/forgejo/data")
+	       ("LFS_START_SERVER" . "true")
+	       ("LFS_JWT_SECRET" . ,(nyapasu-ref 'forgejo-lfs-jwt-secret))
+	       ("OFFLINE_MODE" . "true"))
+              ("database"
+               ("DB_TYPE" . "postgres")
+               ("HOST" . "127.0.0.1:5432")
+               ("NAME" . "forgejo")
+               ("USER" . "forgejo")
+               ("PASSWD" . ,(nyapasu-ref 'forgejo-db))
+               ("SSL_MODE" . "disable")
+               ("LOG_SQL" . "false"))
+              ("ui"
+               ("AMBIGUOUS_UNICODE_DETECTION" . "false"))
+              ("repository"
+               ("ROOT" . "/var/lib/forgejo/data/forgejo-repositories")
+               ("PREFERRED_LICENSES" . "GPL-3.0-or-later")
+               ("ENABLE_PUSH_CREATE_USER" . "true")
+               ("ENABLE_PUSH_CREATE_ORG" . "true")
+               ("DEFAULT_REPO_UNITS" . "repo.code,repo.releases,repo.issues,repo.pulls")
+               ("DEFAULT_BRANCH" . "main")
+               ("DISABLE_DOWNLOAD_SOURCE_ARCHIVES" . "true"))
+              ("lfs"
+               ("PATH" . "/var/lib/forgejo/data/lfs"))
+	      ("mailer"
+	       ("ENABLED" . "true")
+	       ("SMTP_ADDR" . "mail.yumieko.com")
+	       ("PORT" . "587")
+	       ("FROM" . "\"Forgejo\"<littlewing@yumieko.com>")
+	       ("USER" . "littlewing@yumieko.com")
+	       ("PASSWD" . ,(nyapasu-ref 'forgejo-smtp-pass)))
+	      ("security"
+	       ("INSTALL_LOCK" . "true")
+	       ("INTERNAL_TOKEN" . ,(nyapasu-ref 'forgejo-internal-token))
+	       ("PASSWORD_HASH_ALGO" . "pbkdf2_hi"))
+	      ("oauth2"
+	       ("JWT_SECRET" . ,(nyapasu-ref 'forgejo-jwt-secret)))
+              ("service"
+               ("REGISTER_EMAIL_CONFIRM" . "true")
+               ("ENABLE_NOTIFY_MAIL" . "true")
+               ("DISABLE_REGISTRATION" . "true")
+               ("ALLOW_ONLY_EXTERNAL_REGISTRATION" . "false")
+               ("ENABLE_CAPTCHA" . "false")
+               ("REQUIRE_SIGNIN_VIEW" . "false")
+               ("DEFAULT_KEEP_EMAIL_PRIVATE" . "true")
+               ("DEFAULT_ALLOW_CREATE_ORGANIZATION" . "true")
+               ("DEFAULT_ENABLE_TIMETRACKING" . "true")
+               ("NO_REPLY_ADDRESS" . "noreply.localhost"))
+              ("openid"
+               ("ENABLE_OPENID_SIGNIN" . "false")
+               ("ENABLE_OPENID_SIGNUP" . "false"))
+              ("cron.update_checker"
+               ("ENABLED" . "false"))
+              ("session"
+               ("PROVIDER" . "file"))
+              ("log"
+               ("MODE" . "file")
+               ("LEVEL" . "info")
+               ("ROOT_PATH" . "/var/log/forgejo"))
+              ("repository.pull-request"
+               ("DEFAULT_MERGE_STYLE" . "rebase"))
+              ("repository.signing"
+               ("DEFAULT_TRUST_MODEL" . "committer"))))))
+#+end_src
+
+** Navidrome
+#+begin_src scheme :noweb-ref service
+  (service navidrome-service-type
+    (navidrome-configuration
+      (extra-config (string-append "LogLevel = 'DEBUG'\n"
+                      "Scanner.Schedule = '@every 24h'\n"
+  		                "TranscodingCacheSize = '150MiB'\n"
+                      "MusicFolder = '/resource/music/musics'"))))
+#+end_src
+
+** CalibreWeb
+#+begin_src scheme :noweb-ref module
+  (chiko services web)
+#+end_src
+
+#+begin_src scheme :noweb-ref service
+(service calibre-web-service-type
+  	 (calibre-web-configuration
+  	  (port 8083)))
+#+end_src
+
