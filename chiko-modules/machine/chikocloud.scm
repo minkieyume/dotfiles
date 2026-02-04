@@ -86,7 +86,8 @@
    (make-container)
    (make-vps)
    (make-postgresql-secret "misskey" "hedgedoc")
-   (make-webs (misskey-webserver "littlewing.yumieko.com"))
+   (make-webs (misskey-webserver "littlewing.yumieko.com")
+	      (synapse-webserver "chat.yumieko.com"))
    ))
 
 (define (make-chikocloud-os)

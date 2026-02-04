@@ -697,8 +697,7 @@ Rsync是简单的备份工具，可以方便在不同设备之间同步和备份
       (body `("add_header Access-Control-Allow-Origin *;"
 	      "add_header Access-Control-Allow-Methods 'GET, OPTIONS';"
 	      "default_type application/json;"
-	      "return 200 '{\"m.homeserver\": {\"base_url\": \"https://chat.yumieko.com\"}}';")))
-    <<matrix-location>>)))
+	      "return 200 '{\"m.homeserver\": {\"base_url\": \"https://chat.yumieko.com\"}}';"))))))
 #+end_src
 
 #+begin_src scheme :noweb-ref nginx-server
