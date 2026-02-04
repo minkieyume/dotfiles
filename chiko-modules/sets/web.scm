@@ -12,6 +12,7 @@
   #:use-module (gnu services web)
   #:use-module (gnu services certbot)
   #:use-module (chiko services web)
+  #:use-module (chiko services matrix)
   #:use-module (rosenthal services web)
   #:use-module (chiko-modules packages web)
   #:use-module (chiko-modules utils)
@@ -165,11 +166,11 @@
 			  (list
 			   (nginx-location-configuration
 			    (uri "/")
-			    (body `(,@proxy-confs
+			    (body `(,@%nginx-proxy-confings
 				    "proxy_pass http://127.0.0.1:8008;")))
 			   (nginx-location-configuration
 			    (uri "/_matrix/media")
-			    (body `(,@proxy-confs
+			    (body `(,@%nginx-proxy-confings
 				    "proxy_pass http://127.0.0.1:8008;")))
 			   (nginx-location-configuration
 			    (uri "/.well-known/matrix/server")
@@ -192,7 +193,7 @@
 			  (list
 			   (nginx-location-configuration
 			    (uri "/")
-			    (body `(,@proxy-confs
+			    (body `(,@%nginx-proxy-confings
   				    "proxy_pass http://127.0.0.1:8008;"))))))))))
 
 (define (email-webserver domain @xxxx)
@@ -237,7 +238,7 @@
 			   (nginx-location-configuration
 			    (uri "/")
 			    (body `("proxy_pass http://127.0.0.1:8080;"
-				    ,@proxy-confs))))))))))
+				    ,@%nginx-proxy-confings))))))))))
 
 (define (hedgedoc-webserver)
   (webserver
@@ -283,7 +284,7 @@
 			  (list
 			   (nginx-location-configuration
 			    (uri "/")
-			    (body `(,@proxy-confs
+			    (body `(,@%nginx-proxy-confings
 				    "proxy_pass http://127.0.0.1:3012;")))
 			   (nginx-location-configuration
 			    (uri "/oauth-client")
