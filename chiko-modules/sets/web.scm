@@ -178,13 +178,13 @@
 			    (body `("add_header Access-Control-Allow-Origin *;"
 				    "add_header Access-Control-Allow-Methods 'GET, OPTIONS';"
 				    "default_type application/json;"
-				    (string-append "return 200 '{\"m.server\": {\"base_url\": \"" domain ":443\"}}';"))))
+				    ,(string-append "return 200 '{\"m.server\": {\"base_url\": \"" domain ":443\"}}';"))))
 			   (nginx-location-configuration
 			    (uri "/.well-known/matrix/client")
 			    (body `("add_header Access-Control-Allow-Origin *;"
 				    "add_header Access-Control-Allow-Methods 'GET, OPTIONS';"
 				    "default_type application/json;"
-				    (string-append "return 200 '{\"m.homeserver\": {\"base_url\": \"https://" domain "\"}}';")))))))
+				    ,(string-append "return 200 '{\"m.homeserver\": {\"base_url\": \"https://" domain "\"}}';")))))))
 			(nginx-server-configuration
 			 (server-name (list domain))
 			 (listen '("8448 ssl" "[::]:8448 ssl"))
@@ -244,10 +244,7 @@
 (define (hedgedoc-webserver)
   (webserver
    (wcfgset (cfgset
-	     (sys-settings `((services ,(list (simple-service 'hedgedoc-oauth
-							      etc-service-type
-							      `(("www/hedgedoc/oauth-client/client.html" ,(local-file "../files/www/hedgedoc/oauth-client.html"))))
-					      (service hedgedoc-service-type
+	     (sys-settings `((services ,(list (service hedgedoc-service-type
   						       (hedgedoc-configuration
   							(uid 911)
   							(gid 911)
@@ -286,9 +283,4 @@
 			   (nginx-location-configuration
 			    (uri "/")
 			    (body `(,@%nginx-proxy-confings
-				    "proxy_pass http://127.0.0.1:3012;")))
-			   (nginx-location-configuration
-			    (uri "/oauth-client")
-			    (body `("alias /etc/www/hedgedoc/oauth-client;"
-				    "index client.html;"
-				    "try_files $uri $uri/ =404;"))))))))))
+				    "proxy_pass http://127.0.0.1:3012;"))))))))))

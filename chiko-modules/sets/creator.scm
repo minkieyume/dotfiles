@@ -43,7 +43,7 @@
   				(auto-start? #t)))))))))
 
 (define %sing-box-streamer
-  (local-file "../files/config/singbox/streamer.scm"))
+  (local-file (string-append %configdir "singbox/streamer.scm")))
 
 (define %sing-box-streamer-config-file
   (computed-file "sing-box.json"

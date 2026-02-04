@@ -11,8 +11,7 @@
   #:use-module (srfi srfi-26)
   #:use-module (ice-9 match)
   #:use-module (rosenthal)
-  #:use-module (guix gexp)
-  #:use-module (nonguix transformations)
+  #:use-module (guix gexp) 
   #:use-module (chiko-modules system)
   #:use-module (chiko-modules home)
   #:use-module (chiko-modules utils)
@@ -59,7 +58,7 @@
        ,(bootloader-configuration
 	 (bootloader grub-bootloader)
 	 (targets (list "/dev/sda"))
-	 (keyboard-layout keyboard-layout)))
+	 (keyboard-layout (keyboard-layout "us"))))
       (initrd-modules ,%base-initrd-modules)
       (kernel-arguments ,%default-kernel-arguments)
 
@@ -72,14 +71,12 @@
 
       ;;特权程序及软件包
       (privileged-programs ,%default-privileged-programs)
-      (packages ,%base-packages)))
-   (sys-transforms
-    (list (nonguix-transformation-linux)))))
+      (packages ,%base-packages)))))
 
 (define %chikocloud-set
   (merge-sets
    %chikocloud-default-set
-   (make-default-file-system-apps "c702c3a3-d8a4-456a-8e71-5134031222be" "minkieyume")
+   (make-vps-file-system-apps "c702c3a3-d8a4-456a-8e71-5134031222be" "minkieyume")
    (make-dhcpcd-networking %machine-name #:avahi? #t)
    (make-ipv6-gateway "2001:41d0:601:1100::592a/64" "2001:41d0:601:1100::1" "eth0")
    (make-guix '("--cores=0") #f)

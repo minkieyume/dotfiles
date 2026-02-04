@@ -18,11 +18,14 @@
 (define %chiko-ssh-key
   (plain-file "chiko-ssh.pub" "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAOh6siUz1z6TpA5ykI5ftCYLBqV3QHTtECL+ulYLQ+D openpgp:0x1DFD0AED\n"))
 
+(define %dreamtwi-ssh-key
+  (plain-file "dreamtwi.pub" "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINLgx3b2t2hjoLnbG92+aDEccykouFAwY47PMF5ImGJF dreamtwi_PC\n"))
+
 (define %ssh-keys
   `(("minkieyume"
      ,%chiko-ssh-key)
     ("dreamtwi"
-     ,(local-file "../files/keys/dreamtwi_PC_ed25519.pub"))
+     ,%dreamtwi-ssh-key)
     ("deploy"
      ,%chiko-ssh-key)))
 

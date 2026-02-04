@@ -17,7 +17,8 @@
 	    make-syncthing
 	    make-gvfs
 	    make-ipfs
-	    make-default-file-system-apps))
+	    make-default-file-system-apps
+	    make-vps-file-system-apps))
 
 (define (make-swap u-uid)
   (cfgset
@@ -62,4 +63,9 @@
    (make-swap uuid)
    (make-syncthing user)
    (make-gvfs)
+   (make-ipfs)))
+
+(define (make-vps-file-system-apps uuid user)
+  (merge-sets
+   (make-swap uuid)
    (make-ipfs)))
