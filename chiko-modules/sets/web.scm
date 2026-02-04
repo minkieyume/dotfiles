@@ -13,6 +13,7 @@
   #:use-module (gnu services certbot)
   #:use-module (chiko services web)
   #:use-module (chiko services matrix)
+  #:use-module (chiko services email)
   #:use-module (rosenthal services web)
   #:use-module (chiko-modules packages web)
   #:use-module (chiko-modules utils)
@@ -274,7 +275,7 @@
   							   ("CMD_OAUTH2_CLIENT_SECRET" . "")
   							   ("CMD_OAUTH2_PROVIDERNAME" . "Misskey")
   							   ("CMD_OAUTH2_SCOPE" . "read:account")))))))))))
-   (domains (list domain))
+   (domains (list "doc.yumieko.com"))
    (nginx-servers (list (nginx-server-configuration
 			 (server-name '("doc.yumieko.com"))
 			 (listen '("443 ssl" "[::]:443 ssl"))
