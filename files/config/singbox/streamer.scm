@@ -15,12 +15,7 @@
 	. #((("server" . "direct_dns")
 	     ("strategy" . "ipv4_only")))))
       ("inbounds"
-       . #((("type" . "direct")
-	    ("tag" . "dns_in")
-	    ("listen" . "0.0.0.0")
-            ("listen_port" . 53)
-            ("network" . "udp"))
-	   (("type" . "vless")
+       . #((("type" . "vless")
             ("tag" . "vless_in")
             ("listen" . "127.0.0.1")
             ("listen_port" . 7890)
