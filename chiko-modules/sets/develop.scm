@@ -34,12 +34,14 @@
 (define (make-rust)
   (cfgset
    (sys-settings `((packages
-		    ,(list (rustup "stable"
+		    ,(list (rustup "1.90.0"
 				   #:components
 				   (list "cargo" "rustc" "rustfmt" "rust-std"
 					 "rust-src" "clippy" "miri" "rust-analyzer"
-					 "rust-mingw"))))))
-   (home-envs `(("CARGO_REGISTRY_TOKEN" . ,(secret-ref 'crates-io))))))
+					 "rust-mingw")
+				   #:profile 'minimal)))))
+   (home-envs `(("RUSTUP_DIST_SERVER" . "https://mirrors.ustc.edu.cn/rust-static")
+		("CARGO_REGISTRY_TOKEN" . ,(secret-ref 'crates-io))))))
 
 (define (make-uv) ; See 'Install UV.org'
   (cfgset

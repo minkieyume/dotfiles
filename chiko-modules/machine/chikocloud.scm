@@ -32,6 +32,7 @@
   #:use-module (chiko-modules user deploy)
   #:use-module (chiko-modules user root)
   #:use-module (chiko-modules user minkieyume)
+  #:use-module (chiko-modules user dreamtwi)
   #:export (make-chikocloud-os))
 
 (define %root
@@ -45,7 +46,7 @@
 
 (define %chikocloud-default-set
   (cfgset
-   (user-list (list (make-minkieyume) (make-deploy) (make-root)))
+   (user-list (list (make-minkieyume) (make-deploy) (make-dreamtwi) (make-root)))
    (mcron-jobs `((job "0 2 * * *" "rsync -a /resource /backup/nana")))
    (sys-settings
     `((locale "zh_CN.utf8")
