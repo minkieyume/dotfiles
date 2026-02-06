@@ -37,8 +37,7 @@
      "r-s7"
      "clojure"
      "s7"
-     "chicken"
-     "guile")))
+     "chicken")))
 
 (define %tree-sitter
   (specifications->packages

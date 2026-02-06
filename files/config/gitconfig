@@ -1,7 +1,7 @@
 [user]
   name = MinkieYume
   email = sign@yumieko.com
-  signingkey = F655AB8D8F940E9F569CE97D5DBCD44118182F31
+  signingkey = 8B5119152F7862442134970BE87008DA0EDAC449
 
 [core]
   editor = emacs

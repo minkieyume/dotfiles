@@ -12,7 +12,7 @@
            (make-channel-introduction
             "32fb2e5201db0995261f0329081901ac048dcbd0"
             (openpgp-fingerprint
-             "1D49 47B7 EC8F 8C3F 4B19  7077 9E91 3592 5221 70AD"))))
+             "46CA F209 C8FA D487 3152  240B 3611 1AAE FB96 D7D1"))))
 	(channel
 	  (name 'rosenthal)
 	  (url "https://codeberg.org/hako/rosenthal.git")
