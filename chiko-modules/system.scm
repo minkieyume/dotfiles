@@ -35,7 +35,7 @@
   			      (list
 			       (pam-limits-entry "*" 'both 'nofile 100000)))))
     (packages ,(specifications->packages '("unzip" "opendoas" "openssl" "glances" "bind:utils" "rsync" "cryptsetup"
-					   "fish" "btop" "curl" "neofetch" "gnunet" "tcpdump" "ripgrep" "jq")))))
+					   "fish" "btop" "curl" "neofetch" "gnunet" "tcpdump" "ripgrep" "jq" "aria2")))))
 (define %default-doas-rules
   (list
    (doas-rule
