@@ -47,16 +47,17 @@
 		   (services
 		    ,(list (service gvfs-service-type)))))))
 
-(define* (make-ipfs #:key (ipfs "kubo") (gateway "/ip4/0.0.0.0/tcp/8880") (api "/ip4/0.0.0.0/tcp/5001"))
+(define* (make-ipfs #:key (ipfs "kubo") (gateway-port 8880) (api-port 5001))
   (cfgset
+   (home-envs `(("IPFS_GATEWAY" . "http://127.0.0.1/8880")))
    (sys-settings `((packages
 		    ,(specifications->packages (list ipfs)))
 		   (services
 		    ,(list (service ipfs-service-type
 				    (ipfs-configuration
-				     (package (spec->pkg "kubo"))
-				     (gateway "/ip4/0.0.0.0/tcp/8880")
-				     (api "/ip4/0.0.0.0/tcp/5001")))))))))
+				      (package (spec->pkg ipfs))
+				      (gateway "/ip4/0.0.0.0/tcp/8880")
+				      (api "/ip4/0.0.0.0/tcp/5001")))))))))
 
 (define (make-default-file-system-apps uuid user)
   (merge-sets

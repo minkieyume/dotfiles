@@ -34,7 +34,7 @@
     (services ,(list (service pam-limits-service-type
   			      (list
 			       (pam-limits-entry "*" 'both 'nofile 100000)))))
-    (packages ,(specifications->packages '("unzip" "opendoas" "openssl" "glances" "bind:utils" "rsync" "cryptsetup"
+    (packages ,(specifications->packages '("unzip" "opendoas" "openssl" "glances" "bind:utils" "rsync" "cryptsetup" "screen"
 					   "fish" "btop" "curl" "neofetch" "gnunet" "tcpdump" "ripgrep" "jq" "aria2")))))
 (define %default-doas-rules
   (list
