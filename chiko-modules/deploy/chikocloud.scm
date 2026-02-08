@@ -12,7 +12,7 @@
     (operating-system (make-chikocloud-os))
     (environment managed-host-environment-type)
     (configuration (machine-ssh-configuration
-		     (host-name "100.96.116.126")
+		     (host-name "chikocloud")
 		     (build-locally? #t)
 		     (system "x86_64-linux")
 		     (user "deploy")
