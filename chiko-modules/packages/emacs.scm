@@ -67,6 +67,7 @@
      "emacs-which-key"
 
      ;;万能工具
+     "emacs-openwith"
      "emacs-pinentry"
      "emacs-pdf-tools"
      "emacs-ement"

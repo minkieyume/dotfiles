@@ -87,7 +87,7 @@
 (define %chikoniko-default-set
   (cfgset
    (user-list (list (make-minkieyume) (make-deploy) (make-root)))
-   (mcron-jobs `((job '(next-minute (range 0 60 3)) "rsync -a /niko/sandbox/aseprite /home/minkieyume/Creator/remote")))
+   (mcron-jobs `())
    (home-files `(("Downloads" ,(symlink-to "/niko/download"))
 		 ("Pictures" ,(symlink-to "/niko/picture"))
 		 ("Creator" ,(symlink-to "/niko/creator"))

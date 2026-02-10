@@ -59,10 +59,13 @@
 				      (gateway "/ip4/0.0.0.0/tcp/8880")
 				      (api "/ip4/0.0.0.0/tcp/5001")))))))))
 
-(define (make-default-file-system-apps uuid user)
+(define* (make-default-file-system-apps uuid user #:key (pass-hash "$2a$10$TZcxvm7oleRcyLkl8o8v5emoGHEIXoSczLpmPKSUAEBUqzn4c6Nk."))
   (merge-sets
    (make-swap uuid)
-   (make-syncthing user)
+   (make-syncthing user #:config-file (syncthing-config-file
+				       (gui-address "0.0.0.0:8384")
+				       (gui-user user)
+				       (gui-password pass-hash)))
    (make-gvfs)
    (make-ipfs)))
 

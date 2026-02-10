@@ -185,7 +185,7 @@
 					     (local-file (string-append
 							  %secretdir "wallpapers/yumemi_wallpaper1.png"))))
 			       (sys-desktop-services
-				%rosenthal-desktop-services)
+				%rosenthal-desktop-services/tuigreet)
 			       (home-desktop-services
 				%rosenthal-desktop-home-services))
   (merge-sets

@@ -435,7 +435,8 @@
   :bind (:map sly-prefix-map
 	      ("M-h" . sly-documentation-lookup))
   :custom
-  (inferior-lisp-program "$$bin/sbcl$$"))
+  (inferior-lisp-program "$$bin/sbcl$$")
+  (sly-compile-file-options '(:fasl-directory "/tmp/")))
 (use-package rainbow-delimiters
   :hook ((prog-mode conf-mode yaml-mode) . rainbow-delimiters-mode)
   :config
@@ -627,12 +628,14 @@
   :bind ("C-c w" . 'see-elfeed)
   :custom
   (elfeed-feeds '("https://www.yumieko.com/index.xml"
-  		  "https://blog.southfox.me/rss2.xml"
-  		  "https://dthompson.us/feed.xml"
-		  "https://illust.moongazer.net/index.xml"
-		  "https://blog.moongazer.net/index.xml"
-		  "https://nicechord.com/index.xml"
-		  "https://wiwi.blog/blog/rss.xml"
-		  "https://blogblog.club/blog/rss.xml"
-		  "https://blog.giveanornot.com/index.xml"
-		  "https://feeds.feedburner.com/othree")))
+    		  "https://blog.southfox.me/rss2.xml"
+    		  "https://dthompson.us/feed.xml"
+  		  "https://illust.moongazer.net/index.xml"
+  		  "https://blog.moongazer.net/index.xml"
+  		  "https://nicechord.com/index.xml"
+  		  "https://wiwi.blog/blog/rss.xml"
+  		  "https://blogblog.club/blog/rss.xml"
+  		  "https://blog.giveanornot.com/index.xml"
+  		  "https://feeds.feedburner.com/othree"
+  		  "https://syobon.net/index.xml"
+  		  "https://sunset0916.net/index.xml")))
