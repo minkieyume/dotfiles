@@ -40,13 +40,19 @@
 		    ,(specifications->packages '("libsecret"
 						 "keepassxc")))))))
 
+(define (make-pass)
+  (cfgset
+   (sys-settings `((packages
+		    ,(specifications->packages '("password-store"
+						 "pass-update")))))))
+
 (define (make-postgresql-secret . needed)
   (let ((secrets `(("forgejo" . ("secret/postgres/forgejo"
 				 ,(plain-file "forgejo-db-password.txt"
 					      (secret-ref 'forgejo-db))))
 		   ("immich" . ("secret/postgres/immich"
-				 ,(plain-file "immich-db-password.txt"
-					      (secret-ref 'immich-db-pass))))
+				,(plain-file "immich-db-password.txt"
+					     (secret-ref 'immich-db-pass))))
 		   ("misskey" . ("secret/postgres/misskey"
 				 ,(plain-file "misskey-db-password.txt"
 					      (secret-ref 'misskeydb))))

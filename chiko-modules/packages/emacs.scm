@@ -39,6 +39,8 @@
      "emacs-direnv"
      "emacs-envrc"
      "emacs-guix"
+     "emacs-pass"
+     "emacs-password-store"
 
      ;;编辑器优化
      "emacs-company"
