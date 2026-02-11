@@ -28,10 +28,10 @@
 					(file-append (spec->pkg pinetry) (string-append "/bin/" pinetry)))
 				       (ssh-support? #t)
 				       (extra-content (string-join extra-options "\n"))))))))
-   (home-files `((".gnupg/sshcontrol"
-		  ,(string-append
-		    %configdir
-		    "sshcontrol"))))
+   ;; (home-files `((".gnupg/sshcontrol"
+   ;; 		  ,(string-append
+   ;; 		    %configdir
+   ;; 		    "sshcontrol"))))
    (sys-settings `((packages ,(specifications->packages (list pinetry)))))))
 
 (define (make-keepassxc)
