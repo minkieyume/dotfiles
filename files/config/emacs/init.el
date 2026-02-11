@@ -508,7 +508,6 @@
   ;;(dirvish-magick-program "bin/magick")
 
   ;; Dirvish功能配置
-  (dirvish-large-directory-threshold 100)
   (dirvish-mode-line-format
    '(:left (sort symlink) :right (omit yank index)))
   (dirvish-attributes
@@ -566,21 +565,34 @@
     (message "当前缓冲区不是 Dirvish 或 Dired 模式。")))
 (use-package openwith
   :config
-  (openwith-mode 1)
-  :custom
-  (openwith-associations
-   (list
-    (list (openwith-make-extension-regexp
-           '("mpg" "mpeg" "mp3" "mp4"
-             "avi" "wmv" "wav" "mov" "flv"
-             "ogm" "ogg" "mkv"))
-          "mpv"
-          '(file))
-    (list (openwith-make-extension-regexp
-           '("xbm" "pbm" "pgm" "ppm" "pnm"
-             "png" "gif" "bmp" "tif" "jpeg" "jpg"))
-          "feh --scale-down"
-          '(file)))))
+  (setq openwith-associations
+  	(list
+	 (list (openwith-make-extension-regexp
+		'("mpg" "mpeg" "mp3" "mp4"
+		  "avi" "wmv" "wav" "mov" "flv"
+		  "ogm" "ogg" "mkv"))
+               "mpv"
+               '(file))
+	 (list (openwith-make-extension-regexp
+		'("xbm" "pbm" "pgm" "ppm" "pnm"
+		  "png" "gif" "bmp" "tif" "jpeg" "jpg"))
+               "feh --scale-down"
+               '(file))))
+  (openwith-mode 1))
+(defun chiko/openwith-inhibit-hack (old-fun operation &rest args)
+  "只有特定条件满足才会执行正常逻辑"
+  (let ((file (car args)))
+    (if (or (string-prefix-p "*preview-temp*" (buffer-name))
+	    (string-match-p "dirvish" file))
+	(let ((inhibit-file-name-handlers
+               (cons 'openwith-file-handler
+  		     (and (eq inhibit-file-name-operation operation)
+  			  inhibit-file-name-handlers)))
+              (inhibit-file-name-operation operation))
+  	  (apply operation args))
+      (apply old-fun operation args))))
+
+(advice-add 'openwith-file-handler :around #'chiko/openwith-inhibit-hack)
 (defun open-foot-terminal (dir)
   "Open foot terminal in current directory."
   (interactive)
