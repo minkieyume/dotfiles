@@ -21,7 +21,7 @@
 (setq backup-directory-alist
       `((".*" . ,(expand-file-name "emacs/backups/"
 				   (or (getenv "XDG_CACHE_HOME")
-                                       "~/.cache"))))) ;更改自动保存目录
+                                       "~/.cache"))))) ;更改自动保存目录 
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 
 (when (file-exists-p custom-file)
@@ -269,7 +269,10 @@
   (require 'ekg-logseq)
   (setq ekg-logseq-dir "~/Creator/remote/YumiEko/logseq/")
   (ekg-logseq-export))
-(use-package org)
+(use-package org
+  :custom
+  (org-startup-with-inline-images t)
+  (org-image-actual-width 600))
 (use-package emacsql)
 (use-package ox-hugo
   :after ox)
@@ -573,17 +576,22 @@
 		  "ogm" "ogg" "mkv"))
                "mpv"
                '(file))
-	 (list (openwith-make-extension-regexp
-		'("xbm" "pbm" "pgm" "ppm" "pnm"
-		  "png" "gif" "bmp" "tif" "jpeg" "jpg"))
-               "feh --scale-down"
-               '(file))))
+	 ;; (list (openwith-make-extension-regexp
+	 ;; 	'("xbm" "pbm" "pgm" "ppm" "pnm"
+	 ;; 	  "png" "gif" "bmp" "tif" "jpeg" "jpg"))
+         ;;       "feh --scale-down"
+         ;;       '(file))
+	 ))
   (openwith-mode 1))
 (defun chiko/openwith-inhibit-hack (old-fun operation &rest args)
   "只有特定条件满足才会执行正常逻辑"
-  (let ((file (car args)))
-    (if (or (string-prefix-p "*preview-temp*" (buffer-name))
-	    (string-match-p "dirvish" file))
+  (let* ((file (car args))
+	 (file-size (if (and (stringp file) (file-exists-p file))
+                        (file-attribute-size (file-attributes file))
+                      0)))
+    (if (or (< file-size (* 5 1024 1024))
+	    (string-prefix-p "*preview-temp*" (buffer-name))
+	    (string-match-p "dirvish" (or file "")))
 	(let ((inhibit-file-name-handlers
                (cons 'openwith-file-handler
   		     (and (eq inhibit-file-name-operation operation)
