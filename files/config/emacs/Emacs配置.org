@@ -747,7 +747,6 @@ Ekg是方便快速整理灵感和笔记的笔记插件。
 (use-package dirvish
   :init
   (dirvish-override-dired-mode)
-  ;;:hook
   ;;(dirvish-setup . dirvish-emerge-mode)
   :custom
   ;;快速访问
@@ -854,6 +853,27 @@ Ekg是方便快速整理灵感和笔记的笔记插件。
               (message "当前目录没有上一级目录！")))
         (message "当前缓冲区不是 Dirvish 或 Dired 模式。")))
 #+end_src
+
+** OpenWith
+#+begin_src emacs-lisp :noweb-ref config
+(use-package openwith
+  :config
+  (openwith-mode 1)
+  :custom
+  (openwith-associations
+   (list
+    (list (openwith-make-extension-regexp
+           '("mpg" "mpeg" "mp3" "mp4"
+             "avi" "wmv" "wav" "mov" "flv"
+             "ogm" "ogg" "mkv"))
+          "mpv"
+          '(file))
+    (list (openwith-make-extension-regexp
+           '("xbm" "pbm" "pgm" "ppm" "pnm"
+             "png" "gif" "bmp" "tif" "jpeg" "jpg"))
+          "feh --scale-down"
+          '(file)))))
+#+END_SRC
 
 * 终端优化
 ** 系统终端

@@ -467,7 +467,6 @@
 (use-package dirvish
   :init
   (dirvish-override-dired-mode)
-  ;;:hook
   ;;(dirvish-setup . dirvish-emerge-mode)
   :custom
   ;;快速访问
@@ -565,6 +564,23 @@
             (dired parent-dir)
           (message "当前目录没有上一级目录！")))
     (message "当前缓冲区不是 Dirvish 或 Dired 模式。")))
+(use-package openwith
+  :config
+  (openwith-mode 1)
+  :custom
+  (openwith-associations
+   (list
+    (list (openwith-make-extension-regexp
+           '("mpg" "mpeg" "mp3" "mp4"
+             "avi" "wmv" "wav" "mov" "flv"
+             "ogm" "ogg" "mkv"))
+          "mpv"
+          '(file))
+    (list (openwith-make-extension-regexp
+           '("xbm" "pbm" "pgm" "ppm" "pnm"
+             "png" "gif" "bmp" "tif" "jpeg" "jpg"))
+          "feh --scale-down"
+          '(file)))))
 (defun open-foot-terminal (dir)
   "Open foot terminal in current directory."
   (interactive)

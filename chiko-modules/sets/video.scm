@@ -25,14 +25,14 @@
    (make-v4l)
    (cfgset
     (sys-settings `((packages
-		     ,(specifications->packages '("mpv" "ffmpeg" "obs" "kodi-wayland"))))))))
+		     ,(specifications->packages '("feh" "mpv" "ffmpeg" "obs" "kodi-wayland"))))))))
 
 (define (make-video-nvidia)
   (merge-sets
    (make-v4l)
    (cfgset
     (sys-settings `((packages
-		     ,(specifications->packages '("mpv-nvidia" "obs-nvidia" "kodi-wayland" "ffmpeg"))))))))
+		     ,(specifications->packages '("feh" "mpv-nvidia" "obs-nvidia" "kodi-wayland" "ffmpeg"))))))))
 
 (define (make-v4l)
   (cfgset
