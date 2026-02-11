@@ -26,6 +26,19 @@
 
 (when (file-exists-p custom-file)
   (load custom-file))
+(require 'auth-source)
+
+(defun password-ref (host user)
+  (let ((match (car (auth-source-search
+                     :host host
+                     :user user
+                     :require '(:secret)))))
+    (if match
+	(let ((password (if (functionp (plist-get match :secret))
+                            (funcall (plist-get match :secret))
+                          (plist-get match :secret))))
+          password)
+      (user-error "错误，未找到密码。"))))
 (use-package company
   :bind (:map company-active-map
               ("C-n" . 'company-select-next)
@@ -654,7 +667,25 @@
       mu4e-view-html-commands '("librewolf"))
 (setq mm-text-html-renderer 'shr
       mm-coding-system-priorities '(utf-8 gbk gb2312))
-(use-package ement)
+(defun login-ement ()
+    "使用默认帐号登陆ement"
+    (interactive)
+    (ement-connect
+     :user-id "@minkieyume@chat.yumieko.com"
+     :password (password-ref "chat.yumieko.com"
+			     "@minkieyume@chat.yumieko.com")))
+
+(defun use-ement ()
+  "使用ement。"
+  (unless ement-sessions
+    (ement-connect))    
+  (ement-list-rooms))
+
+(use-package ement
+  :bind ("C-c E" . use-ement)
+  :custom
+  ((ement-sessions-file "~/.ement.el")
+   (ement-save-sessions t)))
 (defun see-elfeed ()
   (interactive)
   (elfeed)
