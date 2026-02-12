@@ -678,7 +678,7 @@
     "使用默认帐号登陆ement"
     (interactive)
     (ement-connect
-     :user-id "@minkieyume@chat.yumieko.com"
+     :user-id "@minkieyume:chat.yumieko.com"
      :password (password-ref "chat.yumieko.com"
 			     "@minkieyume@chat.yumieko.com")))
 
