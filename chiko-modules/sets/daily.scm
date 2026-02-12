@@ -35,10 +35,10 @@
 
 (define (make-pantalaimon)
   (cfgset
-   (home-settings `((services
-		     ,(list (service pantalaimon-service-type
-				     (pantalaimon-configuration
-				      (config-file (local-file (string-append %configdir "/pantalaimon.conf")))))))))))
+   (sys-settings `((services
+		    ,(list (service pantalaimon-service-type
+				    (pantalaimon-configuration
+				     (config-file (local-file (string-append %configdir "/pantalaimon.conf")))))))))))
 
 (define (make-jami)
   (cfgset
