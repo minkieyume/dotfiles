@@ -99,7 +99,7 @@
       (("domain_suffix" . "allthemusic.info"))
       (("domain_suffix" . #("guix.moe")))
       (("domain_suffix" . #("git.guix.gnu.org" "ci.guix.gnu.org" "lispworks.com" "nvidia.com")))
-      (("domain_suffix" . #("tailscale.com")))
+      (("domain_suffix" . #("login.tailscale.com" "control.tailscale.com")))
       (("domain_suffix" . #("misskey.io" "misskey.flowers" "toot.cat" "moongazer.net")))
       (("domain_suffix" . #("claude.ai" "claude.com")))
       (("inbound" . "proxy_in"))))
