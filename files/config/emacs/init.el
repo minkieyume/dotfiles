@@ -486,6 +486,8 @@
   (pinentry-start)
   :custom
   (epa-pinentry-mode 'loopback))
+(use-package sdcv
+  :bind ("C-c v" . 'sdcv-search-pointer))
 (use-package pdf-tools)
 (use-package dirvish
   :init
@@ -685,11 +687,11 @@
 (defun use-ement ()
   "使用ement。"
   (unless ement-sessions
-    (ement-connect))    
+    (ement-connect))
   (ement-list-rooms))
 
 (use-package ement
-  :bind ("C-c E" . use-ement)
+  :bind ("C-c E" . 'use-ement)
   :custom
   ((ement-sessions-file "~/.ement.el")
    (ement-save-sessions t)))

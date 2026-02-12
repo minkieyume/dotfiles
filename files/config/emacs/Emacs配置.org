@@ -765,6 +765,13 @@ Ekg是方便快速整理灵感和笔记的笔记插件。
     (epa-pinentry-mode 'loopback))
 #+end_src
 
+** Sdcv
+用于翻译英文文档工具。
+#+begin_src emacs-lisp :noweb-ref config
+(use-package sdcv
+  :bind ("C-c v" . 'sdcv-search-pointer))
+#+end_src
+
 * 文档
 ** PDF阅读
 #+begin_src emacs-lisp :noweb-ref config
