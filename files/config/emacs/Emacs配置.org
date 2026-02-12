@@ -61,6 +61,17 @@
       (user-error "错误，未找到密码。"))))
 #+end_src
 
+** 图片处理
+#+begin_src emacs-lisp :noweb-ref config
+(defun lower-pic (file x y output)
+  "调用 FFmpeg 根据给定的x和y轴比例缩小图片文件。"
+  (interactive "f选择图片: \nn输入x缩放比例: \nn输入y缩放比例:  \nF指定输出文件名(默认<input>_lower.png): ")
+  (let* ((out (if (file-directory-p output) (concat (file-name-sans-extension file) "_lower.png") output))
+	 (cmd (format "ffmpeg -i %s -vf \"scale=iw/%d:ih/%d:flags=neighbor\" %s" (shell-quote-argument file) x y (shell-quote-argument out))))
+    (call-process-shell-command cmd nil 0)
+    (message (format "已保存为%s" (file-name-nondirectory out)))))
+#+end_src
+
 * 补全工具
 ** 代码补全
 *** Company
