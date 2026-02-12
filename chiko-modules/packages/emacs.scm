@@ -10,7 +10,7 @@
 
 (define %emacs-packages
   (specifications->packages
-   '("emacs-pgtk"
+   '("emacs-pgtk-xwidgets"
      "emacs-eldev"
 
      ;;包管理器
