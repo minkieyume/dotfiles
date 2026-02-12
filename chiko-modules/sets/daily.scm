@@ -48,4 +48,4 @@
 (define* (make-daily #:key
 		     (browser (make-icecat))
 		     (mail-client (make-mu-isync)))
-  (merge-sets browser mail-client (make-element) (make-jami)))
+  (merge-sets browser mail-client (make-element) (make-jami) (make-pantalaimon)))
