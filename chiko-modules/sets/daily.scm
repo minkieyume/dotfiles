@@ -6,6 +6,7 @@
 (define-module (chiko-modules sets daily)
   #:use-module (guix gexp)
   #:use-module (rosenthal)
+  #:use-module (chiko services matrix)
   #:use-module (chiko-modules utils)
   #:use-module (chiko-modules loader dir-loader)
   #:use-module (chiko-modules sets)
@@ -31,6 +32,13 @@
    (sys-settings `((packages
 		    ,(specifications->packages '("element-desktop")))))
    (home-desktops `(("element-desktop.desktop" "element-desktop")))))
+
+(define (make-pantalaimon)
+  (cfgset
+   (home-settings `((services
+		     ,(list (service pantalaimon-service-type
+				     (pantalaimon-configuration
+				      (config-file (local-file (string-append %configdir "/pantalaimon.conf")))))))))))
 
 (define (make-jami)
   (cfgset
