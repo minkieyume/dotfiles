@@ -712,4 +712,5 @@
   		  "https://blog.giveanornot.com/index.xml"
   		  "https://feeds.feedburner.com/othree"
   		  "https://syobon.net/index.xml"
-  		  "https://sunset0916.net/index.xml")))
+  		  "https://sunset0916.net/index.xml"
+		  "https://spritely.institute/feed.xml")))
