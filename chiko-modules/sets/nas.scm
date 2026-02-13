@@ -68,6 +68,20 @@
 	    (password "admin")
 	    (picture-directory "/resource/picture/galleries"))))
 
+(define (make-filebrowser)
+  (simple-service 'filebrowser
+		  home-shepherd-service-type
+  		  (list (shepherd-service
+			  (provision '(filebrowser))
+			  (documentation "Run Filebrowser Server")
+			  (start #~(make-forkexec-constructor
+				    (list #$(specification->package "filebrowser"
+								    "-d" "/resource/filebrowser.db"
+								    "-r" "/resource"
+								    "-p" "8811"))
+				    #:log-file "log/filebrowser.log"))
+			  (stop #~(make-kill-destructor))))))
+
 (define* (make-nas #:key
 		   (phodav-path "/resource")
 		   (navidrome-config
@@ -80,4 +94,6 @@
 		    ,(list (make-phodav phodav-path)
 			   (make-navidrome navidrome-config)
 			   (make-calibre)
-			   (make-photoprism)))))))
+			   (make-photoprism)))))
+   (home-settings `((services
+		     ,(list (make-filebrowser)))))))

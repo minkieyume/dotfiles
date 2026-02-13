@@ -682,12 +682,13 @@
     (ement-connect
      :user-id "@minkieyume:chat.yumieko.com"
      :password (password-ref "chat.yumieko.com"
-			     "@minkieyume@chat.yumieko.com")))
+			     "@minkieyume:chat.yumieko.com")))
 
 (defun use-ement ()
   "使用ement。"
+  (interactive)
   (unless ement-sessions
-    (ement-connect))
+    (call-interactively #'ement-connect))
   (ement-list-rooms))
 
 (use-package ement
