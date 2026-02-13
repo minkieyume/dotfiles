@@ -20,8 +20,8 @@
   (load (string-append %workdir "/channels.scm")))
 
 (define %default-substitute-urls
-  (list "https://mirrors.sjtug.sjtu.edu.cn/guix"
-        "https://cache-cdn.guix.moe"
+  (list "https://cache-cdn.guix.moe"
+        "https://mirrors.sjtug.sjtu.edu.cn/guix"	
 	"https://guix.bordeaux.inria.fr"
 	"https://bordeaux.guix.gnu.org"
 	"https://ci.guix.gnu.org"))
