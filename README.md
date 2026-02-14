@@ -1,1 +1,1 @@
-This Branch Has Removed to Codeberg https://codeberg.org/minkieyume/dotfiles
+This Branch Has Moved to [[https://codeberg.org/minkieyume/dotfiles][Codeberg]]
