@@ -1,1 +1,1 @@
-This Branch Has Moved to [https://codeberg.org/minkieyume/dotfiles | Codeberg]
+This Branch Has Moved to [Codeberg](https://codeberg.org/minkieyume/dotfiles)
